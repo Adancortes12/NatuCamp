@@ -1,4 +1,4 @@
-import './Styles.Nav.css'
+import './StylesNav.css'
 export function Navbar(){
     return(
         <nav className="navbar navbar-expand-lg navbar-custom">
