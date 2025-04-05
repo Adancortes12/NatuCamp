@@ -1,11 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { createRoot } from "react-dom/client";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./StylesGeneral.css";
+import { Navbar } from "./Vistas/NavBar.jsx";
+import { PagInicio } from "./Vistas/PagInicio.jsx";
 
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+createRoot(document.getElementById("root")).render(
+  <>
+    <Navbar></Navbar>
+    <PagInicio></PagInicio>
+  </>
+);

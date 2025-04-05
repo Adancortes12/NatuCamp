@@ -1,0 +1,8 @@
+.navbar-custom {
+    background-color: #7C2020 !important; 
+}
+
+.navbar-custom .navbar-nav .nav-link {
+    color: #FFFEFA !important; 
+    padding: 10px;
+}
