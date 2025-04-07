@@ -8,7 +8,7 @@ import logo from "../assets/LogoPH.png";
 
 export function PagInicioSesion() {
   return (
-    <body id="InicioSesionBody">
+    <div id="InicioSesionBody">
       {/* div que define la imagen de fondo */}
       <div
         className="bg-image"
@@ -19,37 +19,37 @@ export function PagInicioSesion() {
         }}
       >
         {/* <!--div para centrar en y-->  */}
-        <div class="separacion1"></div>
+        <div className="separacion1"></div>
 
         {/* Contenedor del inicio de sesión */}
         <div id="caja">
-          <div class="separacion1"></div>
+          <div className="separacion1"></div>
           <h1 id="titulo">Inicia Sesión</h1>
           <Link to="/Registro" id="p">
-            ¿No tienes una cuenta?¡Registrate!
+            ¿No tienes una cuenta? ¡Regístrate!
           </Link>
-          <div class="separacion2"></div>
-          <img id="logo" src={logo} />
-          <div class="separacion2"></div>
-          {/*Campos para introducir usuario y contraseña*/}
+          <div className="separacion2"></div>
+          <img id="logo" src={logo} alt="Logo" />
+          <div className="separacion2"></div>
+          {/* Campos para introducir usuario y contraseña */}
           <form>
-            <div class="separacion2"></div>
-            {/*Usuario*/}
+            <div className="separacion2"></div>
+            {/* Usuario */}
             <fieldset>
               <input
                 type="text"
                 id="username"
                 placeholder="Correo electrónico o usuario"
-              ></input>
-              {/* Contraseña */}
+              />
             </fieldset>
-            <div class="separacion2"></div>
+            <div className="separacion2"></div>
+            {/* Contraseña */}
             <fieldset>
               <input type="password" id="password" placeholder="Contraseña" />
             </fieldset>
 
-            {/*Restaurar contraseña*/}
-            <div class="separacion2"></div>
+            {/* Restaurar contraseña */}
+            <div className="separacion2"></div>
             <Link to="/" id="p">
               Olvidé mi contraseña
             </Link>
@@ -60,8 +60,8 @@ export function PagInicioSesion() {
             </p>
           </form>
         </div>
-        <div class="separacion1"></div>
+        <div className="separacion1"></div>
       </div>
-    </body>
+    </div>
   );
 }
