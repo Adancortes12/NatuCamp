@@ -1,0 +1,116 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+main {
+  display: block;
+  float: left;
+  width: 60%;
+  background-color: #fffefa;
+}
+
+/* Aside que contiene la imagen */
+.imagen {
+  display: block;
+  float: right;
+  width: 40%;
+  height: 100vh;
+}
+
+#formulario {
+  padding: 30px;
+}
+
+/* Franja de color en el aside */
+#franja {
+  margin-top: 300px;
+  padding-top: 10px;
+  background-color: rgb(190, 70, 70, 0.7);
+  color: white;
+  text-align: center;
+  height: 60px;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Logo en el aside */
+#logo {
+  margin-top: 175px;
+  margin-left: 27%;
+  position: absolute;
+  float: right;
+  z-index: 2;
+  clip-path: circle(50%);
+}
+
+/* Estilo de los campos */
+input[type="text"] {
+  margin: 20px;
+  padding: 20px;
+  background-color: #f0e6e6;
+}
+#registro {
+  margin: 20px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bolder;
+  color: white;
+  background-color: #be4646;
+  border-radius: 8px;
+  width: 30%;
+}
+p {
+  margin: 5px;
+  font-size: 20px;
+  text-align: center;
+}
+body h1 {
+  margin-top: 30px;
+  color: #be4646;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+}
+
+/* Texto en el aside */
+#slogan {
+  padding-top: 200px;
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-weight: bolder;
+}
+a:visited {
+  color: white;
+}
+
+#cal {
+  margin: 5px;
+  height: 50px;
+}
+
+#apellidos {
+  display: flex;
+  flex-direction: row;
+}
+
+#primerAp,
+#segundoAp {
+  margin: 10px;
+  width: 45%;
+}
+
+#nombre,
+#usuario,
+#correo,
+#celular,
+#contraseña,
+#cal {
+  margin: 10px;
+  width: 94%;
+}
+
+#cal {
+  height: 50px;
+}

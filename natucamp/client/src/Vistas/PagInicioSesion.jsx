@@ -29,7 +29,9 @@ export function PagInicioSesion() {
             ¿No tienes una cuenta? ¡Regístrate!
           </Link>
           <div className="separacion2"></div>
-          <img id="logo" src={logo} alt="Logo" />
+          <div id="imagen">
+            <img src={logo} alt="Logo" />
+          </div>
           <div className="separacion2"></div>
           {/* Campos para introducir usuario y contraseña */}
           <form>
@@ -38,14 +40,14 @@ export function PagInicioSesion() {
             <fieldset>
               <input
                 type="text"
-                id="username"
+                id="usuario"
                 placeholder="Correo electrónico o usuario"
               />
             </fieldset>
             <div className="separacion2"></div>
             {/* Contraseña */}
             <fieldset>
-              <input type="password" id="password" placeholder="Contraseña" />
+              <input type="password" id="contraseña" placeholder="Contraseña" />
             </fieldset>
 
             {/* Restaurar contraseña */}

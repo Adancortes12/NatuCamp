@@ -10,7 +10,7 @@ export function PagInicio() {
           <div className="col-md-6">
             <div className="image-placeholder"></div>
           </div>
-          <div class="col-md-6">
+          <div className="col-md-6">
             <h2>¿Qué es NatuCamp?</h2>
             <p>HOOOOOOOOOOLIIIIIIIIIIS</p>
           </div>
@@ -53,18 +53,18 @@ export function PagInicio() {
 
       {/* Footer de la página */}
       <footer className="cu-footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 text-start">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6 text-start">
               <p>Contactanos</p>
               <p>Acerca de</p>
               <p>Explora</p>
             </div>
-            <div class="col-md-6 text-end">
+            <div className="col-md-6 text-end">
               <p>Síguenos</p>
-              <i class="bi bi-facebook"></i>
-              <i class="bi bi-twitter"></i>
-              <i class="bi bi-instagram"></i>
+              <i className="bi bi-facebook"></i>
+              <i className="bi bi-twitter"></i>
+              <i className="bi bi-instagram"></i>
             </div>
           </div>
           <p>©NatuCamp 2025</p>
