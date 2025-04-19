@@ -2,7 +2,8 @@ import React from "react";
 import "./StylesGeneral.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-//Imports de paginas
+//Imports de paginas + componentes
+import { PagGaleria } from "./Vistas/PagGaleria";
 import { PagInicio } from "./Vistas/PagInicio"; //Pagina principal
 import { PagRegistro } from "./Vistas/PagRegistro"; //Pagina de registro
 import { PagInicioSesion } from "./Vistas/PagInicioSesion"; //Pagina de inicio de sesión
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<PagInicio />} />
         <Route path="/Registro" element={<PagRegistro />} />
         <Route path="/InicioSesion" element={<PagInicioSesion />} />
+        <Route path="/Galeria" element={<PagGaleria />} />
       </Routes>
     </Router>
   );

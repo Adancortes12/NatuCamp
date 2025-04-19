@@ -26,7 +26,7 @@ export function PagInicio() {
             </div>
             <div class="col-md-4">
               <div className="icon-circle aprende">?</div>
-              <h4>Aprende</h4>
+              <Link to="/Galeria">Aprende</Link>
             </div>
             <div class="col-md-4">
               <div className="icon-circle comparte">❤</div>
