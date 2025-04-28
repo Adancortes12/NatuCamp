@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export function PagInicio() {
   return (
-    <body>
+    <>
       <div className="container text-center py-5">
         <div className="row">
           <div className="col-md-6">
@@ -72,6 +72,6 @@ export function PagInicio() {
       </footer>
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    </>
   );
 }
