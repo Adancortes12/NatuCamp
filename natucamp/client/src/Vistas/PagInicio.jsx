@@ -1,6 +1,9 @@
 import "./StylesInicio.css";
 import React from "react";
 import { Link } from "react-router-dom";
+import campana1 from "../assets/campana1.jpeg";
+import campana2 from "../assets/campana2.jpg";
+import campana3 from "../assets/campana3.jpg";
 
 export function PagInicio() {
   return (
@@ -8,7 +11,36 @@ export function PagInicio() {
       <div className="container text-center py-5">
         <div className="row">
           <div className="col-md-6">
-            <div className="image-placeholder"></div>
+            <div
+              id="carouselExampleSlidesOnly"
+              className="carousel slide image-placeholder"
+              data-bs-ride="carousel"
+              data-bs-interval="3000"
+            >
+              <div className="carousel-inner">
+                <div className="carousel-item active">
+                  <img
+                    src={campana1}
+                    className="d-block w-100"
+                    alt="Imagen 1"
+                  />
+                </div>
+                <div className="carousel-item">
+                  <img
+                    src={campana2}
+                    className="d-block w-100"
+                    alt="Imagen 2"
+                  />
+                </div>
+                <div className="carousel-item">
+                  <img
+                    src={campana3}
+                    className="d-block w-100"
+                    alt="Imagen 3"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div className="col-md-6">
             <h2>¿Qué es NatuCamp?</h2>
