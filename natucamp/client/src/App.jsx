@@ -7,6 +7,7 @@ import { PagGaleria } from "./Vistas/PagGaleria";
 import { PagInicio } from "./Vistas/PagInicio"; //Pagina principal
 import { PagRegistro } from "./Vistas/PagRegistro"; //Pagina de registro
 import { PagInicioSesion } from "./Vistas/PagInicioSesion"; //Pagina de inicio de sesión
+import PagEventos from "./Vistas/PagEventos";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/Registro" element={<PagRegistro />} />
         <Route path="/InicioSesion" element={<PagInicioSesion />} />
         <Route path="/Galeria" element={<PagGaleria />} />
+        <Route path="/Eventos" element={<PagEventos />} />
       </Routes>
     </Router>
   );

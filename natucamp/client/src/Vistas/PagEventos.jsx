@@ -1,6 +1,6 @@
 import { useState } from "react";
-import "./Styles-Eventos.css";
-import image from "./assets/image.png";
+import "./StylesEventos.css";
+import image from "../assets/campana.png";
 
 const Eventos = () => {
   const [openSection, setOpenSection] = useState(null);

@@ -12,7 +12,11 @@ export function PagInicio() {
           </div>
           <div className="col-md-6">
             <h2>¿Qué es NatuCamp?</h2>
-            <p>HOOOOOOOOOOLIIIIIIIIIIS</p>
+            <p id="resumen">
+              Texto mega importante sobre nuestro proyecto que vamos a copiar y
+              pegar del documento que redactamos en la primera unidad de la
+              materia etc. relleno relleno lorem ipsum no sé que más.
+            </p>
           </div>
         </div>
       </div>
@@ -22,11 +26,15 @@ export function PagInicio() {
           <div class="row">
             <div class="col-md-4">
               <div className="icon-circle explora">!</div>
-              <h4>Explora</h4>
+              <Link to="/Eventos" className={"link-styles"}>
+                Explora
+              </Link>
             </div>
             <div class="col-md-4">
               <div className="icon-circle aprende">?</div>
-              <Link to="/Galeria">Aprende</Link>
+              <Link to="/Galeria" className={"link-styles"}>
+                Aprende
+              </Link>
             </div>
             <div class="col-md-4">
               <div className="icon-circle comparte">❤</div>
@@ -37,18 +45,17 @@ export function PagInicio() {
       </div>
 
       <div class="text-center py-5">
+        <p id="textoRelleno">¡Descubre lo que La Campana tiene para ti!</p>
         {/* Botón que envía a la pagina de Registro */}
         <Link to="/Registro" className="btn-register">
           REGÍSTRATE
         </Link>
-
         {/* Boton que envía a la página de Inicio de Sesión */}
         <p class="mt-3">
-          <Link to="/InicioSesion" className="text-dark">
+          <Link to="/InicioSesion" className="linkInicioSesion">
             o inicia sesión
           </Link>
         </p>
-        <p>¡Descubre lo que La Campana tiene para ti!</p>
       </div>
 
       {/* Footer de la página */}
