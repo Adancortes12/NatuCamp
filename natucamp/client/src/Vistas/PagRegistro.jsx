@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "./StylesRegistro.css";
+import StylesRegistro from "./StylesRegistro.module.css";
 //Import de paginas + componentes + assets
 import fondo from "../assets/campana.png";
 import logo from "../assets/LogoPH.png";
 import { Calendario } from "../components/DatePicker";
-import dayjs from "dayjs";
 
 export function PagRegistro() {
   const [formData, setFormData] = useState({
@@ -56,9 +55,13 @@ export function PagRegistro() {
   //HTML de la pagina
   return (
     <>
-      <main className="datos">
+      <main className={StylesRegistro.datos}>
         <h1>Bienvenid@ a NatuCamp</h1>
-        <form id="formulario" onSubmit={handleSubmit}>
+        <form
+          id="formulario"
+          onSubmit={handleSubmit}
+          className={StylesRegistro.formulario}
+        >
           <fieldset>
             <input
               type="text"
@@ -125,7 +128,7 @@ export function PagRegistro() {
       </main>
 
       <aside
-        className="imagen"
+        className={StylesRegistro.imagen}
         style={{
           backgroundImage: `url(${fondo})`,
           height: "100vh",
@@ -133,7 +136,7 @@ export function PagRegistro() {
         }}
       >
         <h2 id="slogan">Descubre la naturaleza a tu alrededor</h2>
-        <img id="logo" src={logo}></img>
+        <img id="logo" src={logo} className={StylesRegistro.logo}></img>
         <div className="franja" id="franja">
           <p>
             <Link to="/">NatuCamp</Link>
