@@ -1,4 +1,4 @@
-import "./StylesInicio.css";
+import styles from "./StylesInicio.module.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import campana1 from "../assets/campana1.jpeg";
@@ -13,7 +13,7 @@ export function PagInicio() {
           <div className="col-md-6">
             <div
               id="carouselExampleSlidesOnly"
-              className="carousel slide image-placeholder"
+              className={`carousel slide ${styles.imagePlaceholder}`}
               data-bs-ride="carousel"
               data-bs-interval="3000"
             >
@@ -44,7 +44,7 @@ export function PagInicio() {
           </div>
           <div className="col-md-6">
             <h2>¿Qué es NatuCamp?</h2>
-            <p id="resumen">
+            <p className={styles.resumen}>
               Texto mega importante sobre nuestro proyecto que vamos a copiar y
               pegar del documento que redactamos en la primera unidad de la
               materia etc. relleno relleno lorem ipsum no sé que más.
@@ -53,54 +53,53 @@ export function PagInicio() {
         </div>
       </div>
 
-      <div className="section-icons">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <div className="icon-circle explora">!</div>
-              <Link to="/Eventos" className={"link-styles"}>
+      <div className={styles.sectionIcons}>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4">
+              <div className={`${styles.iconCircle} ${styles.explora}`}>!</div>
+              <Link to="/Eventos" className={styles.linkStyles}>
                 Explora
               </Link>
             </div>
-            <div class="col-md-4">
-              <div className="icon-circle aprende">?</div>
-              <Link to="/Galeria" className={"link-styles"}>
+            <div className="col-md-4">
+              <div className={`${styles.iconCircle} ${styles.aprende}`}>?</div>
+              <Link to="/Galeria" className={styles.linkStyles}>
                 Aprende
               </Link>
             </div>
-            <div class="col-md-4">
-              <div className="icon-circle comparte">❤</div>
+            <div className="col-md-4">
+              <div className={`${styles.iconCircle} ${styles.comparte}`}>❤</div>
               <h4>Comparte</h4>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center py-5">
-        <p id="textoRelleno">¡Descubre lo que La Campana tiene para ti!</p>
-        {/* Botón que envía a la pagina de Registro */}
-        <Link to="/Registro" className="btn-register">
+      <div className="text-center py-5">
+        <p className={styles.textoRelleno}>
+          ¡Descubre lo que La Campana tiene para ti!
+        </p>
+        <Link to="/Registro" className={styles.btnRegister}>
           REGÍSTRATE
         </Link>
-        {/* Boton que envía a la página de Inicio de Sesión */}
-        <p class="mt-3">
-          <Link to="/InicioSesion" className="linkInicioSesion">
+        <p className="mt-3">
+          <Link to="/InicioSesion" className={styles.linkInicioSesion}>
             o inicia sesión
           </Link>
         </p>
       </div>
 
-      {/* Footer de la página */}
-      <footer className="cu-footer">
+      <footer className={styles.footer}>
         <div className="container">
           <div className="row">
             <div className="col-md-6 text-start">
               <p>Contactanos</p>
-              <p>Acerca de</p>
-              <p>Explora</p>
+              <Link to="/">Acerca de</Link>
+              <Link to="/Eventos">Explora</Link>
             </div>
             <div className="col-md-6 text-end">
-              <p>Síguenos</p>
+              <Link to="/">Síguenos</Link>
               <i className="bi bi-facebook"></i>
               <i className="bi bi-twitter"></i>
               <i className="bi bi-instagram"></i>
@@ -109,7 +108,6 @@ export function PagInicio() {
           <p>©NatuCamp 2025</p>
         </div>
       </footer>
-
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </>
   );

@@ -1,18 +1,18 @@
-#barra {
+.barra {
   background-color: #651d1d;
 }
 
-#resumen {
+.resumen {
   color: #28332f;
 }
 
-.section-icons {
+.sectionIcons {
   background-color: #28332f;
   padding: 40px 0;
   text-align: center;
 }
 
-.icon-circle {
+.iconCircle {
   width: 100px;
   height: 100px;
   display: flex;
@@ -34,7 +34,7 @@
   background-color: #49623a;
 }
 
-.btn-register {
+.btnRegister {
   padding: 15px 30px;
   margin: 5vh 0vh 0vh 10vh;
   width: 70vh;
@@ -49,47 +49,42 @@
   display: block;
 }
 
-footer {
+.footer {
   background-color: #651d1d;
   color: white;
   padding: 20px 0;
   text-align: center;
 }
 
-.btn.btn-custom {
+.btnCustom {
   background-color: #be4646 !important;
   color: rgb(255, 255, 255) !important;
   border: none;
 }
 
-.btn.btn-custom:hover {
+.btnCustomHover {
   background-color: #7c2020 !important;
 }
 
-/* Sidebar */
-.sidebar-custom {
+.sidebarCustom {
   background-color: #f0e6e6 !important;
   padding: 10px;
 }
 
-/* Espaciado entre filtros */
-.mb-2 {
+.mb2 {
   margin-bottom: 10px !important;
 }
 
-/* Imagen de placeholder */
-.image-placeholder {
+.imagePlaceholder {
   background-color: #d3d3d3;
   width: 100%;
   height: 250px;
   overflow: hidden;
-  border-radius: 10px !important; 
+  border-radius: 10px !important;
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
 }
 
-.image-placeholder img {
+.imagePlaceholder img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover;
@@ -99,19 +94,18 @@ footer {
   mask-image: none !important;
 }
 
-
-.link-styles {
+.linkStyles {
   color: #d3d3d3;
   font-weight: bolder;
   font-size: 20px;
   text-decoration: none;
 }
 
-.link-styles:hover {
+.linkStyles:hover {
   text-decoration: underline;
 }
 
-#textoRelleno {
+.textoRelleno {
   display: flex;
   float: right;
   margin: 10vh 30vh 5vh 5vh;
@@ -119,12 +113,14 @@ footer {
   font-size: 30px;
 }
 
-.mt-3 {
+.mt3 {
   width: 45%;
 }
+
 .linkInicioSesion {
   color: #28332f;
 }
+
 .linkInicioSesion:visited {
   color: #28332f;
 }

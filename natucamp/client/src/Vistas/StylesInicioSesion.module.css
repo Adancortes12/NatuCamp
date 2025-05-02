@@ -1,3 +1,4 @@
+/* Estructura básica */
 header,
 section,
 main,
@@ -10,48 +11,33 @@ figcaption {
   display: block;
 }
 
-#InicioSesionBody {
+.InicioSesionBody {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-div {
-  overflow: auto;
+
+.bgImage {
+  background-size: cover;
 }
 
-#InicioSesionFooter {
-  height: 10%;
-  background-color: rgb(134, 32, 32, 0.6);
-}
-
-#footer {
-  color: white;
-  padding-top: 15px;
-  text-align: center;
-}
-
-#home {
-  color: white;
-}
-
-/*Div para centrar*/
 .separacion1 {
   height: 5%;
 }
+
 .separacion2 {
   height: 15px;
 }
 
-/*Estilo de la caja de fondo*/
-#caja {
+.caja {
   border-radius: 25px;
   margin: auto;
-  background-color: rgb(245, 201, 201, 0.6);
-  width: 50%;
-  text-align: center;
+  background-color: rgba(245, 201, 201, 0.6);
   width: 600px;
   height: 650px;
+  text-align: center;
 }
 
-input[type="text"] {
+.usuario,
+.contraseña {
   width: 75%;
   padding: 12px 20px;
   margin: 1px 0;
@@ -60,16 +46,7 @@ input[type="text"] {
   border-radius: 4px;
 }
 
-input[type="password"] {
-  width: 75%;
-  padding: 12px 20px;
-  margin: 1px 0;
-  box-sizing: border-box;
-  border: 2px solid #4b0808;
-  border-radius: 4px;
-}
-
-input[type="submit"] {
+.Enviar input[type="submit"] {
   background-color: #7c2020;
   color: white;
   width: 40%;
@@ -80,23 +57,23 @@ input[type="submit"] {
   border-radius: 4px;
 }
 
-/* Imagen */
-img {
+/* Imagen circular */
+.imagen img {
   clip-path: circle(50%);
 }
 
-#titulo {
+.titulo {
   font-weight: bolder;
   color: white;
   -webkit-text-stroke: 2px #7c2020;
 }
 
-#p {
+.p {
   font-weight: bold;
   color: #7c2020;
 }
 
-#linkcaja {
+.linkcaja {
   color: #7c2020;
   background-color: transparent;
   text-decoration: none;

@@ -1,4 +1,4 @@
-.card-container {
+.cardContainer {
   width: 300px;
   height: 400px;
   border: 2px #000000;
@@ -11,7 +11,7 @@
   text-align: center;
 }
 
-.img-overlay {
+.imgOverlay {
   position: absolute;
   width: 300px;
   height: 300px;
@@ -21,13 +21,13 @@
   opacity: 0;
 }
 
-.img-overlay:hover {
+.imgOverlay:hover {
   backdrop-filter: blur(20px);
   transition-duration: 0.25s;
   opacity: 1;
 }
 
-.card-img {
+.cardImg {
   display: block;
   width: 100%;
   border-radius: 5px;
@@ -40,11 +40,11 @@ p {
   font-size: 20px;
 }
 
-.nombre-vulgar {
+.nombreVulgar {
   font-weight: bolder;
 }
 
-.nombre-cientifico {
+.nombreCientifico {
   font-weight: lighter;
 }
 

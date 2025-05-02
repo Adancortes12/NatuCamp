@@ -1,3 +1,4 @@
+import styles from "./StylesAdminEventos.module.css";
 export function PagAdminEventos() {
   return (
     <>

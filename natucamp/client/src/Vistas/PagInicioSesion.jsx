@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./StylesInicioSesion.css";
+import styles from "./StylesInicioSesion.module.css";
 
 // Imports de páginas + componentes + assets
 import iniciosesionbg from "../assets/iniciosesionbg.jpg";
@@ -8,61 +8,58 @@ import logo from "../assets/LogoPH.png";
 
 export function PagInicioSesion() {
   return (
-    <div id="InicioSesionBody">
-      {/* div que define la imagen de fondo */}
+    <div className={styles.InicioSesionBody}>
       <div
-        className="bg-image"
+        className={styles.bgImage}
         style={{
           backgroundImage: `url(${iniciosesionbg})`,
           height: "100vh",
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* <!--div para centrar en y-->  */}
-        <div className="separacion1"></div>
+        <div className={styles.separacion1}></div>
 
-        {/* Contenedor del inicio de sesión */}
-        <div id="caja">
-          <div className="separacion1"></div>
-          <h1 id="titulo">Inicia Sesión</h1>
-          <Link to="/Registro" id="p">
+        <div className={styles.caja}>
+          <div className={styles.separacion1}></div>
+          <h1 className={styles.titulo}>Inicia Sesión</h1>
+          <Link to="/Registro" className={styles.p}>
             ¿No tienes una cuenta? ¡Regístrate!
           </Link>
-          <div className="separacion2"></div>
-          <div id="imagen">
+          <div className={styles.separacion2}></div>
+          <div className={styles.imagen}>
             <img src={logo} alt="Logo" />
           </div>
-          <div className="separacion2"></div>
-          {/* Campos para introducir usuario y contraseña */}
+          <div className={styles.separacion2}></div>
+
           <form>
-            <div className="separacion2"></div>
-            {/* Usuario */}
+            <div className={styles.separacion2}></div>
             <fieldset>
               <input
                 type="text"
-                id="usuario"
+                className={styles.usuario}
                 placeholder="Correo electrónico o usuario"
               />
             </fieldset>
-            <div className="separacion2"></div>
-            {/* Contraseña */}
+            <div className={styles.separacion2}></div>
             <fieldset>
-              <input type="password" id="contraseña" placeholder="Contraseña" />
+              <input
+                type="password"
+                className={styles.contraseña}
+                placeholder="Contraseña"
+              />
             </fieldset>
 
-            {/* Restaurar contraseña */}
-            <div className="separacion2"></div>
-            <Link to="/" id="p">
+            <div className={styles.separacion2}></div>
+            <Link to="/" className={styles.p}>
               Olvidé mi contraseña
             </Link>
 
-            {/* Botón de enviar */}
-            <p id="Enviar">
+            <p className={styles.Enviar}>
               <input type="submit" value="Iniciar Sesión" />
             </p>
           </form>
         </div>
-        <div className="separacion1"></div>
+        <div className={styles.separacion1}></div>
       </div>
     </div>
   );

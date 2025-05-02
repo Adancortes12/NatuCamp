@@ -1,23 +1,26 @@
 import React from "react";
-import "./Card.css";
+import style from "./Card.module.css";
 export const Card = ({ imgSrc, imgAlt, nomVulgar, nomCientifico, link }) => {
   return (
-    <div className="card-container">
+    <div className={style.cardContainer}>
       {imgSrc && (
-        <div className="img-container">
-          <div className="img-overlay">
-            <button onClick={() => window.open({ link })} className="boton">
+        <div className={style.imgContainer}>
+          <div className={style.imgOverlay}>
+            <button
+              onClick={() => window.open({ link })}
+              className={style.boton}
+            >
               Ver más
             </button>
           </div>
-          <img src={imgSrc} alt={imgAlt} className="card-img"></img>
+          <img src={imgSrc} alt={imgAlt} className={style.cardImg}></img>
         </div>
       )}
-      <p className="card-descripcion">
-        {nomVulgar && <span className="nombre-vulgar">{nomVulgar}</span>}
+      <p className={style.cardDescripcion}>
+        {nomVulgar && <span className={style.nombreVulgar}>{nomVulgar}</span>}
         <br></br>
         {nomCientifico && (
-          <span className="nombre-cientifico">
+          <span className={style.nombreCientifico}>
             <i>{nomCientifico}</i>
           </span>
         )}
