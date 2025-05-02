@@ -1,4 +1,3 @@
-import "./StylesAdminEventos.css";
 export function PagAdminEventos() {
   return (
     <>
