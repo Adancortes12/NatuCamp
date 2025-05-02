@@ -5,35 +5,38 @@ export function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-custom">
       <button
-        class="navbar-toggler"
+        className="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarNav"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div
+        className="collapse navbar-collapse justify-content-end"
+        id="navbarNav"
+      >
         <ul className="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+          <li className="nav-item">
+            <Link className="nav-link" to="/">
               Acerca de
-            </a>
+            </Link>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+          <li className="nav-item">
+            <Link className="nav-link" to="/Eventos">
               Explorar
-            </a>
+            </Link>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Contacto
-            </a>
+          <li className="nav-item">
+            <Link className="nav-link" to="/Galeria">
+              Aprende
+            </Link>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+          <li className="nav-item">
+            <Link className="nav-link" to="/InicioSesion">
               Iniciar Sesión
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

@@ -1,89 +1,70 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import StylesRegistro from "./StylesRegistro.module.css";
+import axios from "axios";
 //Import de paginas + componentes + assets
 import fondo from "../assets/campana.png";
 import logo from "../assets/LogoPH.png";
 import { Calendario } from "../components/DatePicker";
 
 export function PagRegistro() {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    primerAp: "",
-    segundoAp: "",
-    usuario: "",
-    correo: "",
-    celular: "",
-    contraseña: "",
-    fechaNacimiento: null, // En el caso de la fecha se usa Daysjs object
-  });
+  //Hooks para el manejo de los datos
+  const [IdUsuario, setUsuario] = useState("");
+  const [Nombre, setnombre] = useState("");
+  const [PrimerAp, setprimerAp] = useState("");
+  const [SegundoAp, setsegundoAp] = useState("");
+  const [Correo, setCorreo] = useState("");
+  const [Celular, setCelular] = useState("");
+  const [Contraseña, setContraseña] = useState("");
+  const [FechaNac, setFecha] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+  //Funcion para el manejo de la fecha
+  const Agregar = () => {
+    Axios.post("http://localhost:3001/create", {
+      //puerto de la api
+      //obtenemos los valores de los inputs y los guardamos en variables
+      idUsuario: IdUsuario,
+      nombre: Nombre,
+      primerAp: PrimerAp,
+      segundoAp: SegundoAp,
+      fechaNac: FechaNac,
+      correo: Correo,
+      celular: Celular,
+      usuario: IdUsuario,
+      contraseña: Contraseña,
+    }).then(() => {
+      alert("Usuario creado");
+    });
   };
 
-  const handleFechaChange = (newValue) => {
-    setFormData({ ...formData, fechaNacimiento: newValue });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const datosEnviar = {
-      ...formData,
-      fechaNacimiento: formData.fechaNacimiento?.format("YYYY-MM-DD") || null,
-    };
-
-    try {
-      const res = await fetch("http://localhost:3001/api/registro", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      //Vaciar los campos si el registro no dió errores
-      if (res.ok) {
-        alert("Registro exitoso");
-        // limpiar campos si quieres
-      } else {
-        alert("Error al registrar");
-      }
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
   //HTML de la pagina
   return (
     <>
       <main className={StylesRegistro.datos}>
         <h1>Bienvenid@ a NatuCamp</h1>
-        <form
-          id="formulario"
-          onSubmit={handleSubmit}
-          className={StylesRegistro.formulario}
-        >
+        <form id="formulario" className={StylesRegistro.formulario}>
           <fieldset>
             <input
               type="text"
               placeholder="Nombre(s)"
               id="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
+              onChange={(e) => setnombre(e.target.value)}
+              value={Nombre}
             ></input>
             <div id="apellidos">
               <input
                 type="text"
                 placeholder="Primer Apellido"
                 id="primerAp"
-                value={formData.primerAp}
-                onChange={handleChange}
+                onChange={(e) => setprimerAp(e.target.value)}
+                value={PrimerAp}
               ></input>
               <input
                 type="text"
                 placeholder="Segundo Apellido"
                 id="segundoAp"
-                value={formData.segundoAp}
-                onChange={handleChange}
+                onChange={(e) => setsegundoAp(e.target.value)}
+                value={SegundoAp}
               ></input>
             </div>
           </fieldset>
@@ -91,34 +72,34 @@ export function PagRegistro() {
             type="text"
             placeholder="Usuario"
             id="usuario"
-            value={formData.usuario}
-            onChange={handleChange}
+            onChange={(e) => setUsuario(e.target.value)}
+            value={IdUsuario}
           ></input>
           <input
             type="email"
             placeholder="Correo Electrónico"
             id="correo"
-            value={formData.correo}
-            onChange={handleChange}
+            onChange={(e) => setCorreo(e.target.value)}
+            value={Correo}
           ></input>
           <input
             type="text"
             placeholder="Celular"
             id="celular"
-            value={formData.celular}
-            onChange={handleChange}
+            onAbort={(e) => setCelular(e.target.value)}
+            value={Celular}
           ></input>
           <input
             type="password"
             placeholder="Contraseña"
             id="contraseña"
-            value={formData.contraseña}
-            onChange={handleChange}
+            onChange={(e) => setContraseña(e.target.value)}
+            value={Contraseña}
           ></input>
           <div id="cal">
             <Calendario
-              value={formData.fechaNacimiento}
-              onChange={handleFechaChange}
+              onChange={(e) => setFecha(e.target.value)}
+              value={FechaNac}
             ></Calendario>
           </div>
           <p>
