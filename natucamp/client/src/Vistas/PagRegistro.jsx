@@ -24,7 +24,7 @@ export function PagRegistro() {
         nombre: Nombre,
         primerAp: PrimerAp,
         segundoAp: SegundoAp,
-        fechaNac: FechaNac,
+        //fechaNac: FechaNac,
         correo: Correo,
         celular: Celular,
         usuario: IdUsuario,
@@ -93,15 +93,15 @@ export function PagRegistro() {
             onChange={(e) => setContraseña(e.target.value)}
             value={Contraseña}
           />
-          <div className={StylesRegistro.cal}>
+          {/* <div className={StylesRegistro.cal}>
             <Calendario
               onChange={(e) => setFecha(e.target.value)}
               value={FechaNac}
             />
-          </div>
+          </div> */}
           <p className={StylesRegistro.text}>
             <input
-              type="submit"
+              // type="submit"
               value="Registrarse"
               className={StylesRegistro.registroButton}
               onClick={Agregar}

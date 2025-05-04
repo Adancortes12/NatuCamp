@@ -94,15 +94,34 @@ export function PagInicio() {
         <div className="container">
           <div className="row">
             <div className="col-md-6 text-start">
-              <p>Contactanos</p>
-              <Link to="/">Acerca de</Link>
-              <Link to="/Eventos">Explora</Link>
+              <Link to="/" className={styles.linkFooter}>
+                Contactanos
+              </Link>
+              <Link to="/" className={styles.linkFooter}>
+                Acerca de
+              </Link>
+              <Link to="/Eventos" className={styles.linkFooter}>
+                Explora
+              </Link>
             </div>
             <div className="col-md-6 text-end">
-              <Link to="/">Síguenos</Link>
-              <i className="bi bi-facebook"></i>
-              <i className="bi bi-twitter"></i>
-              <i className="bi bi-instagram"></i>
+              <Link to="/" className={styles.linkFooter}>
+                Síguenos
+              </Link>
+              <div className={styles.divIconos}>
+                <a
+                  className={`bi bi-facebook ${styles.redesSociales}`}
+                  href="https://www.facebook.com/LaCampanaAnp"
+                ></a>
+                <a
+                  className={`bi bi-twitter ${styles.redesSociales}`}
+                  href="https://x.com/gobiernocolima?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
+                ></a>
+                <a
+                  className={`bi bi-instagram ${styles.redesSociales}`}
+                  href="https://www.instagram.com/gobierno_colima/?hl=es-la"
+                ></a>
+              </div>
             </div>
           </div>
           <p>©NatuCamp 2025</p>

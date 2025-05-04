@@ -36,7 +36,7 @@
 
 .btnRegister {
   padding: 15px 30px;
-  margin: 5vh 0vh 0vh 10vh;
+
   width: 70vh;
   height: 18vh;
   border: none;
@@ -46,7 +46,6 @@
   font-size: 60px;
   text-align: center;
   text-decoration: none;
-  display: block;
 }
 
 .footer {
@@ -108,7 +107,7 @@
 .textoRelleno {
   display: flex;
   float: right;
-  margin: 10vh 30vh 5vh 5vh;
+  margin: 5vh 30vh 5vh 5vh;
   color: #28332f;
   font-size: 30px;
 }
@@ -123,4 +122,30 @@
 
 .linkInicioSesion:visited {
   color: #28332f;
+}
+
+.linkFooter {
+  color: #f0e6e6;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  font-size: 18px;
+}
+
+.linkFooter:visited {
+  color: #f0e6e6;
+}
+
+.redesSociales {
+  text-align: center;
+  margin: 10px;
+  font-size: 50px;
+  color: #ffffff;
+}
+
+.redesSociales:visited {
+  color: #ffffff;
+}
+.divIconos {
+  text-align: center;
 }

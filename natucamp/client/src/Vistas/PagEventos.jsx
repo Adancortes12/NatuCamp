@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./StylesEventos.css";
+import styles from "./StylesEventos.module.css";
 import image from "../assets/campana.png";
 
 const Eventos = () => {
@@ -10,19 +10,19 @@ const Eventos = () => {
   };
 
   return (
-    <div className="event-page">
-      <aside className="sidebar">
-        <h3 className="sidebar-title">Filtros</h3>
+    <div className={styles["event-page"]}>
+      <aside className={styles.sidebar}>
+        <h3 className={styles["sidebar-title"]}>Filtros</h3>
 
-        <div className="filter-group">
+        <div className={styles["filter-group"]}>
           <button
-            className="filter-toggle"
+            className={styles["filter-toggle"]}
             onClick={() => toggleSection("etiquetas")}
           >
             Etiquetas ▼
           </button>
           {openSection === "etiquetas" && (
-            <div className="filter-options">
+            <div className={styles["filter-options"]}>
               <label>
                 <input type="radio" name="tag" /> Arte
               </label>
@@ -36,107 +36,107 @@ const Eventos = () => {
           )}
         </div>
 
-        <div className="filter-group">
+        <div className={styles["filter-group"]}>
           <button
-            className="filter-toggle"
+            className={styles["filter-toggle"]}
             onClick={() => toggleSection("fecha")}
           >
             Fecha ▼
           </button>
           {openSection === "fecha" && (
-            <div className="filter-options">
+            <div className={styles["filter-options"]}>
               <p>(Aqui van mas opciones)</p>
             </div>
           )}
         </div>
 
-        <div className="filter-group">
+        <div className={styles["filter-group"]}>
           <button
-            className="filter-toggle"
+            className={styles["filter-toggle"]}
             onClick={() => toggleSection("otros")}
           >
             Otros ▼
           </button>
           {openSection === "otros" && (
-            <div className="filter-options">
+            <div className={styles["filter-options"]}>
               <p>(Aqui van mas opciones)</p>
             </div>
           )}
         </div>
 
-        <div className="filter-group">
+        <div className={styles["filter-group"]}>
           <button
-            className="filter-toggle"
+            className={styles["filter-toggle"]}
             onClick={() => toggleSection("buscar")}
           >
             Buscar ▼
           </button>
           {openSection === "buscar" && (
-            <div className="filter-options">
+            <div className={styles["filter-options"]}>
               <input type="text" placeholder="Buscar evento..." />
             </div>
           )}
         </div>
       </aside>
 
-      <main className="event-content">
-        <h2 className="title">Eventos disponibles</h2>
+      <main className={styles["event-content"]}>
+        <h2 className={styles.title}>Eventos disponibles</h2>
 
-        <div className="event-card">
-          <div className="event-info">
+        <div className={styles["event-card"]}>
+          <div className={styles["event-info"]}>
             <h3>
               <strong>Nombre</strong> | Tipo
             </h3>
             <p>
-              Aqui tambien va de que se trata el evento XDXDXDXDXDXDXD
+              Aqui también va de que se trata el evento XDXDXDXDXDXDXD
               <br />
               ...............
             </p>
-            <div className="event-details">
-              <span className="date">Fecha: el 30 de Febrero</span>
-              <span className="cost">Costo: $2</span>
+            <div className={styles["event-details"]}>
+              <span className={styles.date}>Fecha: el 30 de Febrero</span>
+              <span className={styles.cost}>Costo: $2</span>
             </div>
-            <div className="event-buttons">
-              <button className="read-more">Seguir leyendo</button>
-              <button className="register">Registrarse</button>
+            <div className={styles["event-buttons"]}>
+              <button className={styles["read-more"]}>Seguir leyendo</button>
+              <button className={styles.register}>Registrarse</button>
             </div>
           </div>
-          <div className="event-image">
+          <div className={styles["event-image"]}>
             <img src={image} alt="Evento" />
-            <div className="capacity">👤 0/20</div>
+            <div className={styles.capacity}>👤 0/20</div>
           </div>
         </div>
 
-        {/* Se puede duplicar esta card para mas eventos */}
+        {/* Puedes duplicar la card para más eventos */}
 
-        <div className="event-card">
-          <div className="event-info">
+        <div className={styles["event-card"]}>
+          <div className={styles["event-info"]}>
             <h3>
               <strong>Nombre</strong> | Tipo
             </h3>
             <p>
               Aqui nuevamente va de que se trata el evento XDXDXDXDXDXDXD
               <br />
-              Si queremos agregar mas eventos solo se va a copiar el div de las
-              cards las veces que querramos
+              Si queremos agregar más eventos solo se va a copiar el div de las
+              cards las veces que queramos
             </p>
-            <div className="event-details">
-              <span className="date">Fecha: Fue ayer bb</span>
-              <span className="cost">Costo: una picafresa</span>
+            <div className={styles["event-details"]}>
+              <span className={styles.date}>Fecha: Fue ayer bb</span>
+              <span className={styles.cost}>Costo: una picafresa</span>
             </div>
-            <div className="event-buttons">
-              <button className="read-more">Seguir leyendo</button>
-              <button className="register">Registrarse</button>
+            <div className={styles["event-buttons"]}>
+              <button className={styles["read-more"]}>Seguir leyendo</button>
+              <button className={styles.register}>Registrarse</button>
             </div>
           </div>
-          <div className="event-image">
+          <div className={styles["event-image"]}>
             <img src={image} alt="Evento" />
-            <div className="capacity">👤 0/20</div>
+            <div className={styles.capacity}>👤 0/20</div>
           </div>
         </div>
 
-        <div className="event-card">
-          <div className="event-info">
+        <div className={styles["event-card"]}>
+          <div className={styles["event-info"]}>
             <h3>
               <strong>Nombre</strong> | Tipo
             </h3>
@@ -145,18 +145,18 @@ const Eventos = () => {
               <br />
               .............
             </p>
-            <div className="event-details">
-              <span className="date">Fecha: Mañana</span>
-              <span className="cost">Costo: $2,000,000</span>
+            <div className={styles["event-details"]}>
+              <span className={styles.date}>Fecha: Mañana</span>
+              <span className={styles.cost}>Costo: $2,000,000</span>
             </div>
-            <div className="event-buttons">
-              <button className="read-more">Seguir leyendo</button>
-              <button className="register">Registrarse</button>
+            <div className={styles["event-buttons"]}>
+              <button className={styles["read-more"]}>Seguir leyendo</button>
+              <button className={styles.register}>Registrarse</button>
             </div>
           </div>
-          <div className="event-image">
+          <div className={styles["event-image"]}>
             <img src={image} alt="Evento" />
-            <div className="capacity">👤 0/20</div>
+            <div className={styles.capacity}>👤 0/20</div>
           </div>
         </div>
       </main>
