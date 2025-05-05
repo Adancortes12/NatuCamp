@@ -5,29 +5,25 @@ import axios from "axios";
 //Import de paginas + componentes + assets
 import fondo from "../assets/campana.png";
 import logo from "../assets/LogoPH.png";
-import { Calendario } from "../components/DatePicker";
 
 export function PagRegistro() {
-  const [IdUsuario, setUsuario] = useState("");
   const [Nombre, setnombre] = useState("");
   const [PrimerAp, setprimerAp] = useState("");
   const [SegundoAp, setsegundoAp] = useState("");
   const [Correo, setCorreo] = useState("");
   const [Celular, setCelular] = useState("");
+  const [usuario, setUsuario] = useState("");
   const [Contraseña, setContraseña] = useState("");
-  const [FechaNac, setFecha] = useState("");
 
   const Agregar = () => {
     axios
       .post("http://localhost:3001/create", {
-        idUsuario: IdUsuario,
         nombre: Nombre,
         primerAp: PrimerAp,
         segundoAp: SegundoAp,
-        //fechaNac: FechaNac,
         correo: Correo,
         celular: Celular,
-        usuario: IdUsuario,
+        usuario: usuario,
         contraseña: Contraseña,
       })
       .then(() => {
@@ -54,14 +50,14 @@ export function PagRegistro() {
                 placeholder="Primer Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.primerAp}`}
                 onChange={(e) => setprimerAp(e.target.value)}
-                value={PrimerAp}
+                
               />
               <input
                 type="text"
                 placeholder="Segundo Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.segundoAp}`}
                 onChange={(e) => setsegundoAp(e.target.value)}
-                value={SegundoAp}
+                
               />
             </div>
           </fieldset>
@@ -70,38 +66,31 @@ export function PagRegistro() {
             placeholder="Usuario"
             className={`${StylesRegistro.input} ${StylesRegistro.usuario}`}
             onChange={(e) => setUsuario(e.target.value)}
-            value={IdUsuario}
           />
           <input
             type="email"
             placeholder="Correo Electrónico"
             className={`${StylesRegistro.input} ${StylesRegistro.correo} ${StylesRegistro.emailInput}`}
             onChange={(e) => setCorreo(e.target.value)}
-            value={Correo}
+            
           />
           <input
             type="text"
             placeholder="Celular"
             className={`${StylesRegistro.input} ${StylesRegistro.celular}`}
             onChange={(e) => setCelular(e.target.value)}
-            value={Celular}
+           
           />
           <input
             type="password"
             placeholder="Contraseña"
             className={`${StylesRegistro.input} ${StylesRegistro.contraseña}`}
             onChange={(e) => setContraseña(e.target.value)}
-            value={Contraseña}
+            
           />
-          {/* <div className={StylesRegistro.cal}>
-            <Calendario
-              onChange={(e) => setFecha(e.target.value)}
-              value={FechaNac}
-            />
-          </div> */}
           <p className={StylesRegistro.text}>
             <input
-              // type="submit"
+               type="submit"
               value="Registrarse"
               className={StylesRegistro.registroButton}
               onClick={Agregar}
