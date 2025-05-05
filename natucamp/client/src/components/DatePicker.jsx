@@ -7,7 +7,7 @@ export function Calendario({ value, onChange }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label="Fecha de Nacimiento"
+        label="Seleccione una fecha"
         value={value}
         onChange={onChange}
         format="YYYY-MM-DD"

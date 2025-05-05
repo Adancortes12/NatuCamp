@@ -1,39 +1,102 @@
 import styles from "./StylesAdminEventos.module.css";
 export function PagAdminEventos() {
+  const ingresarLink = () => {
+    prompt("Ingrese el link de la imagen");
+  };
+
   return (
     <>
-      <h1>Administrar evento</h1>
-      <main>
-        <div className="contenedor">
-          <div className="caja">
-            <div className="formulario">
-              <input placeholder="Nombre" id="campoNombre"></input>
-              <input placeholder="Descripción" id="campoDesc"></input>
-              <select class="form-select" id="campoTipo">
-                <option selected>Tipo</option>
-                <option value="1">Educativo</option>
-                <option value="2">Entretenimiento</option>
-                <option value="3">Deportivo</option>
-              </select>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">$</span>
-                </div>
-                <input type="text" class="form-control" aria-label="precio" />
-                <div class="input-group-append">
-                  <span class="input-group-text">.00</span>
+      <h1 className={styles.titulo}>Administrar evento</h1>
+      <div className={styles.centro}>
+        <div className={styles.contenedor}>
+          <div>
+            <input
+              placeholder="Nombre"
+              id="inputNombre"
+              className={styles.inputNombre}
+            />
+            <input
+              placeholder="Descripción"
+              id="inputDesc"
+              className={styles.inputDesc}
+            />
+            {/* Dia*/}
+            <label className={styles.inputLabelFecha}>Fecha</label>
+            <input type="date" id="fecha" className={styles.inputFecha} />
+
+            <div className={styles.grupo}>
+              {/* Hora */}
+              <div>
+                <label className={styles.inputLabel}>Hora</label>
+                <input type="time" id="hora" className={styles.input} />
+              </div>
+              {/* Cupo */}
+              <div>
+                <label className={styles.inputLabel}>Cupo</label>
+                <input
+                  type="number"
+                  id="cupo"
+                  className={styles.input}
+                  min="0"
+                />
+              </div>
+            </div>
+            <div className={styles.grupo}>
+              {/* Tipo de actividad */}
+              <div>
+                <label className={styles.inputLabel}>Tipo </label>
+                <select
+                  className={`form-select ${styles.inputTipo}`}
+                  id="campoTipo"
+                  defaultValue="Tipo"
+                >
+                  <option value="1">Educativo</option>
+                  <option value="2">Entretenimiento</option>
+                  <option value="3">Deportivo</option>
+                </select>
+              </div>
+              {/* Ingresar costo */}
+              <div>
+                <label className={styles.inputLabel}>Costo</label>
+                <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
+                  <div className="input-group-prepend">
+                    <span className={`input-group-text ${styles.simboloCosto}`}>
+                      $
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    className={`form-control ${styles.inputCosto}`}
+                    aria-label="precio"
+                    min="0"
+                  />
                 </div>
               </div>
-              <button id="botonGuardar">Guardar</button>
-              <button id="botonCancelar">Cancelar</button>
             </div>
-            <div id="imgDisplay"></div>
-            <div id="insertarImagen">
-              <button>Agregar imagen</button>
+            {/* Botones para guardar y cancelar entrada de datos */}
+
+            <div className={styles.grupo}>
+              <button className={styles.botonGuardar}>Guardar</button>
+              <button className={styles.botonCancelar}>Cancelar</button>
+            </div>
+          </div>
+          <div className={styles.divImagen}>
+            <div className={styles.imgDisplay}>
+              <p className={styles.textoX}>
+                Aca va la imagen que jale del link para el preview
+              </p>
+            </div>
+            <div className={styles.divBotonImagen}>
+              <button
+                className={styles.botonAgregarImagen}
+                onClick={ingresarLink}
+              >
+                Agregar imagen
+              </button>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </>
   );
 }
