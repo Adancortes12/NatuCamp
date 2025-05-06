@@ -10,6 +10,7 @@ import { PagRegistro } from "./Vistas/PagRegistro"; //Pagina de registro
 import { PagInicioSesion } from "./Vistas/PagInicioSesion"; //Pagina de inicio de sesión
 import PagEventos from "./Vistas/PagEventos"; //Pagina para ver eventos
 import { PagAdminEventos } from "./Vistas/PagAdminEventos"; //Pagina para agregar eventos
+import { PagAdminEspecies } from "./Vistas/PagAdminEspecies"; //Pagina para agregar especies
 //bon dia
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/Galeria" element={<PagGaleria />} />
         <Route path="/Eventos" element={<PagEventos />} />
         <Route path="/AdminEventos" element={<PagAdminEventos />} />
+        <Route path="/AdminEspecies" element={<PagAdminEspecies />} />
       </Routes>
     </Router>
   );

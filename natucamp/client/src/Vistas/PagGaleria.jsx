@@ -83,7 +83,7 @@ export function PagGaleria() {
           <div className="container">
             <div className="row">
               {[...Array(9)].map((_, i) => (
-                <div className="col-sm-12 col-md-4 mb-4" key={i}>
+                <div className="col-sm-12 col-md-3 mb-4" key={i}>
                   <Card
                     imgSrc={`https://picsum.photos/300/300?random=${i}`}
                     imgAlt={`Card ${i}`}
