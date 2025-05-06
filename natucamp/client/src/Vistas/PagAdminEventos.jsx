@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./StylesAdminEventos.module.css";
 export function PagAdminEventos() {
   const ingresarLink = () => {
@@ -6,7 +7,14 @@ export function PagAdminEventos() {
 
   return (
     <>
-      <h1 className={styles.titulo}>Administrar evento</h1>
+      <div className={styles.contenedorTitulo}>
+        <div className={styles.tituloCentro}>
+          <Link to="/Admin">
+            <i class={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+          </Link>
+          <h1 className={styles.titulo}>Administrar Eventos</h1>
+        </div>
+      </div>
       <div className={styles.centro}>
         <div className={styles.contenedor}>
           <div>

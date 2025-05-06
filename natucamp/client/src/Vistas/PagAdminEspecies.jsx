@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./StylesAdminEspecies.module.css";
 export function PagAdminEspecies() {
   const ingresarLink = () => {
@@ -6,7 +7,14 @@ export function PagAdminEspecies() {
 
   return (
     <>
-      <h1 className={styles.titulo}>Administrar Especie</h1>
+      <div className={styles.contenedorTitulo}>
+        <div className={styles.tituloCentro}>
+          <Link to="/Admin">
+            <i class={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+          </Link>
+          <h1 className={styles.titulo}>Administrar Especie</h1>
+        </div>
+      </div>
       <div className={styles.centro}>
         <div className={styles.contenedor}>
           <div className={styles.divDatos}>

@@ -1,0 +1,80 @@
+/* Estructura básica */
+header,
+section,
+main,
+footer,
+aside,
+nav,
+article,
+figure,
+figcaption {
+  display: block;
+}
+
+.InicioSesionBody {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.bgImage {
+  background-size: cover;
+}
+
+.separacion1 {
+  height: 5%;
+}
+
+.separacion2 {
+  height: 15px;
+}
+
+.caja {
+  border-radius: 25px;
+  margin: auto;
+  background-color: rgba(245, 201, 201, 0.6);
+  width: 600px;
+  height: 650px;
+  text-align: center;
+}
+
+.usuario,
+.contraseña {
+  width: 75%;
+  padding: 12px 20px;
+  margin: 1px 0;
+  box-sizing: border-box;
+  border: 2px solid #4b0808;
+  border-radius: 4px;
+}
+
+.Enviar input[type="submit"] {
+  background-color: #7c2020;
+  color: white;
+  width: 40%;
+  padding: 4px 4px;
+  margin: 1px 0;
+  box-sizing: border-box;
+  border: 2px solid #4b0808;
+  border-radius: 4px;
+}
+
+/* Imagen circular */
+.imagen img {
+  clip-path: circle(50%);
+}
+
+.titulo {
+  font-weight: bolder;
+  color: white;
+  -webkit-text-stroke: 2px #7c2020;
+}
+
+.p {
+  font-weight: bold;
+  color: #7c2020;
+}
+
+.linkcaja {
+  color: #7c2020;
+  background-color: transparent;
+  text-decoration: none;
+}

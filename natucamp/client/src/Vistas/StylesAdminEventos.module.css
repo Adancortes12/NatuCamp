@@ -19,8 +19,25 @@
   background-color: #f0e6e6;
 }
 
+.icono {
+  margin: 10px;
+  color: #7c2020;
+  text-align: center;
+  font-size: 40px;
+}
+.contenedorTitulo {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  text-align: center;
+}
+.tituloCentro {
+  display: flex;
+  margin: auto;
+}
+
 .titulo {
-  margin: 20px;
+  margin: 10px;
   color: #7c2020;
   text-align: center;
 }

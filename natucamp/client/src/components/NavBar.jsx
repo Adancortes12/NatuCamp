@@ -20,22 +20,22 @@ export function Navbar() {
         <ul className="navbar-nav">
           <li className="nav-item">
             <Link className="nav-link" to="/">
-              Acerca de
+              INICIO
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/Eventos">
-              Explorar
+              EXPLORAR
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/Galeria">
-              Aprende
+              APRENDE
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/InicioSesion">
-              Iniciar Sesión
+              INICIAR SESIÓN
             </Link>
           </li>
         </ul>

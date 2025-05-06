@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./StylesInicioSesion.module.css";
+import styles from "./StylesInicioSesionAdmin.module.css";
 
 // Imports de páginas + componentes + assets
-import iniciosesionbg from "../assets/iniciosesionbg.jpg";
+import iniciosesionbg from "../assets/adminInicioSesionBG.jpg";
 import logo from "../assets/LogoPH.png";
 
-export function PagInicioSesion() {
+export function PagInicioSesionAdmin() {
   return (
     <div className={styles.InicioSesionBody}>
       <div
@@ -22,9 +22,6 @@ export function PagInicioSesion() {
         <div className={styles.caja}>
           <div className={styles.separacion1}></div>
           <h1 className={styles.titulo}>Inicia Sesión</h1>
-          <Link to="/Registro" className={styles.p}>
-            ¿No tienes una cuenta? ¡Regístrate!
-          </Link>
           <div className={styles.separacion2}></div>
           <div className={styles.imagen}>
             <img src={logo} alt="Logo" />
@@ -37,7 +34,7 @@ export function PagInicioSesion() {
               <input
                 type="text"
                 className={styles.usuario}
-                placeholder="Correo electrónico o usuario"
+                placeholder="Codigo de administrador"
               />
             </fieldset>
             <div className={styles.separacion2}></div>
@@ -50,8 +47,8 @@ export function PagInicioSesion() {
             </fieldset>
 
             <div className={styles.separacion2}></div>
-            <Link to="/InicioSesionAdmin" className={styles.p}>
-              Iniciar sesión como administrador
+            <Link to="/InicioSesion" className={styles.p}>
+              Iniciar sesión como usuario
             </Link>
 
             <p className={styles.Enviar}>

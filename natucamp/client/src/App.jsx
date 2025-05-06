@@ -13,6 +13,7 @@ import { PagAdminEventos } from "./Vistas/PagAdminEventos"; //Pagina para agrega
 import { PagAdminEspecies } from "./Vistas/PagAdminEspecies"; //Pagina para agregar especies
 import { PagCrearPost } from "./Vistas/PagCrearPost";
 import { PagAdmin } from "./Vistas/PagAdmin";
+import { PagInicioSesionAdmin } from "./Vistas/PagInicioSesionAdmin";
 //bon dia
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/AdminEspecies" element={<PagAdminEspecies />} />
         <Route path="/Admin" element={<PagAdmin />} />
         <Route path="/CrearPost" element={<PagCrearPost />} />
+        <Route path="/InicioSesionAdmin" element={<PagInicioSesionAdmin />} />
       </Routes>
     </Router>
   );

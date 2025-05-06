@@ -4,8 +4,11 @@
   align-items: center;
   height: 100vh;
 }
-
 .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin: 40px;
   padding: 20px;
   height: 70vh;
@@ -15,6 +18,10 @@
   box-shadow: 1px 10px 5px gray;
   text-align: center;
 }
+.card:hover {
+  transform: scale(1.05);
+}
+
 .cardTitulo {
   color: #7c2020;
   margin: 10px;
@@ -23,22 +30,32 @@
 }
 
 .contenedorIcono {
+  width: 100%;
+}
+.icono {
+  font-size: 150px;
 }
 
-.icono {
-  font-size: 170px;
+.contenedorBoton {
+  display: block;
 }
 
 .botonAdmin {
+  display: block;
+  width: 50%;
   margin: 50px;
   padding: 15px;
   background-color: gray;
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   border-radius: 20px;
-  font-size: 30px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.botonAdmin:visited {
+  color: #ffffff;
 }
 
-.botonAdmin:visited {
-  color: #f0e6e6;
+.botonAdmin:hover {
+  background-color: #7c2020;
 }
