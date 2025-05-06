@@ -33,14 +33,6 @@
   position: relative;
 }
 
-.logo {
-  margin-top: 175px;
-  margin-left: 27%;
-  position: absolute;
-  z-index: 2;
-  clip-path: circle(50%);
-}
-
 .input {
   margin: 20px;
   padding: 20px;

@@ -50,14 +50,12 @@ export function PagRegistro() {
                 placeholder="Primer Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.primerAp}`}
                 onChange={(e) => setprimerAp(e.target.value)}
-                
               />
               <input
                 type="text"
                 placeholder="Segundo Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.segundoAp}`}
                 onChange={(e) => setsegundoAp(e.target.value)}
-                
               />
             </div>
           </fieldset>
@@ -72,25 +70,22 @@ export function PagRegistro() {
             placeholder="Correo Electrónico"
             className={`${StylesRegistro.input} ${StylesRegistro.correo} ${StylesRegistro.emailInput}`}
             onChange={(e) => setCorreo(e.target.value)}
-            
           />
           <input
             type="text"
             placeholder="Celular"
             className={`${StylesRegistro.input} ${StylesRegistro.celular}`}
             onChange={(e) => setCelular(e.target.value)}
-           
           />
           <input
             type="password"
             placeholder="Contraseña"
             className={`${StylesRegistro.input} ${StylesRegistro.contraseña}`}
             onChange={(e) => setContraseña(e.target.value)}
-            
           />
           <p className={StylesRegistro.text}>
             <input
-               type="submit"
+              type="submit"
               value="Registrarse"
               className={StylesRegistro.registroButton}
               onClick={Agregar}
@@ -109,7 +104,6 @@ export function PagRegistro() {
         <h2 className={StylesRegistro.slogan}>
           Descubre la naturaleza a tu alrededor
         </h2>
-        <img src={logo} className={StylesRegistro.logo} alt="Logo" />
         <div className={StylesRegistro.franja}>
           <p>
             <Link to="/" className={StylesRegistro.link}>
