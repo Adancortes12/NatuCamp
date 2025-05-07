@@ -23,11 +23,16 @@ export function PagAdminEventos() {
               id="inputNombre"
               className={styles.inputNombre}
             />
-            <input
-              placeholder="Descripción"
-              id="inputDesc"
-              className={styles.inputDesc}
-            />
+            <div className={styles.contenedorTextarea}>
+              <textarea
+                rows="5"
+                cols="50"
+                placeholder="Descripción"
+                name="Desc"
+                id="inputDesc"
+                className={styles.inputDesc}
+              />
+            </div>
             {/* Dia*/}
             <label className={styles.inputLabelFecha}>Fecha</label>
             <input type="date" id="fecha" className={styles.inputFecha} />

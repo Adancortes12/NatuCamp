@@ -6,22 +6,36 @@ export function PagCrearPost() {
       <div className={styles.centro}>
         <div className={styles.contenedor}>
           <div className={styles.divDatos}>
-            <input
-              placeholder="TÍTULO"
-              id="inputTitulo"
-              className={styles.inputTitulo}
-            />
-            <select>
-              <option>Entretenimiento</option>
-              <option>Educación</option>
-              <option>Naturaleza</option>
-              <option>Deportes</option>
-            </select>
+            <div className={styles.grupo}>
+              <div className={styles.grupoTituloEtiquetas}>
+                <input
+                  placeholder="TÍTULO"
+                  id="inputTitulo"
+                  className={styles.inputTitulo}
+                />
+                <select className={styles.selectEtiquetas}>
+                  <option>Entretenimiento</option>
+                  <option>Educación</option>
+                  <option>Naturaleza</option>
+                  <option>Deportes</option>
+                </select>
+              </div>
+              {/* Botones para guardar y cancelar entrada de datos */}
+              <div className={styles.botones}>
+                <button className={styles.botonGuardar}>Guardar</button>
+                <button className={styles.botonCancelar}>Cancelar</button>
+              </div>
+            </div>
 
-            {/* Botones para guardar y cancelar entrada de datos */}
-            <div className={styles.botones}>
-              <button className={styles.botonGuardar}>Guardar</button>
-              <button className={styles.botonCancelar}>Cancelar</button>
+            <div className={styles.contenedorTextarea}>
+              <textarea
+                rows="10"
+                cols="50"
+                placeholder="¿Qué estás pensando?..."
+                name="contenidoPost"
+                id="inputPost"
+                className={styles.inputPost}
+              />
             </div>
           </div>
         </div>

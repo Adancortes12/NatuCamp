@@ -28,12 +28,16 @@ export function PagAdminEspecies() {
               id="inputDesc"
               className={styles.inputNomCientifico}
             />
-            <input
-              placeholder="Descripción"
-              id="inputDesc"
-              className={styles.inputDesc}
-            />
-
+            <div className={styles.contenedorTextarea}>
+              <textarea
+                rows="5"
+                cols="50"
+                placeholder="Descripción"
+                name="Desc"
+                id="inputDesc"
+                className={styles.inputDesc}
+              />
+            </div>
             <div className={styles.grupo}>
               {/* Tipo de actividad */}
               <div>
