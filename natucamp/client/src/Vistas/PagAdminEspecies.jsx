@@ -1,8 +1,33 @@
 import { Link } from "react-router-dom";
 import styles from "./StylesAdminEspecies.module.css";
+import axios from "axios";
+import { useState } from "react";
+
 export function PagAdminEspecies() {
   const ingresarLink = () => {
-    prompt("Ingrese el link de la imagen");
+    prompt("Ingrese el link de la imagen");  
+}
+    //const [idTIpo,setTipo]=useState(0);
+    //const [idOrden,setIdOrden]=useState(0);
+    //const [idFamilia,setIdFamilia]=useState(0);
+    const [nombreCientifico,setNombreCientifico]=useState("");
+    const [nombreVulgar,setNombreVulgar]=useState("");
+    const [idCategoria,setIdCategoria]=useState(0);
+    //const [idNom,setIdNom]=useState(0);
+    
+
+    const Agregar = () => {
+      axios.post("http://localhost:3001/especie", {
+        //idTipo: idTIpo,
+        //idOrden: idOrden,
+        //idFamilia: idFamilia,
+        nombreCientifico: nombreCientifico,
+        nombreVulgar: nombreVulgar,
+        idCategoria: idCategoria,
+        //idNom: idNom
+      }).then(() => {
+        alert("Especie creada");
+      });
   };
 
   return (
@@ -22,11 +47,14 @@ export function PagAdminEspecies() {
               placeholder="Nombre vulgar"
               id="inputNombre"
               className={styles.inputNomVulgar}
+              onChange={(e) => setNombreVulgar(e.target.value)}
+              
             />
             <input
               placeholder="Nombre cientifico"
               id="inputDesc"
               className={styles.inputNomCientifico}
+              onChange={(e) => setNombreCientifico(e.target.value)}
             />
             <div className={styles.contenedorTextarea}>
               <textarea
@@ -46,6 +74,7 @@ export function PagAdminEspecies() {
                   className={`form-select ${styles.seleccionador}`}
                   id="campoTipo"
                   defaultValue="Tipo"
+                  onChange={(e) => setIdCategoria(e.target.value)}
                 >
                   <option value="1">Categoria 1</option>
                   <option value="2">2</option>

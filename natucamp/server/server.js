@@ -30,6 +30,38 @@ app.post('/create',(req,res)=>{
         }
     });
 })
+app.post('/especie',(req,res)=>{
+    const IdTipo= req.body.IdTipo;
+    const idOrden= req.body.idOrden;
+    const idFamilia= req.body.idFamilia;
+    const nombreCientifico= req.body.nombreCientifico;
+    const nombreVulgar= req.body.nombreVulgar;
+    const idCategoria= req.body.idCategoria;
+    const idNom= req.body.idNom;
+    db.query('INSERT INTO especie(IdTipo,idOrden,idFamilia,nombreCientifico,nombreComun,idCategoria,idNom) VALUES(?,?,?,?,?,?,?,?)',
+        [IdTipo,idOrden,idFamilia,nombreCientifico,nombreVulgar,idCategoria,idNom],(err)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send('Animal Registrado');
+        }
+    });
+})  
+app.get('/especie',(req,res)=>{
+    const IdTipo= req.body.IdTipo;
+    const idOrden= req.body.idOrden;
+    const idFamilia= req.body.idFamilia;
+    const idCategoria= req.body.idCategoria;
+    const idNom= req.body.idNom;
+    db.query('SELECT IdTipo,idOrden,idFamilia,idCategoria,idNom',(err,result)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send(result);
+        }
+    });
+})  
+
 
 app.listen(3001,()=>{
     console.log('corriendo loco en 3001')

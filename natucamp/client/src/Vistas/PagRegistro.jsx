@@ -4,7 +4,6 @@ import StylesRegistro from "./StylesRegistro.module.css";
 import axios from "axios";
 //Import de paginas + componentes + assets
 import fondo from "../assets/campana.png";
-import logo from "../assets/LogoPH.png";
 
 export function PagRegistro() {
   const [Nombre, setnombre] = useState("");
