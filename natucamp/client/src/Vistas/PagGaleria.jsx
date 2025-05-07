@@ -82,17 +82,20 @@ export function PagGaleria() {
         <main className={styles.displayGaleria}>
           <div className="container">
             <div className="row">
-              {[...Array(9)].map((_, i) => (
-                <div className="col-sm-12 col-md-3 mb-4" key={i}>
-                  <Card
-                    imgSrc={`https://picsum.photos/300/300?random=${i}`}
-                    imgAlt={`Card ${i}`}
-                    nomVulgar={`Nombre Vulgar ${i}`}
-                    nomCientifico={`Nombre Cientifico ${i}`}
-                    link="https://www.youtube.com"
-                  />
-                </div>
-              ))}
+              {[...Array(9)].map((_, i) => {
+                const index = i + 1;
+                return (
+                  <div className="col-sm-12 col-md-3 mb-4" key={index}>
+                    <Card
+                      imgSrc={`/NatuFotos/${index}.jpeg`}
+                      imgAlt={`Card ${index}`}
+                      nomVulgar={`Nombre Vulgar ${index}`}
+                      nomCientifico={`Nombre Cientifico ${index}`}
+                      link="https://www.youtube.com"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </main>
