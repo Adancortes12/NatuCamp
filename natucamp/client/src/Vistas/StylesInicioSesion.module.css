@@ -68,6 +68,13 @@ figcaption {
   -webkit-text-stroke: 2px #7c2020;
 }
 
+.icono {
+  margin: 10px;
+  color: #7c2020;
+  text-align: center;
+  font-size: 40px;
+}
+
 .p {
   font-weight: bold;
   color: #7c2020;

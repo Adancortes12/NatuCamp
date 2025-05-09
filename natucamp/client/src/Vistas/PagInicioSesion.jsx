@@ -21,7 +21,12 @@ export function PagInicioSesion() {
 
         <div className={styles.caja}>
           <div className={styles.separacion1}></div>
-          <h1 className={styles.titulo}>Inicia Sesión</h1>
+          <div className={styles.tituloGrupo}>
+            <Link to="/">
+              <i className={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+            </Link>
+            <h1 className={styles.titulo}>Inicia Sesión</h1>
+          </div>
           <Link to="/Registro" className={styles.p}>
             ¿No tienes una cuenta? ¡Regístrate!
           </Link>
