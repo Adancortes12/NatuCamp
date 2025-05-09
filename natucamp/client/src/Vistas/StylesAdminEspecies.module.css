@@ -100,8 +100,9 @@ select.seleccionador {
   border-radius: 10px;
 }
 
-.textoX {
-  color: black;
+.imagen {
+  width: 100%;
+  height: auto;
 }
 
 .divBotonImagen {

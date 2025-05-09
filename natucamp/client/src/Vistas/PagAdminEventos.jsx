@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import styles from "./StylesAdminEventos.module.css";
 export function PagAdminEventos() {
-  const ingresarLink = () => {
-    prompt("Ingrese el link de la imagen");
-  };
+  // Funcion para crear el preview de la imagen en la pantalla
+  const [file, setFile] = useState();
+  function handleChange(e) {
+    console.log(e.target.files);
+    setFile(URL.createObjectURL(e.target.files[0]));
+  }
 
   return (
     <>
       <div className={styles.contenedorTitulo}>
         <div className={styles.tituloCentro}>
           <Link to="/Admin">
-            <i class={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+            <i className={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
           </Link>
           <h1 className={styles.titulo}>Administrar Eventos</h1>
         </div>
@@ -93,19 +97,17 @@ export function PagAdminEventos() {
               <button className={styles.botonCancelar}>Cancelar</button>
             </div>
           </div>
+          {/* Agregar imagen */}
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              <p className={styles.textoX}>
-                Aca va la imagen que jale del link para el preview
-              </p>
+              <img className={styles.imagen} src={file}></img>
             </div>
             <div className={styles.divBotonImagen}>
-              <button
+              <input
                 className={styles.botonAgregarImagen}
-                onClick={ingresarLink}
-              >
-                Agregar imagen
-              </button>
+                type="file"
+                onChange={handleChange}
+              ></input>
             </div>
           </div>
         </div>

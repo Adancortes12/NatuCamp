@@ -4,9 +4,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 export function PagAdminEspecies() {
-  const ingresarLink = () => {
-    prompt("Ingrese el link de la imagen");
-  };
+  // Funcion para crear el preview de la imagen en la pantalla
+  const [file, setFile] = useState();
+  function handleChange(e) {
+    console.log(e.target.files);
+    setFile(URL.createObjectURL(e.target.files[0]));
+  }
 
   const [nombreCientifico, setNombreCientifico] = useState("");
   const [nombreVulgar, setNombreVulgar] = useState("");
@@ -23,25 +26,29 @@ export function PagAdminEspecies() {
 
   useEffect(() => {
     // Obtener todos los datos de las tablas relacionadas
-    axios.get("http://localhost:3001/tipos")
+    axios
+      .get("http://localhost:3001/tipos")
       .then((response) => {
         setTipos(response.data);
       })
       .catch((err) => console.error("Error al obtener tipos:", err));
 
-    axios.get("http://localhost:3001/ordenes")
+    axios
+      .get("http://localhost:3001/ordenes")
       .then((response) => {
         setOrdenes(response.data);
       })
       .catch((err) => console.error("Error al obtener ordenes:", err));
 
-    axios.get("http://localhost:3001/familias")
+    axios
+      .get("http://localhost:3001/familias")
       .then((response) => {
         setFamilias(response.data);
       })
       .catch((err) => console.error("Error al obtener familias:", err));
 
-    axios.get("http://localhost:3001/categorias")
+    axios
+      .get("http://localhost:3001/categorias")
       .then((response) => {
         setCategorias(response.data);
       })
@@ -57,18 +64,19 @@ export function PagAdminEspecies() {
       idFamilia,
       idCategoria,
     });
-    axios.post("http://localhost:3001/especie", {
-      nombreCientifico,
-      nombreVulgar,
-      idTipo,
-      idOrden,
-      idFamilia,
-      idCategoria,
-    })
-    .then(() => {
-      alert("Especie creada");
-    })
-    .catch((err) => console.error("Error al crear especie:", err));
+    axios
+      .post("http://localhost:3001/especie", {
+        nombreCientifico,
+        nombreVulgar,
+        idTipo,
+        idOrden,
+        idFamilia,
+        idCategoria,
+      })
+      .then(() => {
+        alert("Especie creada");
+      })
+      .catch((err) => console.error("Error al crear especie:", err));
   };
   return (
     <>
@@ -153,7 +161,10 @@ export function PagAdminEspecies() {
                   value={idCategoria}
                 >
                   {categorias.map((categoria) => (
-                    <option key={categoria.idCategoria} value={categoria.idCategoria}>
+                    <option
+                      key={categoria.idCategoria}
+                      value={categoria.idCategoria}
+                    >
                       {categoria.categoria}
                     </option>
                   ))}
@@ -163,25 +174,27 @@ export function PagAdminEspecies() {
 
             {/* Botones para guardar y cancelar entrada de datos */}
             <div className={styles.grupo}>
-              <button type="submit" className={styles.botonGuardar} onClick={Agregar}>
+              <button
+                type="submit"
+                className={styles.botonGuardar}
+                onClick={Agregar}
+              >
                 Guardar
               </button>
               <button className={styles.botonCancelar}>Cancelar</button>
             </div>
           </div>
+          {/* Agregar imagen */}
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              <p className={styles.textoX}>
-                Aca va la imagen que jale del link para el preview
-              </p>
+              <img className={styles.imagen} src={file}></img>
             </div>
             <div className={styles.divBotonImagen}>
-              <button
+              <input
                 className={styles.botonAgregarImagen}
-                onClick={ingresarLink}
-              >
-                Agregar imagen
-              </button>
+                type="file"
+                onChange={handleChange}
+              ></input>
             </div>
           </div>
         </div>
