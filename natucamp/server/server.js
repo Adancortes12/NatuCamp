@@ -5,14 +5,14 @@ const cors= require('cors');
 
 app.use(cors());
 app.use(express.json());    
-
+//conexion a la base de datos
 const db= mysql.createConnection({
     host:'localhost',
     user:'root',
     password:'',
     database:'natucamp'
 });
-
+//metodo para crear usuario
 app.post('/create', (req, res) => {
     const nombre = req.body.nombre;
     const primerAp = req.body.primerAp;
@@ -80,7 +80,7 @@ app.get('/tipos', (req, res) => {
 app.post('/especie', (req, res) => {
     const { nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria } = req.body;
   
-    // Asegúrate de que los datos se están recibiendo correctamente
+    
     if (!nombreCientifico || !nombreVulgar || !idTipo || !idOrden || !idFamilia || !idCategoria) {
       return res.status(400).send("Faltan datos necesarios");
     }
@@ -96,6 +96,37 @@ db.query(query, [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idC
   }
 });
   });
+  // Ruta GET para obtener todas las especies
+  app.get('/especies', (req, res) => {
+  const query = 'SELECT nombreCientifico, nombreComun, ruta FROM especie';
+  
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error("Error al obtener especies:", err);
+      return res.status(500).send("Error al obtener las especies");
+    }
+    res.json(result);  // Devuelve todas las especies
+  });
+});
+// Ruta GET para obtener todas las especies, con filtrado por tipo
+app.get('/especies2', (req, res) => {
+  const { idTipo } = req.query;  // Obtener el parámetro idTipo de la consulta
+  
+  // Consulta para obtener las especies, filtrando por idTipo si es proporcionado
+  const query = idTipo 
+    ? `SELECT nombreCientifico, nombreComun, ruta_imagen FROM especie WHERE idTipo = ?`
+    : `SELECT nombreCientifico, nombreComun, ruta_imagen FROM especie`;
+
+  db.query(query, [idTipo], (err, result) => {
+    if (err) {
+      console.error("Error al obtener especies:", err);
+      return res.status(500).send("Error al obtener las especies");
+    }
+    res.json(result);  // Devuelve todas las especies filtradas
+  });
+});
+
+  
   
 app.listen(3001,()=>{
     console.log('corriendo loco en 3001')
