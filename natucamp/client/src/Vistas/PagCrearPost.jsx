@@ -31,7 +31,8 @@ export function PagCrearPost() {
               <textarea
                 rows="10"
                 cols="50"
-                placeholder="¿Qué estás pensando?..."
+                maxLength="1000"
+                placeholder="¿Qué estás pensando?...(1000 caracteres)"
                 name="contenidoPost"
                 id="inputPost"
                 className={styles.inputPost}
