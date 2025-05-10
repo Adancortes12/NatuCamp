@@ -24,6 +24,11 @@ export function PagAdminEspecies() {
   const [familias, setFamilias] = useState([]);
   const [categorias, setCategorias] = useState([]);
 
+  const [idClase, setIdClase] = useState(0);
+  const [idNom, setIdNom] = useState(0);
+  const [clases, setClases] = useState([]);
+  const [nomenclaturas, setNomenclaturas] = useState([]);
+
   useEffect(() => {
     // Obtener todos los datos de las tablas relacionadas
     axios
@@ -53,6 +58,16 @@ export function PagAdminEspecies() {
         setCategorias(response.data);
       })
       .catch((err) => console.error("Error al obtener categorias:", err));
+
+    axios
+      .get("http://localhost:3001/clases")
+      .then((response) => setClases(response.data))
+      .catch((err) => console.error("Error al obtener clases:", err));
+
+    axios
+      .get("http://localhost:3001/nomeclaturas")
+      .then((response) => setNomenclaturas(response.data))
+      .catch((err) => console.error("Error al obtener nomenclaturas:", err));
   }, []);
 
   const Agregar = () => {
@@ -72,6 +87,8 @@ export function PagAdminEspecies() {
         idOrden,
         idFamilia,
         idCategoria,
+        idClase,
+        idNom,
       })
       .then(() => {
         alert("Especie creada");
@@ -166,6 +183,34 @@ export function PagAdminEspecies() {
                       value={categoria.idCategoria}
                     >
                       {categoria.categoria}
+                    </option>
+                  ))}
+                </select>
+                {/* clase */}
+                <label className={styles.inputLabel}>Clase</label>
+                <select
+                  className={`form-select ${styles.seleccionador}`}
+                  id="campoClase"
+                  onChange={(e) => setIdClase(e.target.value)}
+                  value={idClase}
+                >
+                  {clases.map((clase) => (
+                    <option key={clase.idClase} value={clase.idClase}>
+                      {clase.clase}
+                    </option>
+                  ))}
+                </select>
+
+                <label className={styles.inputLabel}>Nomenclatura</label>
+                <select
+                  className={`form-select ${styles.seleccionador}`}
+                  id="campoNom"
+                  onChange={(e) => setIdNom(e.target.value)}
+                  value={idNom}
+                >
+                  {nomenclaturas.map((nom) => (
+                    <option key={nom.idNom} value={nom.idNom}>
+                      {nom.nom}
                     </option>
                   ))}
                 </select>

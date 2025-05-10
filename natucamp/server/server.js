@@ -75,19 +75,39 @@ app.get('/tipos', (req, res) => {
       res.json(result);
     });
   });
+  // Ruta GET para obtener las clases de las especies
+app.get('/clases', (req, res) => {
+    db.query('SELECT idClase, clase FROM clase', (err, result) => {
+        if (err) {
+            console.error("Error al obtener clases:", err);
+            return res.status(500).send("Error al obtener las clases");
+        }
+        res.json(result);
+    });
+});
+// Ruta GET para obtener las nomenclarureas de las especies
+app.get('/nomeclaturas', (req, res) => {
+    db.query('SELECT idNom, nom FROM nomenclatura', (err, result) => {
+        if (err) {
+            console.error("Error al obtener nomeclaturas:", err);
+            return res.status(500).send("Error al obtener las nomeclaturas"); 
+        }
+        res.json(result);
+    }); 
+});
   
   // Ruta POST para agregar una nueva especie
 app.post('/especie', (req, res) => {
-    const { nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria } = req.body;
-  
-    
+    const { nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom } = req.body;
+
     if (!nombreCientifico || !nombreVulgar || !idTipo || !idOrden || !idFamilia || !idCategoria) {
       return res.status(400).send("Faltan datos necesarios");
     }
   
     // Insertar la nueva especie en la base de datos
-    const query = 'INSERT INTO especie (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria) VALUES (?, ?, ?, ?, ?, ?)';
-db.query(query, [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria], (err, result) => {
+    const query = 'INSERT INTO especie (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+db.query(query, [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom],
+ (err, result) => {
   if (err) {
     console.error("Error al insertar especie: ", err);
     return res.status(500).send("Error al crear la especie: " + err.message);
@@ -106,23 +126,6 @@ db.query(query, [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idC
       return res.status(500).send("Error al obtener las especies");
     }
     res.json(result);  // Devuelve todas las especies
-  });
-});
-// Ruta GET para obtener todas las especies, con filtrado por tipo
-app.get('/especies2', (req, res) => {
-  const { idTipo } = req.query;  // Obtener el parámetro idTipo de la consulta
-  
-  // Consulta para obtener las especies, filtrando por idTipo si es proporcionado
-  const query = idTipo 
-    ? `SELECT nombreCientifico, nombreComun, ruta_imagen FROM especie WHERE idTipo = ?`
-    : `SELECT nombreCientifico, nombreComun, ruta_imagen FROM especie`;
-
-  db.query(query, [idTipo], (err, result) => {
-    if (err) {
-      console.error("Error al obtener especies:", err);
-      return res.status(500).send("Error al obtener las especies");
-    }
-    res.json(result);  // Devuelve todas las especies filtradas
   });
 });
 
@@ -156,7 +159,7 @@ app.get('/tipoAc', (req, res) => {
     });
 });
 
-
+//crear post
 app.post('/createPost',(req,res)=>{
     const idPost= req.body.idPost;
     const idUsuario= req.body.idUsuario;
