@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./StylesAdminEventos.module.css";
+
 export function PagAdminEventos() {
   // Funcion para crear el preview de la imagen en la pantalla
   const [file, setFile] = useState();
@@ -8,6 +10,47 @@ export function PagAdminEventos() {
     console.log(e.target.files);
     setFile(URL.createObjectURL(e.target.files[0]));
   }
+ // const [idActividad, setIdActividad] = useState();
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [fecha, setFecha] = useState("");
+  const [horaInicio, setHoraInicio] = useState("");
+  const [idTipoAct,setTipoAct] = useState("");
+  const [cupo, setCupo] = useState(0);
+  const [costo, setCosto] = useState(0);
+  const [tiposActividad, setTiposActividad] = useState([]);
+
+  // const [imagen, setImagen] = useState("");
+
+  const Agregar = () => {
+    axios.post("http://localhost:3001/addEvent", {
+        // idActividad: idActividad,
+        nombre: nombre,
+        fecha: fecha,
+        horaInicio: horaInicio,
+        idTipoAct: idTipoAct, 
+        costo: costo,
+        cupo: cupo,
+        descripcion: descripcion,
+        tiposActividad
+        // imagen: imagen,
+      }).then(() => {
+        alert("Evento creado");
+      });
+  };
+
+   useEffect(() => {
+    axios.get("http://localhost:3001/tipoAc")
+      .then((response) => {
+        setTiposActividad(response.data);
+        console.log(response.data);
+
+      })
+      .catch((error) => {
+        console.error("Error al obtener tipos de actividad:", error);
+        
+      });
+  }, []);
 
   return (
     <>
@@ -26,6 +69,7 @@ export function PagAdminEventos() {
               placeholder="Nombre"
               id="inputNombre"
               className={styles.inputNombre}
+               onChange={(e) => setNombre(e.target.value)}
             />
             <div className={styles.contenedorTextarea}>
               <textarea
@@ -35,17 +79,29 @@ export function PagAdminEventos() {
                 name="Desc"
                 id="inputDesc"
                 className={styles.inputDesc}
+                 onChange={(e) => setDescripcion(e.target.value)}
               />
-            </div>
+           </div>
             {/* Dia*/}
             <label className={styles.inputLabelFecha}>Fecha</label>
-            <input type="date" id="fecha" className={styles.inputFecha} />
-
+            <input
+                type="date"
+                id="fecha"
+                className={styles.inputFecha}
+                value={fecha}  
+                onChange={(e) => setFecha(e.target.value)}  
+              />
             <div className={styles.grupo}>
               {/* Hora */}
               <div>
                 <label className={styles.inputLabel}>Hora</label>
-                <input type="time" id="hora" className={styles.input} />
+                <input
+                  type="time"
+                  id="hora"
+                  className={styles.input}
+                  value={horaInicio}  
+                  onChange={(e) => setHoraInicio(e.target.value)}  
+                />
               </div>
               {/* Cupo */}
               <div>
@@ -55,6 +111,7 @@ export function PagAdminEventos() {
                   id="cupo"
                   className={styles.input}
                   min="0"
+                   onChange={(e) => setCupo(e.target.value)}
                 />
               </div>
             </div>
@@ -62,14 +119,21 @@ export function PagAdminEventos() {
               {/* Tipo de actividad */}
               <div>
                 <label className={styles.inputLabel}>Tipo </label>
-                <select
+                  <select
                   className={`form-select ${styles.inputTipo}`}
-                  id="campoTipo"
-                  defaultValue="Tipo"
+                  value={idTipoAct}
+                  onChange={(e) => setTipoAct(e.target.value)}
                 >
-                  <option value="1">Educativo</option>
-                  <option value="2">Entretenimiento</option>
-                  <option value="3">Deportivo</option>
+                  <option value="" disabled hidden>Selecciona un tipo</option>
+                  {tiposActividad.length > 0 ? (
+                    tiposActividad.map((tipo) => (
+                      <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
+                        {tipo.tipo}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Cargando tipos...</option>
+                  )}
                 </select>
               </div>
               {/* Ingresar costo */}
@@ -86,6 +150,7 @@ export function PagAdminEventos() {
                     className={`form-control ${styles.inputCosto}`}
                     aria-label="precio"
                     min="0"
+                    onChange={(e) => setCosto(e.target.value)}
                   />
                 </div>
               </div>

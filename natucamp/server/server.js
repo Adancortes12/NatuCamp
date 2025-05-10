@@ -126,6 +126,58 @@ app.get('/especies2', (req, res) => {
   });
 });
 
+app.post('/addEvent',(req,res)=>{
+    const idActividad= req.body.idActividad;
+    const nombre= req.body.nombre;
+    const fecha= req.body.fecha;
+    const horaInicio= req.body.horaInicio;
+    const idTipoAct= req.body.idTipoAct;
+    const costo= req.body.costo;
+    const cupo= req.body.cupo;
+    const descripcion= req.body.descripcion;
+    const imagen= req.body.imagen;
+    const vigencia= req.body.vigencia;  
+db.query('INSERT INTO actividad (nombre,fecha,horaInicio,idTipoAct,costo,cupo,descripcion,imagen) VALUES (?,?,?,?,?,?,?,?)',
+[nombre,fecha,horaInicio,idTipoAct,costo,cupo,descripcion,imagen], (err)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send('Evento creado');
+        }
+    });})
+app.get('/tipoAc', (req, res) => {
+    db.query('SELECT idTipoAct, tipo FROM tipoact', (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send("Error en el servidor");
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+app.post('/createPost',(req,res)=>{
+    const idPost= req.body.idPost;
+    const idUsuario= req.body.idUsuario;
+    const idTipoAct= req.body.idTipoAct;
+    const fechaPost= req.body.fechaPost;
+    const titulo= req.body.titulo;
+    const comentario= req.body.comentarios;
+    const status= req.body.status;
+    const idStatusPost= req.body.idStatusPost;
+    const idTipo= req.body.idTipo;
+    const column5= req.body.column5;
+db.query('INSERT INTO post (titulo,comentario,idTipoAct) VALUES (?,?,?)',
+[titulo, comentario, idTipoAct], (err)=>{
+        if(err){
+            console.log(err);
+        }else{
+            res.send('Post creado');
+        }
+    });
+})
+
   
   
 app.listen(3001,()=>{
