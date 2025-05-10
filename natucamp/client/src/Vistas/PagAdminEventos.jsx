@@ -158,7 +158,7 @@ export function PagAdminEventos() {
             {/* Botones para guardar y cancelar entrada de datos */}
 
             <div className={styles.grupo}>
-              <button className={styles.botonGuardar}>Guardar</button>
+              <button className={styles.botonGuardar} onClick={Agregar} >Guardar</button>
               <button className={styles.botonCancelar}>Cancelar</button>
             </div>
           </div>
