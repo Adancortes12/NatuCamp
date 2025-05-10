@@ -92,6 +92,10 @@
   cursor: pointer;
 }
 
+.eliminar {
+  background-color: #6b1e1e !important;
+}
+
 .event-image {
   display: flex;
   flex-direction: column;

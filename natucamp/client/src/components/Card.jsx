@@ -1,15 +1,18 @@
 import React from "react";
 import style from "./Card.module.css";
-export const Card = ({ imgSrc, imgAlt, nomVulgar, nomCientifico, link }) => {
+export const Card = ({
+  imgSrc,
+  imgAlt,
+  nomVulgar,
+  nomCientifico,
+  onViewMore,
+}) => {
   return (
     <div className={style.cardContainer}>
       {imgSrc && (
         <div className={style.imgContainer}>
           <div className={style.imgOverlay}>
-            <button
-              onClick={() => window.open({ link })}
-              className={style.boton}
-            >
+            <button onClick={onViewMore} className={style.boton}>
               Ver más
             </button>
           </div>

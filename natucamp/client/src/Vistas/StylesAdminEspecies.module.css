@@ -6,8 +6,18 @@
   height: 100vh;
 }
 .grupo {
+  display: block;
+  margin: 10px;
+}
+
+.duo {
   display: flex;
-  margin: 20px;
+  margin: 10px;
+}
+
+.duoLabel {
+  display: flex;
+  margin: 10px;
 }
 .contenedor {
   margin: 10px 40px 40px 40px;
@@ -69,10 +79,10 @@
   text-align: justify;
 }
 .inputLabel {
-  margin-left: 20px;
-  display: block;
+  margin-left: 10px;
   font-size: larger;
   font-weight: bolder;
+  width: 20vw;
 }
 
 select.seleccionador {

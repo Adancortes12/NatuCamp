@@ -97,6 +97,7 @@ const Eventos = () => {
               <span className={styles.cost}>Costo: $2</span>
             </div>
             <div className={styles["event-buttons"]}>
+              <button className={styles.eliminar}>Eliminar evento</button>
               <button className={styles.register}>Registrarse</button>
             </div>
           </div>
@@ -124,6 +125,7 @@ const Eventos = () => {
               <span className={styles.cost}>Costo: una picafresa</span>
             </div>
             <div className={styles["event-buttons"]}>
+              <button className={styles.eliminar}>Eliminar evento</button>
               <button className={styles.register}>Registrarse</button>
             </div>
           </div>
@@ -148,6 +150,7 @@ const Eventos = () => {
               <span className={styles.cost}>Costo: $2,000,000</span>
             </div>
             <div className={styles["event-buttons"]}>
+              <button className={styles.eliminar}>Eliminar evento</button>
               <button className={styles.register}>Registrarse</button>
             </div>
           </div>

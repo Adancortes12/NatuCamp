@@ -123,97 +123,112 @@ export function PagAdminEspecies() {
               value={nombreCientifico}
             />
             <div className={styles.grupo}>
-              {/* Tipo */}
               <div>
-                <label className={styles.inputLabel}>Tipo</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoTipo"
-                  onChange={(e) => setIdTipo(e.target.value)}
-                  value={idTipo}
-                >
-                  {tipos.map((tipo) => (
-                    <option key={tipo.idTipo} value={tipo.idTipo}>
-                      {tipo.tipo}
-                    </option>
-                  ))}
-                </select>
+                <div className={styles.duoLabel}>
+                  <label className={styles.inputLabel}>Tipo</label>
+                  <label className={styles.inputLabel}>Orden</label>
+                </div>
+                <div className={styles.duo}>
+                  {/* Tipo */}
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoTipo"
+                    onChange={(e) => setIdTipo(e.target.value)}
+                    value={idTipo}
+                  >
+                    {tipos.map((tipo) => (
+                      <option key={tipo.idTipo} value={tipo.idTipo}>
+                        {tipo.tipo}
+                      </option>
+                    ))}
+                  </select>
+                  {/* Orden */}
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoOrden"
+                    onChange={(e) => setIdOrden(e.target.value)}
+                    value={idOrden}
+                  >
+                    {ordenes.map((orden) => (
+                      <option key={orden.idOrden} value={orden.idOrden}>
+                        {orden.orden}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                {/* Orden */}
-                <label className={styles.inputLabel}>Orden</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoOrden"
-                  onChange={(e) => setIdOrden(e.target.value)}
-                  value={idOrden}
-                >
-                  {ordenes.map((orden) => (
-                    <option key={orden.idOrden} value={orden.idOrden}>
-                      {orden.orden}
-                    </option>
-                  ))}
-                </select>
+                <div className={styles.duoLabel}>
+                  <label className={styles.inputLabel}>Familia</label>
+                  <label className={styles.inputLabel}>Categoría</label>
+                </div>
+                <div className={styles.duo}>
+                  {/* Familia */}
 
-                {/* Familia */}
-                <label className={styles.inputLabel}>Familia</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoFamilia"
-                  onChange={(e) => setIdFamilia(e.target.value)}
-                  value={idFamilia}
-                >
-                  {familias.map((familia) => (
-                    <option key={familia.idFamilia} value={familia.idFamilia}>
-                      {familia.familia}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoFamilia"
+                    onChange={(e) => setIdFamilia(e.target.value)}
+                    value={idFamilia}
+                  >
+                    {familias.map((familia) => (
+                      <option key={familia.idFamilia} value={familia.idFamilia}>
+                        {familia.familia}
+                      </option>
+                    ))}
+                  </select>
 
-                {/* Categoría */}
-                <label className={styles.inputLabel}>Categoría</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoCategoria"
-                  onChange={(e) => setIdCategoria(e.target.value)}
-                  value={idCategoria}
-                >
-                  {categorias.map((categoria) => (
-                    <option
-                      key={categoria.idCategoria}
-                      value={categoria.idCategoria}
-                    >
-                      {categoria.categoria}
-                    </option>
-                  ))}
-                </select>
-                {/* clase */}
-                <label className={styles.inputLabel}>Clase</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoClase"
-                  onChange={(e) => setIdClase(e.target.value)}
-                  value={idClase}
-                >
-                  {clases.map((clase) => (
-                    <option key={clase.idClase} value={clase.idClase}>
-                      {clase.clase}
-                    </option>
-                  ))}
-                </select>
+                  {/* Categoría */}
 
-                <label className={styles.inputLabel}>Nomenclatura</label>
-                <select
-                  className={`form-select ${styles.seleccionador}`}
-                  id="campoNom"
-                  onChange={(e) => setIdNom(e.target.value)}
-                  value={idNom}
-                >
-                  {nomenclaturas.map((nom) => (
-                    <option key={nom.idNom} value={nom.idNom}>
-                      {nom.nom}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoCategoria"
+                    onChange={(e) => setIdCategoria(e.target.value)}
+                    value={idCategoria}
+                  >
+                    {categorias.map((categoria) => (
+                      <option
+                        key={categoria.idCategoria}
+                        value={categoria.idCategoria}
+                      >
+                        {categoria.categoria}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.duoLabel}>
+                  <label className={styles.inputLabel}>Clase</label>
+                  <label className={styles.inputLabel}>Nomenclatura</label>
+                </div>
+                <div className={styles.duo}>
+                  {/* clase */}
+
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoClase"
+                    onChange={(e) => setIdClase(e.target.value)}
+                    value={idClase}
+                  >
+                    {clases.map((clase) => (
+                      <option key={clase.idClase} value={clase.idClase}>
+                        {clase.clase}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className={`form-select ${styles.seleccionador}`}
+                    id="campoNom"
+                    onChange={(e) => setIdNom(e.target.value)}
+                    value={idNom}
+                  >
+                    {nomenclaturas.map((nom) => (
+                      <option key={nom.idNom} value={nom.idNom}>
+                        {nom.nom}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
