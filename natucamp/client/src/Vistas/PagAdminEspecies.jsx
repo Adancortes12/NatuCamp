@@ -9,6 +9,7 @@ export function PagAdminEspecies() {
   function handleChange(e) {
     console.log(e.target.files);
     setFile(URL.createObjectURL(e.target.files[0]));
+    console.log(e.target.files[0]);
   }
 
   const [nombreCientifico, setNombreCientifico] = useState("");
