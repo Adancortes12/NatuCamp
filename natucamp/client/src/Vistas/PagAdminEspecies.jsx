@@ -5,13 +5,12 @@ import { useState, useEffect } from "react";
 
 export function PagAdminEspecies() {
   // Funcion para crear el preview de la imagen en la pantalla
-  const [file, setFile] = useState();
+  const [filePreview, setFilePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   function handleChange(e) {
-    console.log(e.target.files);
-    setFile(URL.createObjectURL(e.target.files[0]));
-    console.log(e.target.files[0]);
+    setSelectedFile(e.target.files[0]); // guardar archivo real
+    setFilePreview(URL.createObjectURL(e.target.files[0]));
   }
-
   const [nombreCientifico, setNombreCientifico] = useState("");
   const [nombreVulgar, setNombreVulgar] = useState("");
   const [idCategoria, setIdCategoria] = useState(0);
@@ -71,30 +70,28 @@ export function PagAdminEspecies() {
       .catch((err) => console.error("Error al obtener nomenclaturas:", err));
   }, []);
 
-  const Agregar = () => {
-    console.log({
-      nombreCientifico,
-      nombreVulgar,
-      idTipo,
-      idOrden,
-      idFamilia,
-      idCategoria,
-    });
-    axios
-      .post("http://localhost:3001/especie", {
-        nombreCientifico,
-        nombreVulgar,
-        idTipo,
-        idOrden,
-        idFamilia,
-        idCategoria,
-        idClase,
-        idNom,
-      })
-      .then(() => {
-        alert("Especie creada");
-      })
-      .catch((err) => console.error("Error al crear especie:", err));
+  const Agregar = async () => {
+    const formData = new FormData();
+    formData.append("nombreCientifico", nombreCientifico);
+    formData.append("nombreVulgar", nombreVulgar);
+    formData.append("idTipo", idTipo);
+    formData.append("idOrden", idOrden);
+    formData.append("idFamilia", idFamilia);
+    formData.append("idCategoria", idCategoria);
+    formData.append("idClase", idClase);
+    formData.append("idNom", idNom);
+    formData.append("imagen", selectedFile); // archivo real, no URL
+
+    try {
+      const res = await axios.post("http://localhost:3001/especie", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Especie creada con éxito");
+    } catch (err) {
+      console.error("Error al crear especie:", err);
+    }
   };
   return (
     <>
@@ -248,12 +245,13 @@ export function PagAdminEspecies() {
           {/* Agregar imagen */}
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              <img className={styles.imagen} src={file}></img>
+              <img className={styles.imagen} src={filePreview}></img>
             </div>
             <div className={styles.divBotonImagen}>
               <input
                 className={styles.botonAgregarImagen}
                 type="file"
+                accept="image/*"
                 onChange={handleChange}
               ></input>
             </div>

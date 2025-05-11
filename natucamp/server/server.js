@@ -3,9 +3,25 @@ const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
 const path = require("path");
+const router = express.Router();
+const multer = require("multer");
 
 //Establecer NatuFotos como publico
 app.use("/NatuFotos", express.static(path.join(__dirname, "public/NatuFotos")));
+
+// Configuración de multer para guardar en /public/NatuFotos
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "/public/NatuFotos"));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
@@ -104,7 +120,7 @@ app.get("/nomeclaturas", (req, res) => {
 });
 
 // Ruta POST para agregar una nueva especie
-app.post("/especie", (req, res) => {
+app.post("/especie", upload.single("imagen"), (req, res) => {
   const {
     nombreCientifico,
     nombreVulgar,
@@ -115,6 +131,8 @@ app.post("/especie", (req, res) => {
     idClase,
     idNom,
   } = req.body;
+
+  const imagePath = req.file ? `/NatuFotos/${req.file.filename}` : null;
 
   if (
     !nombreCientifico ||
@@ -129,7 +147,7 @@ app.post("/especie", (req, res) => {
 
   // Insertar la nueva especie en la base de datos
   const query =
-    "INSERT INTO especie (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO especie (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom, ruta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
   db.query(
     query,
     [
@@ -141,6 +159,7 @@ app.post("/especie", (req, res) => {
       idCategoria,
       idClase,
       idNom,
+      imagePath,
     ],
     (err, result) => {
       if (err) {
