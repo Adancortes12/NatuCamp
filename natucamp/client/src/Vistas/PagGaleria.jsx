@@ -76,7 +76,7 @@ export function PagGaleria() {
                 <i>{animalSeleccionado.nombreCientifico}</i>
               </p>
               <img
-                src={animalSeleccionado.ruta}
+                src={`http://localhost:3001${animalSeleccionado.ruta}`}
                 alt={animalSeleccionado.nombreComun}
                 className={styles.modalImg}
               />
@@ -216,7 +216,7 @@ export function PagGaleria() {
               {especies.map((especie, index) => (
                 <div className="col-sm-12 col-md-3 mb-4" key={index}>
                   <Card
-                    imgSrc={`${especie.ruta}`} // Concatenar la ruta base de las imágenes
+                    imgSrc={`http://localhost:3001${especie.ruta}`} // Concatenar la ruta base de las imágenes
                     imgAlt={especie.nombreComun} // Nombre común como alt de la imagen
                     nomVulgar={especie.nombreComun} // Nombre vulgar de la especie
                     nomCientifico={especie.nombreCientifico} // Nombre científico de la especie}
