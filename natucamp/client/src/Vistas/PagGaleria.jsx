@@ -4,187 +4,163 @@ import styles from "./StylesGaleria.module.css";
 import axios from "axios";
 
 export function PagGaleria() {
+  // Estado para controlar qué animal está seleccionado para mostrar en el panel
   const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
-  const [openSection, setOpenSection] = useState(null);
-  const [especies, setEspecies] = useState([]); // Arreglo para guardar las especies
 
+  // Estado para controlar qué sección del menú lateral está abierta
+  const [openSection, setOpenSection] = useState(null);
+
+  // Estado para almacenar la lista de todas las especies
+  const [especies, setEspecies] = useState([]);
+
+  // Estados para las tablas relacionadas con especie
+  const [tipos, setTipos] = useState([]);
+  const [ordenes, setOrdenes] = useState([]);
+  const [familias, setFamilias] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [clases, setClases] = useState([]);
+  const [nomenclaturas, setNomenclaturas] = useState([]);
+
+  // Estado para filtros
+  const [tipoSeleccionado, setTipoSeleccionado] = useState("Todos"); // ID o "Todos"
+
+  // Funciones para obtener el nombre a partir del ID correspondiente
+  const getTipo = (id) => tipos.find(t => t.idTipo === id)?.tipo || "Información";
+  const getClase = (id) => clases.find(c => c.idClase === id)?.clase || "Información";
+  const getOrden = (id) => ordenes.find(o => o.idOrden === id)?.orden || "Información";
+  const getFamilia = (id) => familias.find(f => f.idFamilia === id)?.familia || "Información";
+  const getCategoria = (id) => categorias.find(c => c.idCategoria === id)?.categoria || "Información";
+  const getNomenclatura = (id) => nomenclaturas.find(n => n.idNom === id)?.nom || "Información";
+
+  // Alternar la visibilidad de secciones del panel de filtros
   const toggleSection = (section) => {
     setOpenSection((prev) => (prev === section ? null : section));
   };
 
-  // Efecto para obtener los datos de la API
+  // Obtener los datos desde el backend al montar el componente
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/especies") // Asegúrate de que esta URL sea la correcta
-      .then((response) => {
-        setEspecies(response.data); // Guardamos los datos de especies
-      })
-      .catch((error) => {
-        console.error("Hubo un error al obtener los datos:", error);
-      });
-
-    //obtener datos de las otras tablas
-    axios
-      .get("http://localhost:3001/tipos")
-      .then((response) => {
-        setTipos(response.data);
-      })
-      .catch((err) => console.error("Error al obtener tipos:", err));
-
-    axios
-      .get("http://localhost:3001/ordenes")
-      .then((response) => {
-        setOrdenes(response.data);
-      })
-      .catch((err) => console.error("Error al obtener ordenes:", err));
-
-    axios
-      .get("http://localhost:3001/familias")
-      .then((response) => {
-        setFamilias(response.data);
-      })
-      .catch((err) => console.error("Error al obtener familias:", err));
-
-    axios
-      .get("http://localhost:3001/categorias")
-      .then((response) => {
-        setCategorias(response.data);
-      })
-      .catch((err) => console.error("Error al obtener categorias:", err));
-
-    axios
-      .get("http://localhost:3001/clases")
-      .then((response) => setClases(response.data))
-      .catch((err) => console.error("Error al obtener clases:", err));
-
-    axios
-      .get("http://localhost:3001/nomeclaturas")
-      .then((response) => setNomenclaturas(response.data))
-      .catch((err) => console.error("Error al obtener nomenclaturas:", err));
+    axios.get("http://localhost:3001/especies").then((res) => setEspecies(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/tipos").then((res) => setTipos(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/ordenes").then((res) => setOrdenes(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/familias").then((res) => setFamilias(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/categorias").then((res) => setCategorias(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/clases").then((res) => setClases(res.data)).catch(console.error);
+    axios.get("http://localhost:3001/nomeclaturas").then((res) => setNomenclaturas(res.data)).catch(console.error);
   }, []);
+
+  // Aplicar filtro por tipo
+  const especiesFiltradas = tipoSeleccionado === "Todos"
+    ? especies
+    : especies.filter(e => e.idTipo === tipoSeleccionado);
 
   return (
     <>
+      {/* Panel emergente de información detallada del animal */}
       {animalSeleccionado && (
         <div className={styles.modalOverlay}>
-          {/* contenido del panel */}
           <div className={styles.modalContent}>
+            {/* Lado izquierdo del panel: imagen y nombres */}
             <div className={styles.modalLeft}>
-              {/* seccion izquierda del panel */}
               <h2>{animalSeleccionado.nombreComun}</h2>
-              <p>
-                <i>{animalSeleccionado.nombreCientifico}</i>
-              </p>
+              <p><i>{animalSeleccionado.nombreCientifico}</i></p>
               <img
                 src={`http://localhost:3001${animalSeleccionado.ruta}`}
                 alt={animalSeleccionado.nombreComun}
                 className={styles.modalImg}
               />
             </div>
+
+            {/* Lado derecho del panel: información taxonómica */}
             <div className={styles.modalRight}>
-              {/* seccion derecha del panel */}
               <button
                 className={styles.closeButton}
                 onClick={() => setAnimalSeleccionado(null)}
               >
-                <i class="bi bi-x-square-fill"></i>
+                <i className="bi bi-x-square-fill"></i>
               </button>
+
               <div className={styles.infoGrid}>
                 <div>
                   <strong>Tipo</strong>
-                  <p>
-                    <i>{animalSeleccionado.tipo || "informacion"}</i>
-                  </p>
+                  <p><i>{getTipo(animalSeleccionado.idTipo)}</i></p>
                 </div>
                 <div>
                   <strong>Nomenclatura</strong>
-                  <p>
-                    <i>{animalSeleccionado.nomenclatura || "informacion"}</i>
-                  </p>
+                  <p><i>{getNomenclatura(animalSeleccionado.idNom)}</i></p>
                 </div>
                 <div>
                   <strong>Familia</strong>
-                  <p>
-                    <i>{animalSeleccionado.familia || "informacion"}</i>
-                  </p>
+                  <p><i>{getFamilia(animalSeleccionado.idFamilia)}</i></p>
                 </div>
                 <div>
                   <strong>Orden</strong>
-                  <p>
-                    <i>{animalSeleccionado.orden || "informacion"}</i>
-                  </p>
+                  <p><i>{getOrden(animalSeleccionado.idOrden)}</i></p>
                 </div>
                 <div>
                   <strong>Categoría</strong>
-                  <p>
-                    <i>{animalSeleccionado.categoria || "informacion"}</i>
-                  </p>
+                  <p><i>{getCategoria(animalSeleccionado.idCategoria)}</i></p>
                 </div>
                 <div>
                   <strong>Clase</strong>
-                  <p>
-                    <i>{animalSeleccionado.clase || "informacion"}</i>
-                  </p>
+                  <p><i>{getClase(animalSeleccionado.idClase)}</i></p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Contenedor general con panel de filtros y galería */}
       <div className={styles.container}>
         <aside className={styles.sidebar}>
           <h3 className={styles["sidebar-title"]}>Filtros</h3>
+
+          {/* Filtro por tipo dinámico desde la base */}
           <div className={styles["filter-group"]}>
-            <button
-              className={styles["filter-toggle"]}
-              onClick={() => toggleSection("Tipo")}
-            >
+            <button className={styles["filter-toggle"]} onClick={() => toggleSection("Tipo")}>
               Tipo ▼
             </button>
             {openSection === "Tipo" && (
               <div className={styles["filter-options"]}>
                 <label>
-                  <input type="radio" name="tag" />
-                  Aves
+                  <input
+                    type="radio"
+                    name="tipo"
+                    value="Todos"
+                    checked={tipoSeleccionado === "Todos"}
+                    onChange={() => setTipoSeleccionado("Todos")}
+                  /> Todos
                 </label>
-                <label>
-                  <input type="radio" name="tag" /> Mamiferos
-                </label>
-                <label>
-                  <input type="radio" name="tag" /> Reptiles
-                </label>
-                <label>
-                  <input type="radio" name="tag" /> Anfibios
-                </label>
-                <label>
-                  <input type="radio" name="tag" /> Artrópodos
-                </label>
-                <label>
-                  <input type="radio" name="tag" /> Insecta
-                </label>
+                {tipos.map((tipo) => (
+                  <label key={tipo.idTipo}>
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value={tipo.idTipo}
+                      checked={tipoSeleccionado === tipo.idTipo}
+                      onChange={() => setTipoSeleccionado(tipo.idTipo)}
+                    /> {tipo.tipo}
+                  </label>
+                ))}
               </div>
             )}
           </div>
 
+          {/* Sección Fecha (en desarrollo) */}
           <div className={styles["filter-group"]}>
-            <button
-              className={styles["filter-toggle"]}
-              onClick={() => toggleSection("fecha")}
-            >
+            <button className={styles["filter-toggle"]} onClick={() => toggleSection("fecha")}>
               Fecha ▼
             </button>
             {openSection === "fecha" && (
               <div className={styles["filter-options"]}>
-                <p>(Aqui van más opciones)</p>
+                <p>(Aquí van más opciones)</p>
               </div>
             )}
           </div>
 
+          {/* Sección Otros (en desarrollo) */}
           <div className={styles["filter-group"]}>
-            <button
-              className={styles["filter-toggle"]}
-              onClick={() => toggleSection("otros")}
-            >
+            <button className={styles["filter-toggle"]} onClick={() => toggleSection("otros")}>
               Otros ▼
             </button>
             {openSection === "otros" && (
@@ -194,11 +170,9 @@ export function PagGaleria() {
             )}
           </div>
 
+          {/* Sección Buscar */}
           <div className={styles["filter-group"]}>
-            <button
-              className={styles["filter-toggle"]}
-              onClick={() => toggleSection("buscar")}
-            >
+            <button className={styles["filter-toggle"]} onClick={() => toggleSection("buscar")}>
               Buscar ▼
             </button>
             {openSection === "buscar" && (
@@ -209,18 +183,18 @@ export function PagGaleria() {
           </div>
         </aside>
 
+        {/* Galería de especies en tarjetas */}
         <main className={styles.displayGaleria}>
           <div className="container">
             <div className="row">
-              {/* Iteramos sobre las especies obtenidas desde la API */}
-              {especies.map((especie, index) => (
+              {especiesFiltradas.map((especie, index) => (
                 <div className="col-sm-12 col-md-3 mb-4" key={index}>
                   <Card
-                    imgSrc={`http://localhost:3001${especie.ruta}`} // Concatenar la ruta base de las imágenes
-                    imgAlt={especie.nombreComun} // Nombre común como alt de la imagen
-                    nomVulgar={especie.nombreComun} // Nombre vulgar de la especie
-                    nomCientifico={especie.nombreCientifico} // Nombre científico de la especie}
-                    onViewMore={() => setAnimalSeleccionado(especie)} //Hacer que el panel muestre los datos de la especie seleccionada
+                    imgSrc={`http://localhost:3001${especie.ruta}`}
+                    imgAlt={especie.nombreComun}
+                    nomVulgar={especie.nombreComun}
+                    nomCientifico={especie.nombreCientifico}
+                    onViewMore={() => setAnimalSeleccionado(especie)} // Al hacer clic en Ver más
                   />
                 </div>
               ))}

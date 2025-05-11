@@ -3,13 +3,12 @@ const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
 const path = require("path");
-const router = express.Router();
 const multer = require("multer");
 
-//Establecer NatuFotos como publico
+// Hacer accesibles las imágenes públicas
 app.use("/NatuFotos", express.static(path.join(__dirname, "public/NatuFotos")));
 
-// Configuración de multer para guardar en /public/NatuFotos
+// Configuración de multer para almacenar imágenes en /public/NatuFotos
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "/public/NatuFotos"));
@@ -20,106 +19,88 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   },
 });
-
 const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
-//conexion a la base de datos
+
+// Conexión a la base de datos
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "natucamp",
 });
-//metodo para crear usuario
+
+// ------------------ RUTAS DE USUARIOS ------------------
+
+// Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const nombre = req.body.nombre;
-  const primerAp = req.body.primerAp;
-  const segundoAp = req.body.segundoAp;
-  const correo = req.body.correo;
-  const celular = req.body.celular;
-  const usuario = req.body.usuario;
-  const contrasena = req.body.contrasena;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
 
   db.query(
     "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
     [nombre, primerAp, segundoAp, correo, celular, usuario, contrasena],
     (err) => {
-      if (err) {
-        console.log(err);
+      if (err) return res.status(500).send("Error al crear usuario");
+      res.send("Usuario creado");
+    }
+  );
+});
+
+// Inicio de sesión
+app.post("/login", (req, res) => {
+  const { correoUsuario, contrasena } = req.body;
+
+  db.query(
+    "SELECT * FROM usuario WHERE correo = ? OR usuario = ?",
+    [correoUsuario, correoUsuario],
+    (err, result) => {
+      if (err) return res.status(500).send("Error en el servidor");
+      if (result.length > 0) {
+        const user = result[0];
+        if (user.contrasena === contrasena) {
+          res.json({ success: true, message: "Inicio de sesión exitoso", user });
+          alert("Inicio de sesión exitoso");
+        } else {
+          res.json({ success: false, message: "Contraseña incorrecta" });
+        }
       } else {
-        res.send("Usuario creado");
+        res.json({ success: false, message: "Usuario no encontrado" });
       }
     }
   );
 });
 
-// Ruta GET para obtener tipos
-app.get("/tipos", (req, res) => {
-  db.query("SELECT idTipo, tipo FROM tipo", (err, result) => {
+// ------------------ RUTAS DE ESPECIES ------------------
+
+// Obtener todas las especies con campos completos
+app.get("/especies", (req, res) => {
+  const query = `
+    SELECT 
+      idEspecie,
+      nombreCientifico,
+      nombreComun,
+      ruta,
+      idTipo,
+      idOrden,
+      idFamilia,
+      idCategoria,
+      idClase,
+      idNom
+    FROM especie
+  `;
+
+  db.query(query, (err, result) => {
     if (err) {
-      console.error("Error al obtener tipo:", err); // Agregar log detallado
-      return res.status(500).send("Error al obtener los tipo");
+      console.error("Error al obtener especies:", err);
+      return res.status(500).send("Error al obtener las especies");
     }
     res.json(result);
   });
 });
 
-// Ruta GET para obtener ordenes
-app.get("/ordenes", (req, res) => {
-  db.query("SELECT idOrden, orden FROM orden", (err, result) => {
-    if (err) {
-      console.error("Error al obtener orden:", err);
-      return res.status(500).send("Error al obtener las orden");
-    }
-    res.json(result);
-  });
-});
-
-// Ruta GET para obtener familias
-app.get("/familias", (req, res) => {
-  db.query("SELECT idFamilia, familia FROM familia", (err, result) => {
-    if (err) {
-      console.error("Error al obtener familia:", err);
-      return res.status(500).send("Error al obtener las familias");
-    }
-    res.json(result);
-  });
-});
-
-// Ruta GET para obtener categorias
-app.get("/categorias", (req, res) => {
-  db.query("SELECT idCategoria, categoria FROM categoria", (err, result) => {
-    if (err) {
-      console.error("Error al obtener categorias:", err);
-      return res.status(500).send("Error al obtener las categorías");
-    }
-    res.json(result);
-  });
-});
-// Ruta GET para obtener las clases de las especies
-app.get("/clases", (req, res) => {
-  db.query("SELECT idClase, clase FROM clase", (err, result) => {
-    if (err) {
-      console.error("Error al obtener clases:", err);
-      return res.status(500).send("Error al obtener las clases");
-    }
-    res.json(result);
-  });
-});
-// Ruta GET para obtener las nomenclarureas de las especies
-app.get("/nomeclaturas", (req, res) => {
-  db.query("SELECT idNom, nom FROM nomenclatura", (err, result) => {
-    if (err) {
-      console.error("Error al obtener nomeclaturas:", err);
-      return res.status(500).send("Error al obtener las nomeclaturas");
-    }
-    res.json(result);
-  });
-});
-
-// Ruta POST para agregar una nueva especie
+// Agregar una nueva especie (con imagen)
 app.post("/especie", upload.single("imagen"), (req, res) => {
   const {
     nombreCientifico,
@@ -134,148 +115,112 @@ app.post("/especie", upload.single("imagen"), (req, res) => {
 
   const imagePath = req.file ? `/NatuFotos/${req.file.filename}` : null;
 
-  if (
-    !nombreCientifico ||
-    !nombreVulgar ||
-    !idTipo ||
-    !idOrden ||
-    !idFamilia ||
-    !idCategoria
-  ) {
+  if (!nombreCientifico || !nombreVulgar || !idTipo || !idOrden || !idFamilia || !idCategoria) {
     return res.status(400).send("Faltan datos necesarios");
   }
 
-  // Insertar la nueva especie en la base de datos
-  const query =
-    "INSERT INTO especie (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom, ruta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  const query = `
+    INSERT INTO especie 
+    (nombreCientifico, nombreComun, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom, ruta)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
   db.query(
     query,
-    [
-      nombreCientifico,
-      nombreVulgar,
-      idTipo,
-      idOrden,
-      idFamilia,
-      idCategoria,
-      idClase,
-      idNom,
-      imagePath,
-    ],
-    (err, result) => {
+    [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom, imagePath],
+    (err) => {
       if (err) {
-        console.error("Error al insertar especie: ", err);
-        return res
-          .status(500)
-          .send("Error al crear la especie: " + err.message);
-      } else {
-        res.status(201).send("Especie creada exitosamente");
+        console.error("Error al insertar especie:", err);
+        return res.status(500).send("Error al crear la especie: " + err.message);
       }
+      res.status(201).send("Especie creada exitosamente");
     }
   );
 });
-// Ruta GET para obtener todas las especies
-app.get("/especies", (req, res) => {
-  const query = "SELECT nombreCientifico, nombreComun, ruta FROM especie";
 
-  db.query(query, (err, result) => {
-    if (err) {
-      console.error("Error al obtener especies:", err);
-      return res.status(500).send("Error al obtener las especies");
-    }
-    res.json(result); // Devuelve todas las especies
+// ------------------ RUTAS DE TABLAS RELACIONADAS ------------------
+
+app.get("/tipos", (req, res) => {
+  db.query("SELECT idTipo, tipo FROM tipo", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener tipos");
+    res.json(result);
   });
 });
 
-// Ruta Set para agregar eventos
+app.get("/ordenes", (req, res) => {
+  db.query("SELECT idOrden, orden FROM orden", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener ordenes");
+    res.json(result);
+  });
+});
+
+app.get("/familias", (req, res) => {
+  db.query("SELECT idFamilia, familia FROM familia", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener familias");
+    res.json(result);
+  });
+});
+
+app.get("/categorias", (req, res) => {
+  db.query("SELECT idCategoria, categoria FROM categoria", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener categorías");
+    res.json(result);
+  });
+});
+
+app.get("/clases", (req, res) => {
+  db.query("SELECT idClase, clase FROM clase", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener clases");
+    res.json(result);
+  });
+});
+
+app.get("/nomeclaturas", (req, res) => {
+  db.query("SELECT idNom, nom FROM nomenclatura", (err, result) => {
+    if (err) return res.status(500).send("Error al obtener nomenclaturas");
+    res.json(result);
+  });
+});
+
+// ------------------ EVENTOS ------------------
+
 app.post("/addEvent", (req, res) => {
-  const idActividad = req.body.idActividad;
-  const nombre = req.body.nombre;
-  const fecha = req.body.fecha;
-  const horaInicio = req.body.horaInicio;
-  const idTipoAct = req.body.idTipoAct;
-  const costo = req.body.costo;
-  const cupo = req.body.cupo;
-  const descripcion = req.body.descripcion;
-  const imagen = req.body.imagen;
-  const vigencia = req.body.vigencia;
+  const { nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen } = req.body;
+
   db.query(
-    "INSERT INTO actividad (nombre,fecha,horaInicio,idTipoAct,costo,cupo,descripcion,imagen) VALUES (?,?,?,?,?,?,?,?)",
+    "INSERT INTO actividad (nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     [nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen],
     (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send("Evento creado");
-      }
+      if (err) return res.status(500).send("Error al crear evento");
+      res.send("Evento creado");
     }
   );
 });
 
-//Ruta get de tabla tipoact
 app.get("/tipoAc", (req, res) => {
   db.query("SELECT idTipoAct, tipo FROM tipoact", (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Error en el servidor");
-    } else {
-      res.json(result);
-    }
+    if (err) return res.status(500).send("Error al obtener tipos de actividad");
+    res.json(result);
   });
 });
 
-//crear post
+// ------------------ POSTS ------------------
+
 app.post("/createPost", (req, res) => {
-  const idPost = req.body.idPost;
-  const idUsuario = req.body.idUsuario;
-  const idTipoAct = req.body.idTipoAct;
-  const fechaPost = req.body.fechaPost;
-  const titulo = req.body.titulo;
-  const comentario = req.body.comentarios;
-  const status = req.body.status;
-  const idStatusPost = req.body.idStatusPost;
-  const idTipo = req.body.idTipo;
-  const column5 = req.body.column5;
+  const { titulo, comentarios, idTipoAct } = req.body;
+
   db.query(
-    "INSERT INTO post (titulo,comentario,idTipoAct) VALUES (?,?,?)",
-    [titulo, comentario, idTipoAct],
+    "INSERT INTO post (titulo, comentario, idTipoAct) VALUES (?, ?, ?)",
+    [titulo, comentarios, idTipoAct],
     (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send("Post creado");
-      }
+      if (err) return res.status(500).send("Error al crear post");
+      res.send("Post creado");
     }
   );
 });
 
-//Ruta para el login
-app.post("/login", (req, res) => {
-  const { correoUsuario, contrasena } = req.body;  // Recibe correo o usuario y contraseña
-
-  // Buscar el usuario en la base de datos por correo o nombre de usuario
-  db.query(
-    "SELECT * FROM usuario WHERE correo = ? OR usuario = ?",  // Usamos 'correo' o 'usuario'
-    [correoUsuario, correoUsuario],  // Compara por correo o nombre de usuario
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send("Error en el servidor");
-      }
-
-      if (result.length > 0) {
-        const user = result[0];  // El primer resultado encontrado
-        if (user.contrasena === contrasena) {  
-          res.json({ success: true, message: "Login exitoso" });
-        } else {
-          res.json({ success: false, message: "Contraseña incorrecta" });
-        }
-      } else {
-        res.json({ success: false, message: "Usuario no encontrado" });
-      }
-    }
-  );
-});
+// ------------------ INICIO DEL SERVIDOR ------------------
 
 app.listen(3001, () => {
-  console.log("corriendo loco en 3001");
+  console.log("Servidor corriendo en el puerto 3001");
 });
