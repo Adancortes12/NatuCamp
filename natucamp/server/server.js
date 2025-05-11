@@ -186,6 +186,7 @@ app.get("/especies", (req, res) => {
   });
 });
 
+// Ruta Set para agregar eventos
 app.post("/addEvent", (req, res) => {
   const idActividad = req.body.idActividad;
   const nombre = req.body.nombre;
@@ -209,6 +210,8 @@ app.post("/addEvent", (req, res) => {
     }
   );
 });
+
+//Ruta get de tabla tipoact
 app.get("/tipoAc", (req, res) => {
   db.query("SELECT idTipoAct, tipo FROM tipoact", (err, result) => {
     if (err) {
@@ -240,6 +243,34 @@ app.post("/createPost", (req, res) => {
         console.log(err);
       } else {
         res.send("Post creado");
+      }
+    }
+  );
+});
+
+//Ruta para el login
+app.post("/login", (req, res) => {
+  const { correoUsuario, contrasena } = req.body;  // Recibe correo o usuario y contraseña
+
+  // Buscar el usuario en la base de datos por correo o nombre de usuario
+  db.query(
+    "SELECT * FROM usuario WHERE correo = ? OR usuario = ?",  // Usamos 'correo' o 'usuario'
+    [correoUsuario, correoUsuario],  // Compara por correo o nombre de usuario
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Error en el servidor");
+      }
+
+      if (result.length > 0) {
+        const user = result[0];  // El primer resultado encontrado
+        if (user.contrasena === contrasena) {  
+          res.json({ success: true, message: "Login exitoso" });
+        } else {
+          res.json({ success: false, message: "Contraseña incorrecta" });
+        }
+      } else {
+        res.json({ success: false, message: "Usuario no encontrado" });
       }
     }
   );
