@@ -25,12 +25,17 @@ export function Navbar() {
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/Eventos">
-              EXPLORAR
+              EXPLORA
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/Galeria">
               APRENDE
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/Admin">
+              COMPARTE
             </Link>
           </li>
           <li className="nav-item">
