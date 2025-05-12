@@ -22,28 +22,29 @@
   transform: scale(1.05);
 }
 
+.contenedorIcono {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
 .cardTitulo {
-  color: #7c2020;
+  position: relative;
   margin: 10px;
+  color: #7c2020;
   font-size: 40px;
   font-weight: bolder;
 }
-
-.contenedorIcono {
-  width: 100%;
-}
 .icono {
-  font-size: 150px;
+  font-size: 120px;
 }
-
 .contenedorBoton {
   display: block;
 }
-
 .botonAdmin {
   display: block;
-  width: 50%;
-  margin: 50px;
+  width: 70%;
+  margin: 20px;
   padding: 15px;
   background-color: gray;
   color: #ffffff;
