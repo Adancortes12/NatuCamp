@@ -15,6 +15,7 @@ import { PagCrearPost } from "./Vistas/PagCrearPost";
 import { PagAdmin } from "./Vistas/PagAdmin";
 import { PagInicioSesionAdmin } from "./Vistas/PagInicioSesionAdmin";
 import PagEventosBorrar from "./Vistas/PagEventosBorrar";
+import { PagUsuario } from "./Vistas/PagUsuario";
 //bon dia
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/CrearPost" element={<PagCrearPost />} />
         <Route path="/InicioSesionAdmin" element={<PagInicioSesionAdmin />} />
         <Route path="/BorrarEventos" element={<PagEventosBorrar />} />
+        <Route path="/Usuario" element={<PagUsuario />} />
       </Routes>
     </Router>
   );
