@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./StylesInicioSesion.module.css";
-import { useNavigate } from "react-router-dom";  
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import iniciosesionbg from "../assets/iniciosesionbg.jpg";
 import logo from "../assets/LogoPH.png";
 
 export function PagInicioSesion() {
-
-    
   const [correoUsuario, setCorreoUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [error, setError] = useState("");  
-  const navigate = useNavigate(); 
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-const response = await axios.post("http://localhost:3001/login", {
-  correoUsuario,
-  contrasena,
-});
+      const response = await axios.post("http://localhost:3001/login", {
+        correoUsuario,
+        contrasena,
+      });
 
       // Verificamos si el login fue exitoso
       if (response.data.success) {
-        // Redirigir al usuario a la página principal después del login
-        navigate("/");  
+        // Guardar datos del usuario en localStorage
+        localStorage.setItem("usuario", JSON.stringify(response.data.user));
+        navigate("/usuario");
       } else {
         // Si no es exitoso, mostrar un mensaje de error
         setError(response.data.message);
@@ -67,8 +66,7 @@ const response = await axios.post("http://localhost:3001/login", {
           </div>
           <div className={styles.separacion2}></div>
 
-          <form  onSubmit={handleLogin}>
-
+          <form onSubmit={handleLogin}>
             <div className={styles.separacion2}></div>
             <fieldset>
               <input

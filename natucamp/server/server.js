@@ -61,7 +61,7 @@ app.post("/login", (req, res) => {
         const user = result[0];
         if (user.contrasena === contrasena) {
           res.json({ success: true, message: "Inicio de sesión exitoso", user });
-          alert("Inicio de sesión exitoso");
+          //alert("Inicio de sesión exitoso");
         } else {
           res.json({ success: false, message: "Contraseña incorrecta" });
         }
@@ -219,8 +219,27 @@ app.post("/createPost", (req, res) => {
   );
 });
 
-// ------------------ INICIO DEL SERVIDOR ------------------
+//-------------------OPTENER DATOS DE USUARIO-------------------
+app.get("/usuario/:usuario", (req, res) => {
+  const usuario = req.params.usuario;
 
+  const query = "SELECT nombre, telefono, correo FROM usuarios WHERE usuario = ?";
+  db.query(query, [usuario], (err, result) => {
+    if (err) {
+      console.error("Error al obtener datos del usuario:", err);
+      return res.status(500).json({ error: "Error en el servidor" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.json(result[0]);
+  });
+});
+
+
+// ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
   console.log("Servidor corriendo en el puerto 3001");
 });
