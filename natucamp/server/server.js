@@ -237,6 +237,31 @@ app.get("/usuario/:usuario", (req, res) => {
     res.json(result[0]);
   });
 });
+//-------------------EVENTOS-------------------
+app.get("/eventos", (req, res) => {
+  const query = `
+    SELECT 
+      actividad.idActividad,
+      actividad.nombre,
+      actividad.descripcion,
+      actividad.fecha,
+      actividad.costo,
+      actividad.cupo,
+      actividad.imagen,
+      tipoact.tipo  -- Descripción del tipo de evento (ahora se obtiene desde la tabla tipoact)
+    FROM actividad
+    LEFT JOIN tipoact ON actividad.idTipoAct = tipoact.idTipoAct
+  `;
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error("Error al obtener eventos:", err);
+      return res.status(500).send("Error al obtener los eventos");
+    }
+    res.json(result); // Aquí se devuelve la respuesta en formato JSON
+  });
+});
+
 
 
 // ------------------ INICIO DEL SERVIDOR ------------------

@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./StylesEventos.module.css";
-import image from "../assets/campana.png";
+import defaultImage from "../assets/campana.png";  // Imagen por defecto en caso de que no haya
 
 const Eventos = () => {
-  const [openSection, setOpenSection] = useState(null);
+  const [eventos, setEventos] = useState([]);  // Guardar los eventos
+  const [openSection, setOpenSection] = useState(null);  // Controlar las secciones de filtros
 
   const toggleSection = (section) => {
-    setOpenSection((prev) => (prev === section ? null : section));
+    setOpenSection((prev) => (prev === section ? null : section));  // Alternar entre secciones
   };
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/eventos") // Cambia la URL si es necesario
+      .then(response => {
+        setEventos(response.data); // Guardar los eventos en el estado
+      })
+      .catch(error => {
+        console.error("Hubo un error al obtener los eventos", error);
+      });
+  }, []);
 
   return (
     <div className={styles["event-page"]}>
@@ -45,7 +57,7 @@ const Eventos = () => {
           </button>
           {openSection === "fecha" && (
             <div className={styles["filter-options"]}>
-              <p>(Aqui van mas opciones)</p>
+              <p>(Aquí van más opciones)</p>
             </div>
           )}
         </div>
@@ -59,7 +71,7 @@ const Eventos = () => {
           </button>
           {openSection === "otros" && (
             <div className={styles["filter-options"]}>
-              <p>(Aqui van mas opciones)</p>
+              <p>(Aquí van más opciones)</p>
             </div>
           )}
         </div>
@@ -82,80 +94,31 @@ const Eventos = () => {
       <main className={styles["event-content"]}>
         <h2 className={styles.title}>Eventos disponibles</h2>
 
-        <div className={styles["event-card"]}>
-          <div className={styles["event-info"]}>
-            <h3>
-              <strong>Nombre</strong> | Tipo
-            </h3>
-            <p>
-              Aqui también va de que se trata el evento XDXDXDXDXDXDXD
-              <br />
-              ...............
-            </p>
-            <div className={styles["event-details"]}>
-              <span className={styles.date}>Fecha: el 30 de Febrero</span>
-              <span className={styles.cost}>Costo: $2</span>
+        {/* Mapeo de eventos */}
+        {eventos.map((evento) => (
+          <div className={styles["event-card"]} key={evento.idActividad}>
+            <div className={styles["event-info"]}>
+              <h3>
+                <strong>{evento.nombre}</strong> | {evento.tipo} {/* Mostrar el tipo de evento */}
+              </h3>
+              <p>{evento.descripcion}</p>
+              <div className={styles["event-details"]}>
+                <span className={styles.date}>Fecha: {new Date(evento.fecha).toLocaleDateString()}</span>
+                <span className={styles.cost}>Costo: ${evento.costo}</span>
+              </div>
+              <div className={styles["event-buttons"]}>
+                <button className={styles.register}>Registrarse</button>
+              </div>
             </div>
-            <div className={styles["event-buttons"]}>
-              <button className={styles.register}>Registrarse</button>
-            </div>
-          </div>
-          <div className={styles["event-image"]}>
-            <img src={image} alt="Evento" />
-            <div className={styles.capacity}>👤 0/20</div>
-          </div>
-        </div>
-
-        {/* Puedes duplicar la card para más eventos */}
-
-        <div className={styles["event-card"]}>
-          <div className={styles["event-info"]}>
-            <h3>
-              <strong>Nombre</strong> | Tipo
-            </h3>
-            <p>
-              Aqui nuevamente va de que se trata el evento XDXDXDXDXDXDXD
-              <br />
-              Si queremos agregar más eventos solo se va a copiar el div de las
-              cards las veces que queramos
-            </p>
-            <div className={styles["event-details"]}>
-              <span className={styles.date}>Fecha: Fue ayer bb</span>
-              <span className={styles.cost}>Costo: una picafresa</span>
-            </div>
-            <div className={styles["event-buttons"]}>
-              <button className={styles.register}>Registrarse</button>
+            <div className={styles["event-image"]}>
+              <img 
+                src={evento.imagen ? `http://localhost:3001/NatuFotos/${evento.imagen}` : defaultImage} 
+                alt={evento.nombre} 
+              />
+              <div className={styles.capacity}>👤 {0}/{evento.cupo}</div>
             </div>
           </div>
-          <div className={styles["event-image"]}>
-            <img src={image} alt="Evento" />
-            <div className={styles.capacity}>👤 0/20</div>
-          </div>
-        </div>
-
-        <div className={styles["event-card"]}>
-          <div className={styles["event-info"]}>
-            <h3>
-              <strong>Nombre</strong> | Tipo
-            </h3>
-            <p>
-              Aqui va de que se trata el evento XDXDXDXDXDXDXD
-              <br />
-              .............
-            </p>
-            <div className={styles["event-details"]}>
-              <span className={styles.date}>Fecha: Mañana</span>
-              <span className={styles.cost}>Costo: $2,000,000</span>
-            </div>
-            <div className={styles["event-buttons"]}>
-              <button className={styles.register}>Registrarse</button>
-            </div>
-          </div>
-          <div className={styles["event-image"]}>
-            <img src={image} alt="Evento" />
-            <div className={styles.capacity}>👤 0/20</div>
-          </div>
-        </div>
+        ))}
       </main>
     </div>
   );
