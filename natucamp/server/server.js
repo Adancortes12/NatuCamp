@@ -219,24 +219,39 @@ app.post("/createPost", (req, res) => {
   );
 });
 
-//-------------------OPTENER DATOS DE USUARIO-------------------
-app.get("/usuario/:usuario", (req, res) => {
-  const usuario = req.params.usuario;
+  //-----------------OBTENER DATOS DEL USUARIO-----------------
+  // Obtener datos del usuario por id o correo
+app.get("/usuario", (req, res) => {
+  const { usuario } = req.query;  // Recibir usuario o correo como query
 
-  const query = "SELECT nombre, telefono, correo FROM usuarios WHERE usuario = ?";
-  db.query(query, [usuario], (err, result) => {
+  const query = `
+    SELECT 
+      idUsuario,
+      nombre,
+      primerAp,
+      segundoAp,
+      correo,
+      celular,usuario
+    FROM usuario
+    WHERE usuario = ? OR correo = ?
+  `;
+
+  db.query(query, [usuario, usuario], (err, result) => {
     if (err) {
-      console.error("Error al obtener datos del usuario:", err);
-      return res.status(500).json({ error: "Error en el servidor" });
+      console.error("Error al obtener los datos del usuario:", err);
+      return res.status(500).send("Error al obtener los datos del usuario");
     }
 
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+    if (result.length > 0) {
+      res.json(result[0]);  // Retornar los datos del usuario
+    } else {
+      res.status(404).send("Usuario no encontrado");
     }
-
-    res.json(result[0]);
   });
 });
+
+
+
 //-------------------EVENTOS-------------------
 app.get("/eventos", (req, res) => {
   const query = `
