@@ -4,16 +4,28 @@ import { Link } from "react-router-dom";
 
 export function Navbar() {
   const [usuario, setUsuario] = useState(null);
+  const [admin, setAdmin] = useState(null);
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
+    const adminGuardado = localStorage.getItem("admin");
+
     if (usuarioGuardado) {
       setUsuario(JSON.parse(usuarioGuardado));
+    } else {
+      setUsuario(null);
+    }
+
+    if (adminGuardado) {
+      setAdmin(JSON.parse(adminGuardado));
+    } else {
+      setAdmin(null);
     }
   }, []);
 
   const cerrarSesion = () => {
     localStorage.removeItem("usuario");
+    localStorage.removeItem("admin");
     window.location.reload(); // recarga para actualizar el navbar
   };
 
@@ -34,21 +46,43 @@ export function Navbar() {
       >
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/">INICIO</Link>
+            <Link className="nav-link" to="/">
+              INICIO
+            </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/Eventos">EXPLORA</Link>
+            <Link className="nav-link" to="/Eventos">
+              EXPLORA
+            </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/Galeria">APRENDE</Link>
+            <Link className="nav-link" to="/Galeria">
+              APRENDE
+            </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/Admin">COMPARTE</Link>
+            <Link className="nav-link" to="/Admin">
+              COMPARTE
+            </Link>
           </li>
           <li className="nav-item">
-            {usuario ? (
-              <div className="nav-link"  style={{ cursor: "pointer" }}>
-                <Link className="nav-link" to="/usuario">¡Hola, {usuario.nombre}!</Link>
+            {admin ? (
+              <div className="nav-link" style={{ cursor: "pointer" }}>
+                <Link className="nav-link" to="/Admin">
+                  ¡Hola, Admin {admin.codigoAdmin}!
+                </Link>
+                <span
+                  style={{ marginLeft: "10px", color: "#ffc107" }}
+                  onClick={cerrarSesion}
+                >
+                  (Cerrar sesión)
+                </span>
+              </div>
+            ) : usuario ? (
+              <div className="nav-link" style={{ cursor: "pointer" }}>
+                <Link className="nav-link" to="/usuario">
+                  ¡Hola, {usuario.nombre}!
+                </Link>
                 <span
                   style={{ marginLeft: "10px", color: "#ffc107" }}
                   onClick={cerrarSesion}

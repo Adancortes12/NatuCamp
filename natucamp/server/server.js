@@ -267,7 +267,6 @@ app.get("/eventos", (req, res) => {
     FROM actividad
     LEFT JOIN tipoact ON actividad.idTipoAct = tipoact.idTipoAct
   `;
-
   db.query(query, (err, result) => {
     if (err) {
       console.error("Error al obtener eventos:", err);
@@ -276,9 +275,28 @@ app.get("/eventos", (req, res) => {
     res.json(result); // Aquí se devuelve la respuesta en formato JSON
   });
 });
+//------------------Login de ADMINNISTRADOR------------------
+app.post("/loginAdmin", (req, res) => {
+  const { codigoAdmin, contrasena } = req.body;
 
+  if (!codigoAdmin || !contrasena) {
+    return res.status(400).json({ success: false, message: "Faltan datos" });
+  }
 
+  const query = "SELECT * FROM admin WHERE codigoAdmin = ? AND contrasena = ?";
 
+  db.query(query, [codigoAdmin, contrasena], (err, result) => {
+    if (err) {
+      console.error("Error login admin:", err);
+      return res.status(500).json({ success: false, message: "Error servidor" });
+    }
+    if (result.length > 0) {
+      res.json({ success: true, message: "Login admin exitoso", admin: result[0] });
+    } else {
+      res.json({ success: false, message: "Credenciales inválidas" });
+    }
+  });
+});
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
   console.log("Servidor corriendo en el puerto 3001");
