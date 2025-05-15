@@ -26,7 +26,7 @@ const Eventos = () => {
       .catch((error) => {
         console.error("Hubo un error al obtener los eventos", error);
       });
-          axios
+    axios
       .get("http://localhost:3001/inscripcion/count")
       .then((response) => {
         if (response.data.success) {
@@ -41,8 +41,6 @@ const Eventos = () => {
         console.error("Error al obtener inscritos", error);
       });
   }, []);
-
-  
 
   const toggleSection = (section) => {
     setOpenSection((prev) => (prev === section ? null : section));
@@ -176,13 +174,14 @@ const Eventos = () => {
               <img
                 src={
                   evento.imagen
-                    ? `http://localhost:3001/NatuFotos/${evento.imagen}`
+                    ? `http://localhost:3001${evento.imagen}`
                     : defaultImage
                 }
                 alt={evento.nombre}
               />
-              <div className={styles.capacity}>👤 {inscritos[evento.idActividad] || 0}/{evento.cupo}</div>
-
+              <div className={styles.capacity}>
+                👤 {inscritos[evento.idActividad] || 0}/{evento.cupo}
+              </div>
             </div>
           </div>
         ))}

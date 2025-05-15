@@ -7,6 +7,10 @@ const multer = require("multer");
 
 // Hacer accesibles las imágenes públicas
 app.use("/NatuFotos", express.static(path.join(__dirname, "public/NatuFotos")));
+app.use(
+  "/NatuEventos",
+  express.static(path.join(__dirname, "public/NatuEventos"))
+);
 
 // Configuración de multer para almacenar imágenes en /public/NatuFotos
 const storage = multer.diskStorage({
@@ -20,6 +24,18 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+
+const storageEventos = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "/public/NatuEventos"));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+  },
+});
+const uploadEvento = multer({ storage: storageEventos });
 
 app.use(cors());
 app.use(express.json());
@@ -36,7 +52,8 @@ const db = mysql.createConnection({
 
 // Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } =
+    req.body;
 
   db.query(
     "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -60,7 +77,11 @@ app.post("/login", (req, res) => {
       if (result.length > 0) {
         const user = result[0];
         if (user.contrasena === contrasena) {
-          res.json({ success: true, message: "Inicio de sesión exitoso", user });
+          res.json({
+            success: true,
+            message: "Inicio de sesión exitoso",
+            user,
+          });
           //alert("Inicio de sesión exitoso");
         } else {
           res.json({ success: false, message: "Contraseña incorrecta" });
@@ -115,7 +136,14 @@ app.post("/especie", upload.single("imagen"), (req, res) => {
 
   const imagePath = req.file ? `/NatuFotos/${req.file.filename}` : null;
 
-  if (!nombreCientifico || !nombreVulgar || !idTipo || !idOrden || !idFamilia || !idCategoria) {
+  if (
+    !nombreCientifico ||
+    !nombreVulgar ||
+    !idTipo ||
+    !idOrden ||
+    !idFamilia ||
+    !idCategoria
+  ) {
     return res.status(400).send("Faltan datos necesarios");
   }
 
@@ -127,11 +155,23 @@ app.post("/especie", upload.single("imagen"), (req, res) => {
 
   db.query(
     query,
-    [nombreCientifico, nombreVulgar, idTipo, idOrden, idFamilia, idCategoria, idClase, idNom, imagePath],
+    [
+      nombreCientifico,
+      nombreVulgar,
+      idTipo,
+      idOrden,
+      idFamilia,
+      idCategoria,
+      idClase,
+      idNom,
+      imagePath,
+    ],
     (err) => {
       if (err) {
         console.error("Error al insertar especie:", err);
-        return res.status(500).send("Error al crear la especie: " + err.message);
+        return res
+          .status(500)
+          .send("Error al crear la especie: " + err.message);
       }
       res.status(201).send("Especie creada exitosamente");
     }
@@ -184,12 +224,23 @@ app.get("/nomeclaturas", (req, res) => {
 
 // ------------------ EVENTOS ------------------
 
-app.post("/addEvent", (req, res) => {
-  const { nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen } = req.body;
+app.post("/addEvent", uploadEvento.single("imagen"), (req, res) => {
+  const { nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion } =
+    req.body;
+  const imagenPath = req.file ? `/NatuEventos/${req.file.filename}` : null;
 
   db.query(
     "INSERT INTO actividad (nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    [nombre, fecha, horaInicio, idTipoAct, costo, cupo, descripcion, imagen],
+    [
+      nombre,
+      fecha,
+      horaInicio,
+      idTipoAct,
+      costo,
+      cupo,
+      descripcion,
+      imagenPath,
+    ],
     (err) => {
       if (err) return res.status(500).send("Error al crear evento");
       res.send("Evento creado");
@@ -219,10 +270,10 @@ app.post("/createPost", (req, res) => {
   );
 });
 
-  //-----------------OBTENER DATOS DEL USUARIO-----------------
-  // Obtener datos del usuario por id o correo
+//-----------------OBTENER DATOS DEL USUARIO-----------------
+// Obtener datos del usuario por id o correo
 app.get("/usuario", (req, res) => {
-  const { usuario } = req.query;  // Recibir usuario o correo como query
+  const { usuario } = req.query; // Recibir usuario o correo como query
 
   const query = `
     SELECT 
@@ -243,14 +294,12 @@ app.get("/usuario", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.json(result[0]);  // Retornar los datos del usuario
+      res.json(result[0]); // Retornar los datos del usuario
     } else {
       res.status(404).send("Usuario no encontrado");
     }
   });
 });
-
-
 
 //-------------------EVENTOS-------------------
 app.get("/eventos", (req, res) => {
@@ -288,10 +337,16 @@ app.post("/loginAdmin", (req, res) => {
   db.query(query, [codigoAdmin, contrasena], (err, result) => {
     if (err) {
       console.error("Error login admin:", err);
-      return res.status(500).json({ success: false, message: "Error servidor" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error servidor" });
     }
     if (result.length > 0) {
-      res.json({ success: true, message: "Login admin exitoso", admin: result[0] });
+      res.json({
+        success: true,
+        message: "Login admin exitoso",
+        admin: result[0],
+      });
     } else {
       res.json({ success: false, message: "Credenciales inválidas" });
     }
@@ -308,7 +363,9 @@ app.post("/inscripcion", (req, res) => {
     (err, result) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ success: false, message: "Error al registrar" });
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al registrar" });
       }
       res.json({ success: true, message: "Registro exitoso" });
     }
@@ -336,31 +393,51 @@ app.post("/eventos/eliminar", (req, res) => {
   const { idActividad } = req.body;
 
   if (!idActividad) {
-    return res.status(400).json({ success: false, message: "Falta idActividad" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Falta idActividad" });
   }
 
   // Primero eliminar inscripciones relacionadas (si existen)
-  db.query("DELETE FROM inscripcion WHERE idActividad = ?", [idActividad], (err) => {
-    if (err) {
-      console.error("Error al eliminar inscripciones:", err);
-      return res.status(500).json({ success: false, message: "Error al eliminar inscripciones relacionadas" });
+  db.query(
+    "DELETE FROM inscripcion WHERE idActividad = ?",
+    [idActividad],
+    (err) => {
+      if (err) {
+        console.error("Error al eliminar inscripciones:", err);
+        return res
+          .status(500)
+          .json({
+            success: false,
+            message: "Error al eliminar inscripciones relacionadas",
+          });
+      }
+
+      // Luego eliminar el evento
+      db.query(
+        "DELETE FROM actividad WHERE idActividad = ?",
+        [idActividad],
+        (err2, result) => {
+          if (err2) {
+            console.error("Error al eliminar evento:", err2);
+            return res
+              .status(500)
+              .json({ success: false, message: "Error al eliminar el evento" });
+          }
+          if (result.affectedRows === 0) {
+            return res
+              .status(404)
+              .json({ success: false, message: "Evento no encontrado" });
+          }
+          res.json({
+            success: true,
+            message: "Evento eliminado correctamente",
+          });
+        }
+      );
     }
-
-    // Luego eliminar el evento
-    db.query("DELETE FROM actividad WHERE idActividad = ?", [idActividad], (err2, result) => {
-      if (err2) {
-        console.error("Error al eliminar evento:", err2);
-        return res.status(500).json({ success: false, message: "Error al eliminar el evento" });
-      }
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ success: false, message: "Evento no encontrado" });
-      }
-      res.json({ success: true, message: "Evento eliminado correctamente" });
-    });
-  });
+  );
 });
-
-
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
