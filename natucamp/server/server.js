@@ -330,6 +330,37 @@ app.get("/inscripcion/count", async (req, res) => {
     res.json({ success: true, data: results }); // data = [{idActividad: 1, inscritos: 5}, ...]
   });
 });
+//------------------BORRAR EVENTOS ------------------
+// Eliminar evento por idActividad
+app.post("/eventos/eliminar", (req, res) => {
+  const { idActividad } = req.body;
+
+  if (!idActividad) {
+    return res.status(400).json({ success: false, message: "Falta idActividad" });
+  }
+
+  // Primero eliminar inscripciones relacionadas (si existen)
+  db.query("DELETE FROM inscripcion WHERE idActividad = ?", [idActividad], (err) => {
+    if (err) {
+      console.error("Error al eliminar inscripciones:", err);
+      return res.status(500).json({ success: false, message: "Error al eliminar inscripciones relacionadas" });
+    }
+
+    // Luego eliminar el evento
+    db.query("DELETE FROM actividad WHERE idActividad = ?", [idActividad], (err2, result) => {
+      if (err2) {
+        console.error("Error al eliminar evento:", err2);
+        return res.status(500).json({ success: false, message: "Error al eliminar el evento" });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: "Evento no encontrado" });
+      }
+      res.json({ success: true, message: "Evento eliminado correctamente" });
+    });
+  });
+});
+
+
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
