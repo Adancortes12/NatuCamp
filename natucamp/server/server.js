@@ -297,6 +297,40 @@ app.post("/loginAdmin", (req, res) => {
     }
   });
 });
+
+//------------------INSCRIPCION A EVENTOS------------------
+app.post("/inscripcion", (req, res) => {
+  const { idUsuario, idActividad, fechaInscrip } = req.body;
+
+  db.query(
+    "INSERT INTO inscripcion (idUsuario, idActividad, fechaInscrip) VALUES (?, ?, ?)",
+    [idUsuario, idActividad, fechaInscrip],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Error al registrar" });
+      }
+      res.json({ success: true, message: "Registro exitoso" });
+    }
+  );
+});
+//------------------OBTENER INSCRIPCIONES------------------
+app.get("/inscripcion/count", async (req, res) => {
+  const sql = `
+    SELECT idActividad, COUNT(*) as inscritos
+    FROM inscripcion
+    GROUP BY idActividad
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false });
+    }
+    res.json({ success: true, data: results }); // data = [{idActividad: 1, inscritos: 5}, ...]
+  });
+});
+
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
   console.log("Servidor corriendo en el puerto 3001");
