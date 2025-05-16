@@ -130,7 +130,6 @@ export function PagAdminEspecies() {
                   {/* Tipo */}
                   <select
                     className={`form-select ${styles.seleccionador}`}
-                    id="campoTipo"
                     onChange={(e) => setIdTipo(e.target.value)}
                     value={idTipo}
                   >
@@ -143,7 +142,7 @@ export function PagAdminEspecies() {
                   {/* Orden */}
                   <select
                     className={`form-select ${styles.seleccionador}`}
-                    id="campoOrden"
+                    placeholder="Orden"
                     onChange={(e) => setIdOrden(e.target.value)}
                     value={idOrden}
                   >

@@ -61,7 +61,7 @@ export function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/Admin">
+            <Link className="nav-link" to="/Post">
               COMPARTE
             </Link>
           </li>

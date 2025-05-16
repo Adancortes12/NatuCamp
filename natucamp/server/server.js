@@ -300,10 +300,25 @@ app.get("/usuario", (req, res) => {
     }
   });
 });
+//-----------------EVENTOS TIPOS-----------------
+// Ejemplo usando Express y tu conexión a base de datos `db`
+app.get("/eventos/tipos", (req, res) => {
+  const sql = "SELECT idTipoAct, tipo FROM tipoact";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error al obtener tipos:", err);
+      return res.status(500).json({ error: "Error al obtener tipos" });
+    }
+    res.json(results);
+  });
+});
+
 
 //-------------------EVENTOS-------------------
 app.get("/eventos", (req, res) => {
-  const query = `
+  const { idTipoAct, fecha } = req.query;
+
+  let query = `
     SELECT 
       actividad.idActividad,
       actividad.nombre,
@@ -312,18 +327,35 @@ app.get("/eventos", (req, res) => {
       actividad.costo,
       actividad.cupo,
       actividad.imagen,
-      tipoact.tipo  -- Descripción del tipo de evento (ahora se obtiene desde la tabla tipoact)
+      tipoact.tipo,
+      actividad.idTipoAct
     FROM actividad
     LEFT JOIN tipoact ON actividad.idTipoAct = tipoact.idTipoAct
+    WHERE 1=1
   `;
-  db.query(query, (err, result) => {
+
+  const params = [];
+
+  if (idTipoAct) {
+    query += " AND actividad.idTipoAct = ?";
+    params.push(idTipoAct);
+  }
+
+  if (fecha) {
+    query += " AND DATE(actividad.fecha) = ?";
+    params.push(fecha);
+  }
+
+  db.query(query, params, (err, result) => {
     if (err) {
       console.error("Error al obtener eventos:", err);
       return res.status(500).send("Error al obtener los eventos");
     }
-    res.json(result); // Aquí se devuelve la respuesta en formato JSON
+    res.json(result);
   });
 });
+
+
 //------------------Login de ADMINNISTRADOR------------------
 app.post("/loginAdmin", (req, res) => {
   const { codigoAdmin, contrasena } = req.body;
