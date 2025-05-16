@@ -1,6 +1,6 @@
 .page {
   display: flex;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 .sidebar {
@@ -60,6 +60,11 @@
 
 .plusIcon {
   font-size: 2rem;
+}
+
+.plusIcon:visited {
+  color: white;
+  text-decoration: none;
 }
 
 .postCard {

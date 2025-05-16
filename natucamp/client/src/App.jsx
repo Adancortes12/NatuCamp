@@ -36,7 +36,7 @@ function App() {
         <Route path="/InicioSesionAdmin" element={<PagInicioSesionAdmin />} />
         <Route path="/BorrarEventos" element={<PagEventosBorrar />} />
         <Route path="/Usuario" element={<PagUsuario />} />
-        <Route path="/Post" element={<PagPost />} />
+        <Route path="/Post" element={<Post />} />
       </Routes>
     </Router>
   );

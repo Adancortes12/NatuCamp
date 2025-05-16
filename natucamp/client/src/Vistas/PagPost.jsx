@@ -1,4 +1,5 @@
 import styles from "./StylesPost.module.css";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const PostCard = ({ content, author }) => {
@@ -124,7 +125,9 @@ export default function Post() {
       <main className={styles.container}>
         <div className={styles.createPostButton}>
           <button>
-            <span className={styles.plusIcon}>+</span> Hacer un post
+            <Link className={styles.plusIcon} to="/CrearPost">
+              + Hacer un post
+            </Link>
           </button>
         </div>
         {posts.map((post, index) => (
@@ -134,4 +137,3 @@ export default function Post() {
     </div>
   );
 }
-
