@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./StylesEventos.module.css";
 import defaultImage from "../assets/campana.png";
+import { Link } from "react-router-dom";
 
 const Eventos = () => {
   const [eventos, setEventos] = useState([]);
@@ -60,11 +61,18 @@ const Eventos = () => {
     if (!window.confirm("¿Estás seguro de eliminar este evento?")) return;
 
     try {
-      const response = await axios.post("http://localhost:3001/eventos/eliminar", { idActividad });
+      const response = await axios.post(
+        "http://localhost:3001/eventos/eliminar",
+        { idActividad }
+      );
       if (response.data.success) {
         alert("Evento eliminado correctamente.");
-        setEventos((prevEventos) => prevEventos.filter((e) => e.idActividad !== idActividad));
-        setEventosFiltrados((prevEventos) => prevEventos.filter((e) => e.idActividad !== idActividad));
+        setEventos((prevEventos) =>
+          prevEventos.filter((e) => e.idActividad !== idActividad)
+        );
+        setEventosFiltrados((prevEventos) =>
+          prevEventos.filter((e) => e.idActividad !== idActividad)
+        );
       } else {
         alert("No se pudo eliminar el evento: " + response.data.message);
       }
@@ -100,13 +108,19 @@ const Eventos = () => {
         </div>
 
         {/* Los demás filtros solo visuales sin funcionalidad */}
-        
       </aside>
 
       <main className={styles["event-content"]}>
-        <h2 className={styles.title}>Eventos disponibles</h2>
+        <div className={styles.tituloCentro}>
+          <Link to="/Admin">
+            <i className={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+          </Link>
+          <h1 className={styles.titulo}>Eliminar Eventos</h1>
+        </div>
 
-        {eventosFiltrados.length === 0 && <p>No se encontraron eventos con esa búsqueda.</p>}
+        {eventosFiltrados.length === 0 && (
+          <p>No se encontraron eventos con esa búsqueda.</p>
+        )}
 
         {eventosFiltrados.map((evento) => (
           <div className={styles["event-card"]} key={evento.idActividad}>

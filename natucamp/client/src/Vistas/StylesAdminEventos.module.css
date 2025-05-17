@@ -132,25 +132,28 @@ span.simboloCosto {
   height: 300px;
   width: 300px;
   background-color: #fffefa;
+  border: 10px;
+  border-color: #100816;
   border-radius: 10px;
 }
 
 .imagen {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
 }
 
 .divBotonImagen {
   width: 100%;
-  opacity: 55%;
   text-align: center;
 }
 
 .botonAgregarImagen {
   border: none;
-  border-radius: 15px;
   color: #100816;
-  background-color: #807f7a;
+  background-color: #b6b6b3;
   width: 70%;
   font-size: large;
 }

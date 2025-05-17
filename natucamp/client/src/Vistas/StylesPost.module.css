@@ -59,12 +59,11 @@
 }
 
 .plusIcon {
-  font-size: 2rem;
-}
+  color: #ffffff;
+  font-weight: bolder;
 
-.plusIcon:visited {
-  color: white;
   text-decoration: none;
+  font-size: 2rem;
 }
 
 .postCard {
@@ -103,6 +102,17 @@
   gap: 1rem;
 }
 
+.botonBorrar {
+  margin-left: 10px;
+  background-color: #6b1e1e !important;
+  color: white;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .user {
   color: #666;
   font-size: 0.9rem;
@@ -127,4 +137,22 @@
 
 .expanded {
   max-height: none;
+}
+
+.icono {
+  margin: 10px;
+  color: #7c2020;
+  text-align: center;
+  font-size: 40px;
+}
+
+.tituloCentro {
+  display: flex;
+  margin: auto;
+}
+
+.titulo {
+  margin: 10px;
+  color: #7c2020;
+  text-align: center;
 }

@@ -34,10 +34,7 @@ export function PagAdmin() {
             <p className={styles.cardTitulo}>POSTS</p>
             <i className={`bi bi-card-text ${styles.icono}`}></i>
           </div>
-          <Link to="/CrearPost" className={styles.botonAdmin}>
-            Crear post
-          </Link>
-          <Link to="/" className={styles.botonAdmin}>
+          <Link to="/BorrarPost" className={styles.botonAdmin}>
             Eliminar posts
           </Link>
         </div>

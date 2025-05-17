@@ -45,9 +45,11 @@ export function PagInicio() {
           <div className="col-md-6">
             <h2>¿Qué es NatuCamp?</h2>
             <p className={styles.resumen}>
-              Texto mega importante sobre nuestro proyecto que vamos a copiar y
-              pegar del documento que redactamos en la primera unidad de la
-              materia etc. relleno relleno lorem ipsum no sé que más.
+              NatuCamp es una página que busca fomentar la educación ambiental y
+              convivencia sana en Colima al ofrecer información en una
+              plataforma en línea accesible al publico sobre las especies y
+              actividades que se llevan a cabo dentro de la zona arqueológica y
+              parque ecológico La Campana.
             </p>
           </div>
         </div>
@@ -70,7 +72,9 @@ export function PagInicio() {
             </div>
             <div className="col-md-4">
               <div className={`${styles.iconCircle} ${styles.comparte}`}>❤</div>
-              <h4>Comparte</h4>
+              <Link to="/Post" className={styles.linkStyles}>
+                Comparte
+              </Link>
             </div>
           </div>
         </div>
