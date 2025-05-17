@@ -25,7 +25,7 @@ export function PagAdmin() {
           <Link to="/AdminEspecies" className={styles.botonAdmin}>
             Agregar especies
           </Link>
-          <Link to="/" className={styles.botonAdmin}>
+          <Link to="/BorrarEspecie" className={styles.botonAdmin}>
             Eliminar especie
           </Link>
         </div>
