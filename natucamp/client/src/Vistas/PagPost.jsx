@@ -1,22 +1,19 @@
 import styles from "./StylesPost.module.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const PostCard = ({ content, author }) => {
+const PostCard = ({ title, content, author, tags }) => {
   const [expanded, setExpanded] = useState(false);
-
   const toggleReadMore = () => setExpanded(!expanded);
 
   return (
     <div className={styles.postCard}>
       <div className={styles.postText}>
         <h2>
-          Título |{" "}
-          <span className={styles.hashtags}>#etiqueta #etiqueta #etiqueta</span>
+          {title} | <span className={styles.hashtags}>{tags}</span>
         </h2>
-        <p
-          className={`${styles.postContent} ${expanded ? styles.expanded : ""}`}
-        >
+        <p className={`${styles.postContent} ${expanded ? styles.expanded : ""}`}>
           {content}
         </p>
       </div>
@@ -32,31 +29,62 @@ const PostCard = ({ content, author }) => {
 
 export default function Post() {
   const [openSection, setOpenSection] = useState(null);
-  const posts = [
-    {
-      content:
-        "Aquí va todo el bla bla bla acerca del evento...bldasldashdlksjdalkjldjflkdfhadlkfhasldkfhaldkfhasdfslkfhalkfjaa;kjfalksjdalskdjalksdja;ksjda;slfja;lsfjka;slfja;ldsfjasl;fjasalskdjalsdjaslkdjalskdjalskdjalskdjalksdjalksdjalskdjalksdjalskdjalskdjalksdjalksjdlaskdjalksdjlaksdjlaksjdalksjdalksjdalksjdalskjdalksdjlasdjalksjdalskjdlaksjdlaskjdlaksjdalsjdalksjdalskjdalksdjalksdjalsdjalksdjalskdjalskdjf",
-      author: "LuisilloElPillo",
-    },
-    {
-      content: "Discusión del evento etc etc…",
-      author: "ManatiTactico",
-    },
-    {
-      content: "Otro post nuevo",
-      author: "Vergonio",
-    },
-  ];
+  const [posts, setPosts] = useState([]);
+  const [filterTag, setFilterTag] = useState(""); // etiqueta seleccionada
+  const [searchText, setSearchText] = useState(""); // texto búsqueda
+  const [tagsOptions, setTagsOptions] = useState([]); // etiquetas dinámicas
+
+  // Carga posts desde backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/posts")
+      .then((res) => {
+        // console.log para depurar datos recibidos
+        console.log("Posts recibidos del backend:", res.data);
+        const formattedPosts = res.data.map((post) => ({
+          title: post.titulo,
+          content: post.comentario,
+          author: post.autor,
+          tags: post.etiqueta,
+        }));
+        setPosts(formattedPosts);
+      })
+      .catch((error) => {
+        console.error("Error al cargar posts:", error);
+      });
+  }, []);
+
+  // Carga etiquetas dinámicas desde backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/tipoAc")
+      .then((res) => {
+        setTagsOptions(res.data.map((t) => t.tipo));
+      })
+      .catch((error) => {
+        console.error("Error al cargar etiquetas:", error);
+      });
+  }, []);
 
   const toggleSection = (section) => {
     setOpenSection((prev) => (prev === section ? null : section));
   };
+
+  // Filtrar posts localmente por etiqueta exacta y búsqueda en título
+  const filteredPosts = posts.filter((post) => {
+    const matchesTag = filterTag ? post.tags === filterTag : true;
+    const matchesSearch = post.title
+      ? post.title.toLowerCase().includes(searchText.toLowerCase())
+      : false;
+    return matchesTag && matchesSearch;
+  });
 
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
         <h3 className={styles.sidebarTitle}>Filtros</h3>
 
+        {/* Filtro etiquetas dinámicas */}
         <div className={styles.filterGroup}>
           <button
             className={styles.filterToggle}
@@ -66,47 +94,39 @@ export default function Post() {
           </button>
           {openSection === "etiquetas" && (
             <div className={styles.filterOptions}>
-              <label>
-                <input type="radio" name="tag" /> Arte
-              </label>
-              <label>
-                <input type="radio" name="tag" /> Educación
-              </label>
-              <label>
-                <input type="radio" name="tag" /> Deportivos
-              </label>
+              {tagsOptions.length === 0 ? (
+                <p>Cargando etiquetas...</p>
+              ) : (
+                <>
+                  {tagsOptions.map((tag) => (
+                    <label key={tag}>
+                      <input
+                        type="radio"
+                        name="tag"
+                        value={tag}
+                        checked={filterTag === tag}
+                        onChange={() => setFilterTag(tag)}
+                      />
+                      {tag}
+                    </label>
+                  ))}
+                  <label>
+                    <input
+                      type="radio"
+                      name="tag"
+                      value=""
+                      checked={filterTag === ""}
+                      onChange={() => setFilterTag("")}
+                    />
+                    Todas
+                  </label>
+                </>
+              )}
             </div>
           )}
         </div>
 
-        <div className={styles.filterGroup}>
-          <button
-            className={styles.filterToggle}
-            onClick={() => toggleSection("fecha")}
-          >
-            Fecha ▼
-          </button>
-          {openSection === "fecha" && (
-            <div className={styles.filterOptions}>
-              <p>(Aquí van más opciones)</p>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.filterGroup}>
-          <button
-            className={styles.filterToggle}
-            onClick={() => toggleSection("otros")}
-          >
-            Otros ▼
-          </button>
-          {openSection === "otros" && (
-            <div className={styles.filterOptions}>
-              <p>(Aquí van más opciones)</p>
-            </div>
-          )}
-        </div>
-
+        {/* Filtro búsqueda por título */}
         <div className={styles.filterGroup}>
           <button
             className={styles.filterToggle}
@@ -116,7 +136,13 @@ export default function Post() {
           </button>
           {openSection === "buscar" && (
             <div className={styles.filterOptions}>
-              <input type="text" placeholder="Buscar post..." />
+              <input
+                type="text"
+                placeholder="Buscar por título..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                autoComplete="off"
+              />
             </div>
           )}
         </div>
@@ -130,9 +156,20 @@ export default function Post() {
             </Link>
           </button>
         </div>
-        {posts.map((post, index) => (
-          <PostCard key={index} content={post.content} author={post.author} />
-        ))}
+
+        {filteredPosts.length === 0 ? (
+          <p>No hay posts que coincidan.</p>
+        ) : (
+          filteredPosts.map((post, index) => (
+            <PostCard
+              key={index}
+              title={post.title}
+              content={post.content}
+              author={post.author}
+              tags={post.tags}
+            />
+          ))
+        )}
       </main>
     </div>
   );

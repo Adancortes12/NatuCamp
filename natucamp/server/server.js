@@ -470,6 +470,64 @@ app.post("/eventos/eliminar", (req, res) => {
     }
   );
 });
+//------------------OBTENER LOS POSTS------------------
+app.get("/posts", (req, res) => {
+  const query = `
+    SELECT 
+      post.titulo,
+      post.comentario,
+      usuario.usuario AS autor,
+      tipoact.tipo AS etiqueta
+    FROM post
+    JOIN usuario ON post.idUsuario = usuario.idUsuario
+    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error al obtener posts:", err);
+      return res.status(500).send("Error al obtener los posts");
+    }
+    res.json(results);
+  });
+});
+//------------------FILTRO DE POSTS------------------
+app.get("/posts", (req, res) => {
+  const { etiqueta, titulo } = req.query;
+
+  let query = `
+    SELECT 
+      post.titulo,
+      post.comentario,
+      usuario.usuario AS autor,
+      tipoact.tipo AS etiqueta
+    FROM post
+    JOIN usuario ON post.idUsuario = usuario.idUsuario
+    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
+    WHERE 1=1
+  `;
+
+  const params = [];
+
+  if (etiqueta && etiqueta.trim() !== "") {
+    query += " AND tipoact.tipo = ?";
+    params.push(etiqueta.trim());
+  }
+
+  if (titulo && titulo.trim() !== "") {
+    query += " AND post.titulo LIKE ?";
+    params.push(`%${titulo.trim()}%`);
+  }
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("Error al obtener posts:", err);
+      return res.status(500).json({ error: "Error al obtener posts" });
+    }
+    res.json(results);
+  });
+});
+
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
