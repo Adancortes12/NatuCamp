@@ -255,20 +255,37 @@ app.get("/tipoAc", (req, res) => {
   });
 });
 
-// ------------------ POSTS ------------------
-
-app.post("/createPost", (req, res) => {
-  const { titulo, comentarios, idTipoAct } = req.body;
-
-  db.query(
-    "INSERT INTO post (titulo, comentario, idTipoAct) VALUES (?, ?, ?)",
-    [titulo, comentarios, idTipoAct],
-    (err) => {
-      if (err) return res.status(500).send("Error al crear post");
-      res.send("Post creado");
+app.get("/tipoact", (req, res) => {
+  const sql = "SELECT idTipoAct, tipo FROM tipoact";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error al obtener tipos de actividad:", err);
+      return res.status(500).json({ success: false, message: "Error al obtener tipos" });
     }
-  );
+    res.json({ success: true, data: results });
+  });
 });
+
+// ------------------ POSTS ------------------
+app.post("/createPost", (req, res) => {
+  const { titulo, comentario, idTipoAct, idUsuario } = req.body;
+
+  if (!titulo || !comentario || !idTipoAct || !idUsuario) {
+    return res.status(400).json({ success: false, message: "Faltan datos obligatorios" });
+  }
+
+  const sql = "INSERT INTO post (titulo, comentario, idTipoAct, idUsuario) VALUES (?, ?, ?, ?)";
+
+  db.query(sql, [titulo, comentario, idTipoAct, idUsuario], (err, result) => {
+    if (err) {
+      console.error("Error al crear post:", err);
+      return res.status(500).json({ success: false, message: "Error al crear post" });
+    }
+    res.json({ success: true, message: "Post creado correctamente", postId: result.insertId });
+  });
+});
+
+
 
 //-----------------OBTENER DATOS DEL USUARIO-----------------
 // Obtener datos del usuario por id o correo
