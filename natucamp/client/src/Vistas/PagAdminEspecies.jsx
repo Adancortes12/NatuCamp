@@ -13,10 +13,10 @@ export function PagAdminEspecies() {
   }
   const [nombreCientifico, setNombreCientifico] = useState("");
   const [nombreVulgar, setNombreVulgar] = useState("");
-  const [idCategoria, setIdCategoria] = useState(0);
-  const [idTipo, setIdTipo] = useState(0);
-  const [idOrden, setIdOrden] = useState(0);
-  const [idFamilia, setIdFamilia] = useState(0);
+  const [idCategoria, setIdCategoria] = useState("");
+  const [idTipo, setIdTipo] = useState("");
+  const [idOrden, setIdOrden] = useState("");
+  const [idFamilia, setIdFamilia] = useState("");
 
   // Estados para almacenar los datos completos
   const [tipos, setTipos] = useState([]);
@@ -24,8 +24,8 @@ export function PagAdminEspecies() {
   const [familias, setFamilias] = useState([]);
   const [categorias, setCategorias] = useState([]);
 
-  const [idClase, setIdClase] = useState(0);
-  const [idNom, setIdNom] = useState(0);
+  const [idClase, setIdClase] = useState("");
+  const [idNom, setIdNom] = useState("");
   const [clases, setClases] = useState([]);
   const [nomenclaturas, setNomenclaturas] = useState([]);
 
@@ -83,11 +83,12 @@ export function PagAdminEspecies() {
     formData.append("imagen", selectedFile); // archivo real, no URL
 
     try {
-      const res = await axios.post("http://localhost:3001/especie", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.post("http://localhost:3001/especie", formData, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
       alert("Especie creada con éxito");
     } catch (err) {
       console.error("Error al crear especie:", err);
@@ -133,6 +134,9 @@ export function PagAdminEspecies() {
                     onChange={(e) => setIdTipo(e.target.value)}
                     value={idTipo}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {tipos.map((tipo) => (
                       <option key={tipo.idTipo} value={tipo.idTipo}>
                         {tipo.tipo}
@@ -146,6 +150,9 @@ export function PagAdminEspecies() {
                     onChange={(e) => setIdOrden(e.target.value)}
                     value={idOrden}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {ordenes.map((orden) => (
                       <option key={orden.idOrden} value={orden.idOrden}>
                         {orden.orden}
@@ -160,13 +167,15 @@ export function PagAdminEspecies() {
                 </div>
                 <div className={styles.duo}>
                   {/* Familia */}
-
                   <select
                     className={`form-select ${styles.seleccionador}`}
                     id="campoFamilia"
                     onChange={(e) => setIdFamilia(e.target.value)}
                     value={idFamilia}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {familias.map((familia) => (
                       <option key={familia.idFamilia} value={familia.idFamilia}>
                         {familia.familia}
@@ -175,13 +184,15 @@ export function PagAdminEspecies() {
                   </select>
 
                   {/* Categoría */}
-
                   <select
                     className={`form-select ${styles.seleccionador}`}
                     id="campoCategoria"
                     onChange={(e) => setIdCategoria(e.target.value)}
                     value={idCategoria}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {categorias.map((categoria) => (
                       <option
                         key={categoria.idCategoria}
@@ -199,13 +210,15 @@ export function PagAdminEspecies() {
                 </div>
                 <div className={styles.duo}>
                   {/* clase */}
-
                   <select
                     className={`form-select ${styles.seleccionador}`}
                     id="campoClase"
                     onChange={(e) => setIdClase(e.target.value)}
                     value={idClase}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {clases.map((clase) => (
                       <option key={clase.idClase} value={clase.idClase}>
                         {clase.clase}
@@ -219,6 +232,9 @@ export function PagAdminEspecies() {
                     onChange={(e) => setIdNom(e.target.value)}
                     value={idNom}
                   >
+                    <option value="" disabled>
+                      Selecciona
+                    </option>
                     {nomenclaturas.map((nom) => (
                       <option key={nom.idNom} value={nom.idNom}>
                         {nom.nom}
