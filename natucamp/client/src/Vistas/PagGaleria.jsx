@@ -23,6 +23,7 @@ export function PagGaleria() {
 
   // Estado para filtros
   const [tipoSeleccionado, setTipoSeleccionado] = useState("Todos"); // ID o "Todos"
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
 
   // Funciones para obtener el nombre a partir del ID correspondiente
   const getTipo = (id) =>
@@ -75,11 +76,15 @@ export function PagGaleria() {
       .catch(console.error);
   }, []);
 
-  // Aplicar filtro por tipo
-  const especiesFiltradas =
-    tipoSeleccionado === "Todos"
-      ? especies
-      : especies.filter((e) => e.idTipo === tipoSeleccionado);
+  // Aplicar filtro por tipo y búsqueda
+  const especiesFiltradas = especies
+    .filter((e) => {
+      return (
+        e.nombreComun.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        e.nombreCientifico.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    })
+    .filter((e) => tipoSeleccionado === "Todos" || e.idTipo === tipoSeleccionado);
 
   return (
     <>
@@ -203,7 +208,12 @@ export function PagGaleria() {
             </button>
             {openSection === "buscar" && (
               <div className={styles["filter-options"]}>
-                <input type="text" placeholder="Buscar animal..." />
+                <input
+                  type="text"
+                  placeholder="Buscar animal..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+                />
               </div>
             )}
           </div>
