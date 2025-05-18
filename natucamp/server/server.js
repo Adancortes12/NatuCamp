@@ -544,7 +544,53 @@ app.get("/posts", (req, res) => {
     res.json(results);
   });
 });
+// ------------------ OBTENER LOS POSTS ------------------
+// ------------------ OBTENER LOS POSTS ------------------
+app.get("/posts", (req, res) => {
+  const { usuario } = req.query; // Obtener el usuario desde la query
+  const query = `
+    SELECT 
+      post.titulo,
+      post.comentario,
+      usuario.usuario AS autor,
+      tipoact.tipo AS etiqueta
+    FROM post
+    JOIN usuario ON post.idUsuario = usuario.idUsuario
+    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
+    WHERE usuario.usuario = ?;  // Aquí se filtra por el nombre de usuario
+  `;
 
+  db.query(query, [usuario], (err, results) => {
+    if (err) {
+      console.error('Error al obtener los posts:', err);
+      return res.status(500).send('Error en el servidor');
+    }
+    res.json(results); // Enviar los resultados
+  });
+});
+
+
+
+
+// ------------------ OBTENER LOS EVENTOS ------------------
+app.get("/inscripcion", (req, res) => {
+  const { usuario } = req.query; // Obtener el usuario desde la query
+  const query = `
+    SELECT i.*, a.nombre, a.tipo, a.descripcion, a.costo
+    FROM inscripcion i
+    JOIN actividad a ON i.idActividad = a.idActividad
+    JOIN usuario u ON i.idUsuario = u.idUsuario
+    WHERE u.usuario = ?;
+  `;
+
+  db.query(query, [usuario], (err, results) => {
+    if (err) {
+      console.error('Error al obtener los eventos:', err);
+      return res.status(500).send('Error en el servidor');
+    }
+    res.json(results); // Enviar los resultados
+  });
+});
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {

@@ -2,6 +2,7 @@ import styles from "./StylesUsuario.module.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+// Componente para mostrar los posts
 const PostCard = ({ title, content, author, tags }) => {
   const [expanded, setExpanded] = useState(false);
   const toggleReadMore = () => setExpanded(!expanded);
@@ -28,6 +29,7 @@ const PostCard = ({ title, content, author, tags }) => {
   );
 };
 
+// Componente para mostrar los eventos
 const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
   return (
     <div className={styles["event-card"]}>
@@ -46,11 +48,16 @@ const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
 };
 
 export function PagUsuario() {
-  //Estado para controlar si el usuario ve los eventos o los posts
-  const [vista, setVista] = useState("eventos"); //se ve eventos por default
+  // Estado para controlar si el usuario ve los eventos o los posts
+  const [vista, setVista] = useState("eventos"); // Se ve eventos por defecto
 
+  // Estado para almacenar los datos del usuario
   const [usuarioData, setUsuarioData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Estados para los posts y eventos del usuario
+  const [posts, setPosts] = useState([]);
+  const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
     // Obtener el usuario logueado desde localStorage
@@ -73,6 +80,26 @@ export function PagUsuario() {
         .catch((err) => {
           console.error("Error al obtener los datos del usuario:", err);
           setLoading(false); // Terminar el estado de carga incluso si hay error
+        });
+
+      // Obtener posts del usuario usando su idUsuario
+      axios
+        .get(`http://localhost:3001/posts?usuario=${usuario.usuario}`)
+        .then((res) => {
+          setPosts(res.data); // Almacenar los posts
+        })
+        .catch((err) => {
+          console.error("Error al obtener los posts:", err.response?.data || err.message);
+        });
+
+      // Obtener eventos del usuario usando su idUsuario
+      axios
+        .get(`http://localhost:3001/inscripcion?usuario=${usuario.usuario}`)
+        .then((res) => {
+          setEventos(res.data); // Almacenar los eventos
+        })
+        .catch((err) => {
+          console.error("Error al obtener los eventos:", err.response?.data || err.message);
         });
     }
   }, []); // El efecto solo se ejecuta una vez al montar el componente
@@ -117,6 +144,7 @@ export function PagUsuario() {
           </div>
           <div className={styles.panelUsuario}>
             <div className={styles.opciones}>
+              {/* Boton para eventos */}
               <button
                 className={`${styles.BotonEventos} ${
                   vista === "eventos" ? styles.activo : ""
@@ -125,6 +153,7 @@ export function PagUsuario() {
               >
                 Eventos
               </button>
+              {/* Boton para posts */}
               <button
                 className={`${styles.BotonPosts} ${
                   vista === "posts" ? styles.activo : ""
@@ -135,26 +164,42 @@ export function PagUsuario() {
               </button>
             </div>
             <div className={styles.eventosPosts}>
+              {/* Tarjeta de posts */}
               {vista === "posts" && (
                 <div className={styles.cardEvento}>
-                  <PostCard
-                    title="prueba"
-                    content="Este es un post de ejemplo"
-                    author="Autor Prueba"
-                    tags="#naturaleza #aventura"
-                  />
+                  {posts.length > 0 ? (
+                    posts.map((post) => (
+                      <PostCard
+                        key={post.idPost} // Usar un key único
+                        title={post.titulo}
+                        content={post.comentario}
+                        author={post.autor} // Asumiendo que tienes el autor en los posts
+                        tags={post.etiqueta} // Asumiendo que tienes etiquetas en los posts
+                      />
+                    ))
+                  ) : (
+                    <p>No has creado ningún post.</p>
+                  )}
                 </div>
               )}
 
+              {/* Tarjeta de eventos */}
               {vista === "eventos" && (
                 <div className={styles.cardEvento}>
-                  <EventCard
-                    nombre="Caminata ecológica"
-                    tipo="Recreativo"
-                    descripcion="Una caminata por la reserva natural para observar flora y fauna."
-                    fecha="2025-06-15"
-                    costo="100"
-                  />
+                  {eventos.length > 0 ? (
+                    eventos.map((evento) => (
+                      <EventCard
+                        key={evento.idInscripcion} // Usar un key único
+                        nombre={evento.nombre}
+                        tipo={evento.tipo}
+                        descripcion={evento.descripcion}
+                        fecha={evento.fechaInscrip}
+                        costo={evento.costo}
+                      />
+                    ))
+                  ) : (
+                    <p>No estás inscrito en ningún evento.</p>
+                  )}
                 </div>
               )}
             </div>
@@ -164,3 +209,4 @@ export function PagUsuario() {
     </div>
   );
 }
+export default PagUsuario;
