@@ -70,9 +70,126 @@
   font-size: 20px;
 }
 
-.eventos {
+.panelUsuario {
   border-radius: 15px;
   background-color: #f0e6e6;
   width: 70%;
   height: 100%;
+}
+
+.opciones {
+  width: 100%;
+  height: 10%;
+  padding: 10px;
+  display: flex;
+}
+
+.BotonEventos,
+.BotonPosts {
+  margin: 3px;
+  width: 20%;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #303133;
+  color: white;
+}
+
+.activo {
+  background-color: #5c7a59;
+  color: white;
+}
+
+.eventosPosts {
+  width: 100%;
+  height: 90%;
+  overflow-y: auto;
+}
+
+.cardEvento {
+  background-color: #c5b5b5;
+  margin: 10px;
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Posts */
+.postText h2 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #444;
+}
+
+.hashtags {
+  color: #5c7a59;
+  font-weight: bold;
+}
+
+.postText p {
+  color: #555;
+  margin: 0.5rem 0 0 0;
+  width: 100%;
+  word-break: break-word;
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.user {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.readMore {
+  background-color: #5c7a59;
+  color: white;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.postContent {
+  max-height: 3.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: max-height 0.3s ease;
+}
+
+.expanded {
+  max-height: none;
+}
+
+/* Eventos */
+
+.event-info {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.event-info h3 {
+  color: #59705d;
+  margin-bottom: 0.5rem;
+}
+
+.event-info p {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.event-details {
+  font-weight: bold;
+  color: #6b1e1e;
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
 }

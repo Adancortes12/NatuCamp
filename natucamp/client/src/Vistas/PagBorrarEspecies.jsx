@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "../components/CardBorrar";
 import styles from "./StylesGaleria.module.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export function BorrarEspecies() {
   // Estado para controlar qué sección del menú lateral está abierta
@@ -129,6 +130,12 @@ export function BorrarEspecies() {
 
         {/* Galería de especies en tarjetas */}
         <main className={styles.displayGaleria}>
+          <div className={styles.tituloCentro}>
+            <Link to="/Admin">
+              <i className={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+            </Link>
+            <h1 className={styles.titulo}>Eliminar Especies</h1>
+          </div>
           <div className="container">
             <div className="row">
               {especiesFiltradas.map((especie, index) => (
