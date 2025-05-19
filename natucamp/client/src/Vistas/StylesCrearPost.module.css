@@ -2,18 +2,19 @@
   display: flex;
   justify-content: center; /* centra horizontalmente */
   align-items: center; /* centra verticalmente */
-  height: 100vh;
+  height: 100%;
 }
 .contenedor {
   margin: 0px 40px 40px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100%;
   width: 80%;
   border-radius: 15px;
   background-color: #f0e6e6;
 }
+
 .divDatos {
   margin: 0px;
   padding: 40px;
@@ -21,75 +22,113 @@
   width: 100%;
 }
 
+.icono {
+  margin: 10px;
+  color: #7c2020;
+  text-align: center;
+  font-size: 40px;
+}
+.contenedorTitulo {
+  margin: 20px;
+  display: flex;
+  text-align: center;
+}
+.tituloCentro {
+  display: flex;
+  margin: auto;
+}
+
 .titulo {
-  margin-top: 40px;
+  margin: 10px;
   color: #7c2020;
   text-align: center;
 }
-
 .grupo {
+  padding: 0px;
+  margin: 0px;
   width: 100%;
   display: flex;
 }
 
 .grupoTituloEtiquetas {
   display: block;
-  width: 80%;
+  width: 75%;
 }
 
 .contenedorTextarea {
-  justify-content: center;
-  align-items: center;
-  margin: 30px;
-  padding: 20px;
-  height: 50vh;
-  width: 65vw;
+  height: 75%;
+  width: 100%;
 }
 
 .inputTitulo {
   display: block;
   margin: 30px;
-  width: 80%;
+  padding: 10px;
+  width: 90%;
+  border: solid;
+  border-color: #cbc6c6;
+  border-radius: 10px;
+  height: 50px;
+  font-size: 25px;
 }
+
 select.selectEtiquetas {
   display: block;
   margin: 30px;
+  width: 20%;
+  font-size: 25px;
+  border-style: none none solid none;
+  border-color: #7c2020;
+  color: #7c2020;
+  background-color: #f0e6e6;
 }
 
 .inputPost {
   resize: none;
   margin: 0px;
-  padding: 2px;
+  padding: 30px;
   display: block;
   background-color: #fffefa;
   height: 100%;
   width: 100%;
-  border: none;
+  border: solid;
+  border-color: #cbc6c6;
+  border-radius: 10px;
   text-align: justify;
+  font-size: 25px;
+}
+.botones {
+  padding-top: 30px;
+  width: 25%;
 }
 
-.botonGuardar {
+.botonGuardar,
+.botonCancelar {
   display: block;
-  margin: 10px;
+  margin-bottom: 20px;
   height: 5vh;
-  width: 10vw;
+  width: 100%;
   border: none;
   border-radius: 15px;
   font-weight: bolder;
   font-size: 20px;
-  background-color: #4a5e47;
-  color: #f0e6e6;
+  color: #ffffff;
 }
 
 .botonCancelar {
-  display: block;
-  margin: 10px;
-  height: 5vh;
-  width: 10vw;
-  border: none;
-  border-radius: 15px;
-  font-weight: bolder;
-  font-size: 20px;
   background-color: #7c2020;
-  color: #f0e6e6;
+}
+
+.botonGuardar {
+  background-color: #4a5e47;
+}
+
+.avisoContenedor {
+  text-align: center;
+}
+
+.aviso {
+  color: #4a5e47;
+  font-size: 20px;
+  font-weight: bold;
 }

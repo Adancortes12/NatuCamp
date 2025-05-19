@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./StylesCrearPost.module.css";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 export function PagCrearPost() {
-
   const [titulo, setTitulo] = useState("");
   const [comentario, setComentario] = useState("");
   const [tipos, setTipos] = useState([]);
@@ -14,8 +13,9 @@ export function PagCrearPost() {
 
   // Cargar tipos de actividad al montar
   useEffect(() => {
-    axios.get("http://localhost:3001/tipoact")
-      .then(res => {
+    axios
+      .get("http://localhost:3001/tipoact")
+      .then((res) => {
         if (res.data.success) {
           setTipos(res.data.data);
           if (res.data.data.length > 0) {
@@ -23,7 +23,7 @@ export function PagCrearPost() {
           }
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error al cargar tipos:", err);
       });
   }, []);
@@ -66,7 +66,17 @@ export function PagCrearPost() {
   };
   return (
     <>
-      <h1 className={styles.titulo}>Crear Post</h1>
+      <div className={styles.contenedorTitulo}>
+        <div className={styles.tituloCentro}>
+          <Link to="/Post">
+            <i className={`bi bi-arrow-left-circle-fill ${styles.icono}`}></i>
+          </Link>
+          <h1 className={styles.titulo}>Crear Posts</h1>
+        </div>
+      </div>
+      <div className={styles.avisoContenedor}>
+        {mensaje && <p className={styles.aviso}>{mensaje}</p>}
+      </div>
       <div className={styles.centro}>
         <div className={styles.contenedor}>
           <div className={styles.divDatos}>
@@ -77,11 +87,12 @@ export function PagCrearPost() {
                   id="inputTitulo"
                   className={styles.inputTitulo}
                   value={titulo}
-                   onChange={(e) => setTitulo(e.target.value)}
+                  onChange={(e) => setTitulo(e.target.value)}
+                  maxlength="70"
                 />
                 <select className={styles.selectEtiquetas}>
                   value={idTipoAct}
-              onChange={(e) => setIdTipoAct(e.target.value)}       
+                  onChange={(e) => setIdTipoAct(e.target.value)}
                   {tipos.map((tipo) => (
                     <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
                       {tipo.tipo}
@@ -94,7 +105,10 @@ export function PagCrearPost() {
                 <button className={styles.botonGuardar} onClick={handleGuardar}>
                   Guardar
                 </button>
-                <button className={styles.botonCancelar} onClick={handleCancelar}>
+                <button
+                  className={styles.botonCancelar}
+                  onClick={handleCancelar}
+                >
                   Cancelar
                 </button>
               </div>
@@ -113,7 +127,6 @@ export function PagCrearPost() {
                 onChange={(e) => setComentario(e.target.value)}
               />
             </div>
-            {mensaje && <p style={{ color: "red", marginTop: "10px" }}>{mensaje}</p>}
           </div>
         </div>
       </div>
