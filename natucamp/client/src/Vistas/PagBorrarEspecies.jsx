@@ -28,36 +28,28 @@ export function BorrarEspecies() {
   };
 
   // Obtener los datos desde el backend al montar el componente
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/especies")
-      .then((res) => setEspecies(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/tipos")
-      .then((res) => setTipos(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/ordenes")
-      .then((res) => setOrdenes(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/familias")
-      .then((res) => setFamilias(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/categorias")
-      .then((res) => setCategorias(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/clases")
-      .then((res) => setClases(res.data))
-      .catch(console.error);
-    axios
-      .get("http://localhost:3001/nomeclaturas")
-      .then((res) => setNomenclaturas(res.data))
-      .catch(console.error);
-  }, []);
+useEffect(() => {
+  Promise.all([
+    axios.get("http://localhost:3001/especies"),
+    axios.get("http://localhost:3001/tipos"),
+    axios.get("http://localhost:3001/ordenes"),
+    axios.get("http://localhost:3001/familias"),
+    axios.get("http://localhost:3001/categorias"),
+    axios.get("http://localhost:3001/clases"),
+    axios.get("http://localhost:3001/nomeclaturas"),
+  ])
+    .then(([resEspecies, resTipos, resOrdenes, resFamilias, resCategorias, resClases, resNomenclaturas]) => {
+      setEspecies(resEspecies.data);
+      setTipos(resTipos.data);
+      setOrdenes(resOrdenes.data);
+      setFamilias(resFamilias.data);
+      setCategorias(resCategorias.data);
+      setClases(resClases.data);
+      setNomenclaturas(resNomenclaturas.data);
+    })
+    .catch(console.error);
+}, []);
+
 
   // Aplicar filtro por tipo
   const especiesFiltradas =
@@ -65,9 +57,19 @@ export function BorrarEspecies() {
       ? especies
       : especies.filter((e) => e.idTipo === tipoSeleccionado);
 
-  const handleEliminarEspecie = async (idEspecie) => {
-    alert("Aqui va el metodo eliminar");
-  };
+const handleEliminarEspecie = async (idEspecie) => {
+  if (window.confirm("¿Seguro que deseas eliminar esta especie?")) {
+    try {
+      await axios.delete(`http://localhost:3001/especies/${idEspecie}`);
+      setEspecies(especies.filter((e) => e.idEspecie !== idEspecie));
+      alert("Especie eliminada correctamente.");
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar la especie.");
+    }
+  }
+};
+
 
   return (
     <>

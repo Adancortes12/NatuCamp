@@ -4,6 +4,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
+const router = express.Router();
 
 // Hacer accesibles las imágenes públicas
 app.use("/NatuFotos", express.static(path.join(__dirname, "public/NatuFotos")));
@@ -177,6 +178,26 @@ app.post("/especie", upload.single("imagen"), (req, res) => {
     }
   );
 });
+
+// Eliminar especie por ID
+app.delete("/especies/:id", (req, res) => {
+  const id = req.params.id;
+
+  const sql = "DELETE FROM especie WHERE idEspecie = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("❌ Error al eliminar especie:", err);
+      return res.status(500).send("Error al eliminar especie");
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Especie no encontrada");
+    }
+
+    res.send("✅ Especie eliminada correctamente");
+  });
+});
+
 
 // ------------------ RUTAS DE TABLAS RELACIONADAS ------------------
 
