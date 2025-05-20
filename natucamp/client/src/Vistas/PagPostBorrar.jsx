@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const PostCard = ({ title, content, author, tags }) => {
+const PostCard = ({ title, content, author, tags, onDelete }) => {
   const [expanded, setExpanded] = useState(false);
   const toggleReadMore = () => setExpanded(!expanded);
 
@@ -24,7 +24,9 @@ const PostCard = ({ title, content, author, tags }) => {
           <button className={styles.readMore} onClick={toggleReadMore}>
             {expanded ? "ver menos" : "seguir leyendo"}
           </button>
-          <button className={styles.botonBorrar}>Eliminar post</button>
+          <button className={styles.botonBorrar} onClick={onDelete}>
+            Eliminar post
+          </button>
         </div>
 
         <span className={styles.user}>por {author}</span>
@@ -43,11 +45,12 @@ export default function PostBorrar() {
   // Carga posts desde backend
   useEffect(() => {
     axios
-      .get("http://localhost:3001/posts")
+      .get("http://localhost:3001/Getpost")
       .then((res) => {
         // console.log para depurar datos recibidos
         console.log("Posts recibidos del backend:", res.data);
         const formattedPosts = res.data.map((post) => ({
+          id: post.idPost,
           title: post.titulo,
           content: post.comentario,
           author: post.autor,
@@ -76,6 +79,18 @@ export default function PostBorrar() {
     setOpenSection((prev) => (prev === section ? null : section));
   };
 
+    const handleDeletePost = async (id) => {
+    if (window.confirm("¿Estás seguro de eliminar este post?")) {
+      try {
+        await axios.delete(`http://localhost:3001/posts/${id}`);
+        setPosts(posts.filter((p) => p.id !== id));
+        alert("Post eliminado correctamente.");
+      } catch (error) {
+        console.error("Error al eliminar el post:", error);
+        alert("Error al eliminar el post.");
+      }
+    }
+  };
   // Filtrar posts localmente por etiqueta exacta y búsqueda en título
   const filteredPosts = posts.filter((post) => {
     const matchesTag = filterTag ? post.tags === filterTag : true;
@@ -161,16 +176,18 @@ export default function PostBorrar() {
           </Link>
           <h1 className={styles.titulo}>Eliminar Posts</h1>
         </div>
+
         {filteredPosts.length === 0 ? (
           <p>No hay posts que coincidan.</p>
         ) : (
-          filteredPosts.map((post, index) => (
+          filteredPosts.map((post) => (
             <PostCard
-              key={index}
+              key={post.id}
               title={post.title}
               content={post.content}
               author={post.author}
               tags={post.tags}
+              onDelete={() => handleDeletePost(post.id)}
             />
           ))
         )}

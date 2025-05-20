@@ -199,6 +199,7 @@ app.delete("/especies/:id", (req, res) => {
 });
 
 
+
 // ------------------ RUTAS DE TABLAS RELACIONADAS ------------------
 
 app.get("/tipos", (req, res) => {
@@ -288,6 +289,8 @@ app.get("/tipoact", (req, res) => {
 });
 
 // ------------------ POSTS ------------------
+
+// Crear un nuevo post
 app.post("/createPost", (req, res) => {
   const { titulo, comentario, idTipoAct, idUsuario } = req.body;
 
@@ -305,6 +308,26 @@ app.post("/createPost", (req, res) => {
     res.json({ success: true, message: "Post creado correctamente", postId: result.insertId });
   });
 });
+
+// Eliminar post por ID
+app.delete("/posts/:id", (req, res) => {
+  const id = req.params.id;
+
+  const sql = "DELETE FROM post WHERE idPost = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error("❌ Error al eliminar post:", err);
+      return res.status(500).send("Error al eliminar el post");
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Post no encontrado");
+    }
+
+    res.send("✅ Post eliminado correctamente");
+  });
+});
+
 
 
 
@@ -512,6 +535,7 @@ app.post("/eventos/eliminar", (req, res) => {
 app.get("/posts", (req, res) => {
   const query = `
     SELECT 
+
       post.titulo,
       post.comentario,
       usuario.usuario AS autor,
@@ -565,7 +589,7 @@ app.get("/posts", (req, res) => {
     res.json(results);
   });
 });
-// ------------------ OBTENER LOS POSTS ------------------
+
 // ------------------ OBTENER LOS POSTS ------------------
 app.get("/posts", (req, res) => {
   const { usuario } = req.query; // Obtener el usuario desde la query
@@ -589,6 +613,29 @@ app.get("/posts", (req, res) => {
     res.json(results); // Enviar los resultados
   });
 });
+
+app.get("/Getpost", (req, res) => {
+  const query = `
+    SELECT 
+      post.idPost,         
+      post.titulo,
+      post.comentario,
+      usuario.usuario AS autor,
+      tipoact.tipo AS etiqueta
+    FROM post
+    JOIN usuario ON post.idUsuario = usuario.idUsuario
+    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error al obtener posts:", err);
+      return res.status(500).send("Error al obtener los posts");
+    }
+    res.json(results);
+  });
+});
+
 
 
 
