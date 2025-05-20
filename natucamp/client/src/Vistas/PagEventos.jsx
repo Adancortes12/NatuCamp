@@ -99,7 +99,7 @@ const Eventos = () => {
       }
     } catch (error) {
       console.error(error);
-      alert("Error al registrar en el evento.");
+      alert("Ya te encuentras registrado en este evento.");
     }
   };
 

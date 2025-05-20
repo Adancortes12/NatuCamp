@@ -53,7 +53,7 @@ export function PagCrearPost() {
       }
     } catch (error) {
       console.error("Error en la creación del post:", error);
-      setMensaje("Error al conectar con el servidor");
+      setMensaje("Es necesario iniciar sesión para crear un post");
     }
   };
 
@@ -90,15 +90,17 @@ export function PagCrearPost() {
                   onChange={(e) => setTitulo(e.target.value)}
                   maxlength="70"
                 />
-                <select className={styles.selectEtiquetas}>
-                  value={idTipoAct}
-                  onChange={(e) => setIdTipoAct(e.target.value)}
-                  {tipos.map((tipo) => (
-                    <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
-                      {tipo.tipo}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    className={styles.selectEtiquetas}
+                    value={idTipoAct}
+                    onChange={(e) => setIdTipoAct(e.target.value)}
+                  >
+                    {tipos.map((tipo) => (
+                      <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
+                        {tipo.tipo}
+                      </option>
+                    ))}
+                  </select>
               </div>
               {/* Botones para guardar y cancelar entrada de datos */}
               <div className={styles.botones}>
