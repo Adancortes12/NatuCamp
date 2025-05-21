@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import styles from "./StylesInicioSesionAdmin.module.css";
 import iniciosesionbg from "../assets/adminInicioSesionBG.jpg";
@@ -9,12 +9,10 @@ export function PagInicioSesionAdmin() {
   const [codigoAdmin, setCodigoAdmin] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const loginAdmin = async (e) => {
     e.preventDefault();
 
-    // Validación básica
     if (!codigoAdmin || !contrasena) {
       setError("Por favor, completa todos los campos.");
       return;
@@ -28,7 +26,7 @@ export function PagInicioSesionAdmin() {
 
       if (response.data.success) {
         localStorage.setItem("admin", JSON.stringify(response.data.admin));
-        navigate("/Admin");
+        window.location.href = "/Admin"; // Redirige y fuerza recarga para actualizar navbar
       } else {
         setError(response.data.message || "Credenciales incorrectas.");
       }
@@ -94,7 +92,8 @@ export function PagInicioSesionAdmin() {
             </Link>
 
             <p className={styles.Enviar}>
-              <input type="submit" value="Iniciar Sesión" onClick={loginAdmin} />
+              {/* El onClick aquí se elimina porque el form ya maneja el submit */}
+              <input type="submit" value="Iniciar Sesión" />
             </p>
             {error && <p className={styles.error}>{error}</p>}
           </form>

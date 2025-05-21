@@ -26,7 +26,7 @@ export function Navbar() {
   const cerrarSesion = () => {
     localStorage.removeItem("usuario");
     localStorage.removeItem("admin");
-    window.location.reload(); // recarga para actualizar el navbar
+    window.location.href = "/"; // Redirige y actualiza la navbar
   };
 
   return (
