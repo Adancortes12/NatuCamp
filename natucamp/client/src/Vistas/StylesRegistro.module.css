@@ -6,7 +6,21 @@
   display: block;
   float: left;
   width: 60%;
+  height: 100%;
   background-color: #fffefa;
+}
+
+.grupoTitulo {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.icono {
+  color: #be4646;
+  font-size: 60px;
+  margin: 15px;
 }
 
 .imagen {

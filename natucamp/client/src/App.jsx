@@ -19,6 +19,7 @@ import { PagUsuario } from "./Vistas/PagUsuario";
 import Post from "./Vistas/PagPost";
 import PostBorrar from "./Vistas/PagPostBorrar";
 import { BorrarEspecies } from "./Vistas/PagBorrarEspecies";
+import PagEventosModificar from "./Vistas/PagEventosModificar";
 //bon dia
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/Post" element={<Post />} />
         <Route path="/BorrarPost" element={<PostBorrar />} />
         <Route path="/BorrarEspecie" element={<BorrarEspecies />} />
+        <Route path="/ModificarEventos" element={<PagEventosModificar />} />
       </Routes>
     </Router>
   );

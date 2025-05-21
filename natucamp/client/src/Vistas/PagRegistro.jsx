@@ -7,34 +7,43 @@ import fondo from "../assets/campana.png";
 
 export function PagRegistro() {
   const [Nombre, setnombre] = useState("");
-const [PrimerAp, setprimerAp] = useState("");
-const [SegundoAp, setsegundoAp] = useState("");
-const [Correo, setCorreo] = useState("");
-const [Celular, setCelular] = useState("");
-const [usuario, setUsuario] = useState("");
-const [Contraseña, setContraseña] = useState("");
+  const [PrimerAp, setprimerAp] = useState("");
+  const [SegundoAp, setsegundoAp] = useState("");
+  const [Correo, setCorreo] = useState("");
+  const [Celular, setCelular] = useState("");
+  const [usuario, setUsuario] = useState("");
+  const [Contraseña, setContraseña] = useState("");
 
-const Agregar = () => {
-  axios
-    .post("http://localhost:3001/create", {
-      nombre: Nombre,
-      primerAp: PrimerAp,
-      segundoAp: SegundoAp,
-      correo: Correo,
-      celular: Celular,
-      usuario: usuario,
-      contrasena: Contraseña,  // Cambié "contraseña" por "contrasena"
-    })
-    .then(() => {
-      alert("Usuario creado");
-    });
-};
-
+  const Agregar = () => {
+    axios
+      .post("http://localhost:3001/create", {
+        nombre: Nombre,
+        primerAp: PrimerAp,
+        segundoAp: SegundoAp,
+        correo: Correo,
+        celular: Celular,
+        usuario: usuario,
+        contrasena: Contraseña, // Cambié "contraseña" por "contrasena"
+      })
+      .then(() => {
+        alert("Usuario creado");
+      });
+  };
 
   return (
     <>
       <main className={StylesRegistro.main}>
-        <h1 className={StylesRegistro.titulo}>Bienvenid@ a NatuCamp</h1>
+        <div className={StylesRegistro.contenedorGrupoTitulo}>
+          <div className={StylesRegistro.grupoTitulo}>
+            <Link to="/">
+              <i
+                className={`bi bi-arrow-left-circle-fill ${StylesRegistro.icono}`}
+              ></i>
+            </Link>
+            <h1 className={StylesRegistro.titulo}>Bienvenid@ a NatuCamp</h1>
+          </div>
+        </div>
+
         <form className={StylesRegistro.formulario}>
           <fieldset>
             <input

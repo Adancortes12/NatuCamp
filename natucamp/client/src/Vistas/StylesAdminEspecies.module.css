@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center; /* centra horizontalmente */
   align-items: center; /* centra verticalmente */
-  height: 100vh;
+  height: 100%;
 }
 .grupo {
   display: block;

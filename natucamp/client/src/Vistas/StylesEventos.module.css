@@ -92,7 +92,8 @@
   cursor: pointer;
 }
 
-.eliminar {
+.eliminar,
+.modificar {
   background-color: #6b1e1e !important;
 }
 
