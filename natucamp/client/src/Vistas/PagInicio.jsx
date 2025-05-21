@@ -1,11 +1,23 @@
 import styles from "./StylesInicio.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import campana1 from "../assets/campana1.jpeg";
 import campana2 from "../assets/campana2.jpg";
 import campana3 from "../assets/campana3.jpg";
 
 export function PagInicio() {
+  const [logueado, setLogueado] = useState(false);
+
+  useEffect(() => {
+    const usuario = localStorage.getItem("usuario");
+    const admin = localStorage.getItem("admin");
+    if (usuario || admin) {
+      setLogueado(true);
+    } else {
+      setLogueado(false);
+    }
+  }, []);
+
   return (
     <>
       <div className="container text-center py-5">
@@ -81,17 +93,22 @@ export function PagInicio() {
       </div>
 
       <div className="text-center py-5">
-        <p className={styles.textoRelleno}>
-          ¡Descubre lo que La Campana tiene para ti!
-        </p>
-        <Link to="/Registro" className={styles.btnRegister}>
-          REGÍSTRATE
-        </Link>
-        <p className="mt-3">
-          <Link to="/InicioSesion" className={styles.linkInicioSesion}>
-            o inicia sesión
+        {logueado ? (
+          <Link to="/Eventos" className={styles.btnRegister}>
+            EXPLORA
           </Link>
-        </p>
+        ) : (
+          <>
+            <Link to="/Registro" className={styles.btnRegister}>
+              REGÍSTRATE
+            </Link>
+            <p className="mt-3">
+              <Link to="/InicioSesion" className={styles.linkInicioSesion}>
+                o inicia sesión
+              </Link>
+            </p>
+          </>
+        )}
       </div>
 
       <footer className={styles.footer}>

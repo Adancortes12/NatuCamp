@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import StylesRegistro from "./StylesRegistro.module.css";
 import axios from "axios";
-//Import de paginas + componentes + assets
 import fondo from "../assets/campana.png";
 
 export function PagRegistro() {
@@ -14,20 +13,42 @@ export function PagRegistro() {
   const [usuario, setUsuario] = useState("");
   const [Contraseña, setContraseña] = useState("");
 
-  const Agregar = () => {
-    axios
-      .post("http://localhost:3001/create", {
+  const navigate = useNavigate();
+
+  const Agregar = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:3001/create", {
         nombre: Nombre,
         primerAp: PrimerAp,
         segundoAp: SegundoAp,
         correo: Correo,
         celular: Celular,
         usuario: usuario,
-        contrasena: Contraseña, // Cambié "contraseña" por "contrasena"
-      })
-      .then(() => {
-        alert("Usuario creado");
+        contrasena: Contraseña,
       });
+      alert("Usuario creado");
+      limpiarCampos();
+      navigate("/InicioSesion");
+    } catch (error) {
+      alert("Error al registrar usuario");
+      console.error(error);
+    }
+  };
+
+  const limpiarCampos = () => {
+    setnombre("");
+    setprimerAp("");
+    setsegundoAp("");
+    setCorreo("");
+    setCelular("");
+    setUsuario("");
+    setContraseña("");
+  };
+
+  const cancelar = (e) => {
+    e.preventDefault();
+    limpiarCampos();
   };
 
   return (
@@ -44,7 +65,7 @@ export function PagRegistro() {
           </div>
         </div>
 
-        <form className={StylesRegistro.formulario}>
+        <form className={StylesRegistro.formulario} onSubmit={Agregar}>
           <fieldset>
             <input
               type="text"
@@ -98,14 +119,22 @@ export function PagRegistro() {
             value={Contraseña}
             onChange={(e) => setContraseña(e.target.value)}
           />
-          <p className={StylesRegistro.text}>
+
+          <div className={StylesRegistro.botones}>
             <input
               type="submit"
               value="Registrarse"
               className={StylesRegistro.registroButton}
-              onClick={Agregar}
             />
-          </p>
+            <button
+              onClick={cancelar}
+              className={StylesRegistro.registroButton}
+              style={{ backgroundColor: "#ccc", color: "#333", marginLeft: "10px" }}
+              type="button"
+            >
+              Cancelar
+            </button>
+          </div>
         </form>
       </main>
 
