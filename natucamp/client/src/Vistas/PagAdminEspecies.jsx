@@ -8,9 +8,11 @@ export function PagAdminEspecies() {
   const [filePreview, setFilePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   function handleChange(e) {
-    setSelectedFile(e.target.files[0]); // guardar archivo real
-    setFilePreview(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    setSelectedFile(file); // guardar archivo real
+    setFilePreview(URL.createObjectURL(file));
   }
+
   const [nombreCientifico, setNombreCientifico] = useState("");
   const [nombreVulgar, setNombreVulgar] = useState("");
   const [idCategoria, setIdCategoria] = useState("");
@@ -84,16 +86,36 @@ export function PagAdminEspecies() {
 
     try {
       await axios.post("http://localhost:3001/especie", formData, {
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       alert("Especie creada con éxito");
+      limpiarCampos();
     } catch (err) {
       console.error("Error al crear especie:", err);
     }
   };
+
+  const limpiarCampos = () => {
+    setSelectedFile(null);
+    setFilePreview(null);
+    setNombreCientifico("");
+    setNombreVulgar("");
+    setIdCategoria("");
+    setIdTipo("");
+    setIdOrden("");
+    setIdFamilia("");
+    setIdClase("");
+    setIdNom("");
+  };
+
+  const cancelar = (e) => {
+    e.preventDefault();
+    limpiarCampos();
+  };
+
   return (
     <>
       <div className={styles.contenedorTitulo}>
@@ -254,13 +276,21 @@ export function PagAdminEspecies() {
               >
                 Guardar
               </button>
-              <button className={styles.botonCancelar}>Cancelar</button>
+              <button
+                className={styles.botonCancelar}
+                onClick={cancelar}
+                type="button"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
           {/* Agregar imagen */}
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              <img className={styles.imagen} src={filePreview}></img>
+              {filePreview && (
+                <img className={styles.imagen} src={filePreview} alt="Preview" />
+              )}
             </div>
             <div className={styles.divBotonImagen}>
               <input
@@ -268,7 +298,7 @@ export function PagAdminEspecies() {
                 type="file"
                 accept="image/*"
                 onChange={handleChange}
-              ></input>
+              />
             </div>
           </div>
         </div>

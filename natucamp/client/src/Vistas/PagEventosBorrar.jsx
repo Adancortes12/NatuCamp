@@ -38,7 +38,6 @@ const Eventos = () => {
       });
   }, []);
 
-  // Filtrar eventos localmente por búsqueda
   useEffect(() => {
     if (busqueda.trim() === "") {
       setEventosFiltrados(eventos);
@@ -149,8 +148,11 @@ const Eventos = () => {
             <div className={styles["event-image"]}>
               <img
                 src={
-                  evento.imagen
-                    ? `http://localhost:3001/NatuFotos/${evento.imagen}`
+                  evento.imagen && evento.imagen.trim() !== ""
+                    ? `http://localhost:3001${evento.imagen.startsWith("/")
+                        ? evento.imagen
+                        : "/" + evento.imagen
+                      }`
                     : defaultImage
                 }
                 alt={evento.nombre}

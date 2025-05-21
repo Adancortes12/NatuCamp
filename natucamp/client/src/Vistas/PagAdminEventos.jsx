@@ -4,15 +4,9 @@ import axios from "axios";
 import styles from "./StylesAdminEventos.module.css";
 
 export function PagAdminEventos() {
-  // Funcion para crear el preview de la imagen en la pantalla
-  const [file, setFile] = useState(null); // ahora guardamos el archivo
-  const [preview, setPreview] = useState(null); // para mostrar vista previa
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
 
-  function handleChange(e) {
-    setFile(e.target.files[0]);
-    setPreview(URL.createObjectURL(e.target.files[0]));
-  }
-  // const [idActividad, setIdActividad] = useState();
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fecha, setFecha] = useState("");
@@ -22,7 +16,11 @@ export function PagAdminEventos() {
   const [costo, setCosto] = useState(0);
   const [tiposActividad, setTiposActividad] = useState([]);
 
-  // const [imagen, setImagen] = useState("");
+  function handleChange(e) {
+    const archivo = e.target.files[0];
+    setFile(archivo);
+    setPreview(URL.createObjectURL(archivo));
+  }
 
   const Agregar = async () => {
     const formData = new FormData();
@@ -35,15 +33,33 @@ export function PagAdminEventos() {
     formData.append("costo", costo);
     formData.append("imagen", file);
     try {
-      const res = await axios.post("http://localhost:3001/addEvent", formData, {
+      await axios.post("http://localhost:3001/addEvent", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       alert("Evento creado con éxito");
+      limpiarCampos();
     } catch (err) {
       console.error("Error al crear evento:", err);
     }
+  };
+
+  const limpiarCampos = () => {
+    setFile(null);
+    setPreview(null);
+    setNombre("");
+    setDescripcion("");
+    setFecha("");
+    setHoraInicio("");
+    setTipoAct("");
+    setCupo(0);
+    setCosto(0);
+  };
+
+  const cancelar = (e) => {
+    e.preventDefault();
+    limpiarCampos();
   };
 
   useEffect(() => {
@@ -51,7 +67,6 @@ export function PagAdminEventos() {
       .get("http://localhost:3001/tipoAc")
       .then((response) => {
         setTiposActividad(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error al obtener tipos de actividad:", error);
@@ -75,6 +90,7 @@ export function PagAdminEventos() {
               placeholder="Nombre"
               id="inputNombre"
               className={styles.inputNombre}
+              value={nombre}
               onChange={(e) => setNombre(e.target.value)}
             />
             <div className={styles.contenedorTextarea}>
@@ -85,10 +101,10 @@ export function PagAdminEventos() {
                 name="Desc"
                 id="inputDesc"
                 className={styles.inputDesc}
+                value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
               />
             </div>
-            {/* Dia*/}
             <label className={styles.inputLabelFecha}>Fecha</label>
             <input
               type="date"
@@ -98,7 +114,6 @@ export function PagAdminEventos() {
               onChange={(e) => setFecha(e.target.value)}
             />
             <div className={styles.grupo}>
-              {/* Hora */}
               <div>
                 <label className={styles.inputLabel}>Hora</label>
                 <input
@@ -109,7 +124,6 @@ export function PagAdminEventos() {
                   onChange={(e) => setHoraInicio(e.target.value)}
                 />
               </div>
-              {/* Cupo */}
               <div>
                 <label className={styles.inputLabel}>Cupo</label>
                 <input
@@ -117,12 +131,12 @@ export function PagAdminEventos() {
                   id="cupo"
                   className={styles.input}
                   min="0"
+                  value={cupo}
                   onChange={(e) => setCupo(e.target.value)}
                 />
               </div>
             </div>
             <div className={styles.grupo}>
-              {/* Tipo de actividad */}
               <div>
                 <label className={styles.inputLabel}>Tipo </label>
                 <select
@@ -144,7 +158,6 @@ export function PagAdminEventos() {
                   )}
                 </select>
               </div>
-              {/* Ingresar costo */}
               <div>
                 <label className={styles.inputLabel}>Costo</label>
                 <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
@@ -158,31 +171,43 @@ export function PagAdminEventos() {
                     className={`form-control ${styles.inputCosto}`}
                     aria-label="precio"
                     min="0"
+                    value={costo}
                     onChange={(e) => setCosto(e.target.value)}
                   />
                 </div>
               </div>
             </div>
-            {/* Botones para guardar y cancelar entrada de datos */}
 
             <div className={styles.grupo}>
-              <button className={styles.botonGuardar} onClick={Agregar}>
+              <button
+                className={styles.botonGuardar}
+                onClick={(e) => {
+                  e.preventDefault();
+                  Agregar();
+                }}
+              >
                 Guardar
               </button>
-              <button className={styles.botonCancelar}>Cancelar</button>
+              <button
+                className={styles.botonCancelar}
+                onClick={cancelar}
+                type="button"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
-          {/* Agregar imagen */}
+
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              <img className={styles.imagen} src={preview}></img>
+              {preview && <img className={styles.imagen} src={preview} alt="Preview" />}
             </div>
             <div className={styles.divBotonImagen}>
               <input
                 className={styles.botonAgregarImagen}
                 type="file"
                 onChange={handleChange}
-              ></input>
+              />
             </div>
           </div>
         </div>
