@@ -18,9 +18,12 @@ export function BorrarEspecies() {
   const [categorias, setCategorias] = useState([]);
   const [clases, setClases] = useState([]);
   const [nomenclaturas, setNomenclaturas] = useState([]);
+  
 
   // Estado para filtros
   const [tipoSeleccionado, setTipoSeleccionado] = useState("Todos"); // ID o "Todos"
+  const [busqueda, setBusqueda] = useState("");
+
 
   // Alternar la visibilidad de secciones del panel de filtros
   const toggleSection = (section) => {
@@ -52,10 +55,14 @@ useEffect(() => {
 
 
   // Aplicar filtro por tipo
-  const especiesFiltradas =
-    tipoSeleccionado === "Todos"
-      ? especies
-      : especies.filter((e) => e.idTipo === tipoSeleccionado);
+const especiesFiltradas = especies
+  .filter((e) =>
+    tipoSeleccionado === "Todos" ? true : e.idTipo === tipoSeleccionado
+  )
+  .filter((e) =>
+    e.nombreComun.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
 
 const handleEliminarEspecie = async (idEspecie) => {
   if (window.confirm("¿Seguro que deseas eliminar esta especie?")) {
@@ -115,19 +122,24 @@ const handleEliminarEspecie = async (idEspecie) => {
           </div>
 
           {/* Sección Buscar */}
-          <div className={styles["filter-group"]}>
-            <button
-              className={styles["filter-toggle"]}
-              onClick={() => toggleSection("buscar")}
-            >
-              Buscar ▼
-            </button>
-            {openSection === "buscar" && (
-              <div className={styles["filter-options"]}>
-                <input type="text" placeholder="Buscar animal..." />
-              </div>
-            )}
-          </div>
+<div className={styles["filter-group"]}>
+  <button
+    className={styles["filter-toggle"]}
+    onClick={() => toggleSection("buscar")}
+  >
+    Buscar ▼
+  </button>
+  {openSection === "buscar" && (
+    <div className={styles["filter-options"]}>
+      <input
+        type="text"
+        placeholder="Buscar animal..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+    </div>
+  )}
+</div>
         </aside>
 
         {/* Galería de especies en tarjetas */}
