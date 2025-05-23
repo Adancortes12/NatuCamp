@@ -14,10 +14,7 @@ export function PagAdmin() {
             Agregar eventos
           </Link>
           <Link to="/BorrarEventos" className={styles.botonAdmin}>
-            Eliminar eventos
-          </Link>
-          <Link to="/ModificarEventos" className={styles.botonAdmin}>
-            Modificar eventos
+            Eliminar o Modificar eventos
           </Link>
         </div>
         <div className={styles.card}>
