@@ -633,6 +633,46 @@ app.get("/inscripcion", (req, res) => {
   });
 });
 
+//---------------------------------------------------------------------
+app.post("/eventos/editar", (req, res) => {
+  const {
+    idActividad,
+    nombre,
+    descripcion,
+    fecha,
+    horaInicio,
+    cupo,
+    idTipoAct,
+    costo,
+  } = req.body;
+
+  if (!idActividad || !nombre || !descripcion || !fecha || !horaInicio || !idTipoAct) {
+    return res.status(400).json({ success: false, message: "Faltan datos obligatorios" });
+  }
+
+  const sql = `
+    UPDATE actividad SET
+      nombre = ?, descripcion = ?, fecha = ?, horaInicio = ?,
+      cupo = ?, idTipoAct = ?, costo = ?
+    WHERE idActividad = ?
+  `;
+
+  db.query(
+    sql,
+    [nombre, descripcion, fecha, horaInicio, cupo, idTipoAct, costo, idActividad],
+    (err, result) => {
+      if (err) {
+        console.error("Error al actualizar evento:", err);
+        return res.status(500).json({ success: false, message: "Error al actualizar evento" });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: "Evento no encontrado" });
+      }
+      res.json({ success: true, message: "Evento actualizado correctamente" });
+    }
+  );
+});
+
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {
   console.log("Servidor corriendo en el puerto 3001");
