@@ -2,7 +2,6 @@ import styles from "./StylesUsuario.module.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-// Componente para mostrar los posts
 const PostCard = ({ title, content, author, tags }) => {
   const [expanded, setExpanded] = useState(false);
   const toggleReadMore = () => setExpanded(!expanded);
@@ -11,7 +10,7 @@ const PostCard = ({ title, content, author, tags }) => {
     <div className={styles.postCard}>
       <div className={styles.postText}>
         <h2>
-          {title} | <span className={styles.hashtags}>{tags}</span>
+          {title} {tags && <span className={styles.hashtags}>| {tags}</span>}
         </h2>
         <p
           className={`${styles.postContent} ${expanded ? styles.expanded : ""}`}
@@ -29,7 +28,6 @@ const PostCard = ({ title, content, author, tags }) => {
   );
 };
 
-// Componente para mostrar los eventos
 const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
   return (
     <div className={styles["event-card"]}>
@@ -48,64 +46,54 @@ const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
 };
 
 export function PagUsuario() {
-  // Estado para controlar si el usuario ve los eventos o los posts
-  const [vista, setVista] = useState("eventos"); // Se ve eventos por defecto
-
-  // Estado para almacenar los datos del usuario
+  const [vista, setVista] = useState("eventos");
   const [usuarioData, setUsuarioData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Estados para los posts y eventos del usuario
   const [posts, setPosts] = useState([]);
   const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
-    // Obtener el usuario logueado desde localStorage
     const usuarioGuardado = localStorage.getItem("usuario");
 
     if (!usuarioGuardado) {
-      // Si no está logueado, redirige a la página de inicio de sesión
-      window.location.href = "/InicioSesion"; // Asegúrate de que esta URL sea correcta
+      window.location.href = "/InicioSesion";
     } else {
-      // Parseamos el usuario almacenado en localStorage
       const usuario = JSON.parse(usuarioGuardado);
 
-      // Hacer una solicitud GET al backend para obtener los datos del usuario desde la base de datos
       axios
         .get(`http://localhost:3001/usuario?usuario=${usuario.usuario}`)
         .then((res) => {
-          setUsuarioData(res.data); // Almacenar los datos del usuario
-          setLoading(false); // Terminar el estado de carga
+          setUsuarioData(res.data);
+          setLoading(false);
+
+          // Traer posts con idUsuario recibido
+          axios
+            .get(`http://localhost:3001/posts/${res.data.idUsuario}`)
+            .then((resPosts) => {
+              setPosts(resPosts.data);
+            })
+            .catch((err) => {
+              console.error("Error al obtener los posts:", err.response?.data || err.message);
+            });
         })
         .catch((err) => {
           console.error("Error al obtener los datos del usuario:", err);
-          setLoading(false); // Terminar el estado de carga incluso si hay error
+          setLoading(false);
         });
 
-      // Obtener posts del usuario usando su idUsuario
-      axios
-        .get(`http://localhost:3001/posts?usuario=${usuario.usuario}`)
-        .then((res) => {
-          setPosts(res.data); // Almacenar los posts
-        })
-        .catch((err) => {
-          console.error("Error al obtener los posts:", err.response?.data || err.message);
-        });
-
-      // Obtener eventos del usuario usando su idUsuario
       axios
         .get(`http://localhost:3001/inscripcion?usuario=${usuario.usuario}`)
         .then((res) => {
-          setEventos(res.data); // Almacenar los eventos
+          setEventos(res.data);
         })
         .catch((err) => {
           console.error("Error al obtener los eventos:", err.response?.data || err.message);
         });
     }
-  }, []); // El efecto solo se ejecuta una vez al montar el componente
+  }, []);
 
   if (loading) {
-    return <p>Cargando los datos del usuario...</p>; // Mientras se cargan los datos
+    return <p>Cargando los datos del usuario...</p>;
   }
 
   return (
@@ -117,18 +105,16 @@ export function PagUsuario() {
               <i className={`bi bi-person ${styles.icono}`}></i>
               <h2 className={styles.nomUsuario}>
                 {usuarioData ? usuarioData.usuario : "Cargando..."}{" "}
-                {/* Mostrar el nombre */}
               </h2>
               <p className={styles.userName}>
                 {usuarioData ? usuarioData.usuario : "Cargando..."}{" "}
-                {/* Nombre de usuario debajo del ícono */}
               </p>
               <hr className={styles.linea} />
               <div className={styles.datosPersonal}>
                 <p className={styles.datosTitulo}>Nombre completo</p>
                 <p className={styles.datosUsuario}>
                   {usuarioData
-                    ? `${usuarioData.nombre} ${usuarioData.primerAp} ${usuarioData.segundoAp}`
+                    ? `${usuarioData.nombre} ${usuarioData.primerAp} ${usuarioData.segundoAp || ""}`
                     : "Cargando..."}
                 </p>
                 <p className={styles.datosTitulo}>Celular</p>
@@ -144,7 +130,6 @@ export function PagUsuario() {
           </div>
           <div className={styles.panelUsuario}>
             <div className={styles.opciones}>
-              {/* Boton para eventos */}
               <button
                 className={`${styles.BotonEventos} ${
                   vista === "eventos" ? styles.activo : ""
@@ -153,7 +138,6 @@ export function PagUsuario() {
               >
                 Eventos
               </button>
-              {/* Boton para posts */}
               <button
                 className={`${styles.BotonPosts} ${
                   vista === "posts" ? styles.activo : ""
@@ -164,17 +148,16 @@ export function PagUsuario() {
               </button>
             </div>
             <div className={styles.eventosPosts}>
-              {/* Tarjeta de posts */}
               {vista === "posts" && (
                 <div className={styles.cardEvento}>
                   {posts.length > 0 ? (
                     posts.map((post) => (
                       <PostCard
-                        key={post.idPost} // Usar un key único
+                        key={post.idPost}
                         title={post.titulo}
                         content={post.comentario}
-                        author={post.autor} // Asumiendo que tienes el autor en los posts
-                        tags={post.etiqueta} // Asumiendo que tienes etiquetas en los posts
+                        author={usuarioData.usuario}
+                        tags=""
                       />
                     ))
                   ) : (
@@ -183,13 +166,12 @@ export function PagUsuario() {
                 </div>
               )}
 
-              {/* Tarjeta de eventos */}
               {vista === "eventos" && (
                 <div className={styles.cardEvento}>
                   {eventos.length > 0 ? (
                     eventos.map((evento) => (
                       <EventCard
-                        key={evento.idInscripcion} // Usar un key único
+                        key={evento.idInscripcion}
                         nombre={evento.nombre}
                         tipo={evento.tipo}
                         descripcion={evento.descripcion}
@@ -209,4 +191,5 @@ export function PagUsuario() {
     </div>
   );
 }
+
 export default PagUsuario;

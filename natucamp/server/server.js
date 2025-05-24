@@ -590,56 +590,29 @@ app.get("/posts", (req, res) => {
   });
 });
 
-// ------------------ OBTENER LOS POSTS ------------------
-app.get("/posts", (req, res) => {
-  const { usuario } = req.query; // Obtener el usuario desde la query
+// ------------------ OBTENER LOS POSTS DEL UUSUARIO------------------
+app.get('/posts/:idUsuario', (req, res) => {
+  const idUsuario = Number(req.params.idUsuario);
+
+  if (isNaN(idUsuario) || idUsuario <= 0) {
+    return res.status(400).json({ message: 'idUsuario inválido' });
+  }
+
   const query = `
-    SELECT 
-      post.titulo,
-      post.comentario,
-      usuario.usuario AS autor,
-      tipoact.tipo AS etiqueta
+    SELECT idPost, fechaPost, titulo, comentario, idTipoAct, idStatusPost
     FROM post
-    JOIN usuario ON post.idUsuario = usuario.idUsuario
-    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
-    WHERE usuario.usuario = ?;  // Aquí se filtra por el nombre de usuario
+    WHERE idUsuario = ?
+    ORDER BY fechaPost DESC;
   `;
 
-  db.query(query, [usuario], (err, results) => {
+  db.query(query, [idUsuario], (err, results) => {
     if (err) {
       console.error('Error al obtener los posts:', err);
-      return res.status(500).send('Error en el servidor');
-    }
-    res.json(results); // Enviar los resultados
-  });
-});
-
-app.get("/Getpost", (req, res) => {
-  const query = `
-    SELECT 
-      post.idPost,         
-      post.titulo,
-      post.comentario,
-      usuario.usuario AS autor,
-      tipoact.tipo AS etiqueta
-    FROM post
-    JOIN usuario ON post.idUsuario = usuario.idUsuario
-    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error al obtener posts:", err);
-      return res.status(500).send("Error al obtener los posts");
+      return res.status(500).json({ message: 'Error en el servidor' });
     }
     res.json(results);
   });
 });
-
-
-
-
-
 // ------------------ OBTENER LOS EVENTOS ------------------
 app.get("/inscripcion", (req, res) => {
   const { usuario } = req.query; // Obtener el usuario desde la query
