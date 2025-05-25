@@ -84,7 +84,9 @@ export function PagGaleria() {
         e.nombreCientifico.toLowerCase().includes(searchTerm.toLowerCase())
       );
     })
-    .filter((e) => tipoSeleccionado === "Todos" || e.idTipo === tipoSeleccionado);
+    .filter(
+      (e) => tipoSeleccionado === "Todos" || e.idTipo === tipoSeleccionado
+    );
 
   return (
     <>
@@ -220,22 +222,18 @@ export function PagGaleria() {
         </aside>
 
         {/* Galería de especies en tarjetas */}
-        <main className={styles.displayGaleria}>
-          <div className="container">
-            <div className="row">
-              {especiesFiltradas.map((especie, index) => (
-                <div className="col-sm-12 col-md-3 mb-4" key={index}>
-                  <Card
-                    imgSrc={`http://localhost:3001${especie.ruta}`}
-                    imgAlt={especie.nombreComun}
-                    nomVulgar={especie.nombreComun}
-                    nomCientifico={especie.nombreCientifico}
-                    onViewMore={() => setAnimalSeleccionado(especie)} // Al hacer clic en Ver más
-                  />
-                </div>
-              ))}
+        <main className={styles.gridGaleria}>
+          {especiesFiltradas.map((especie, index) => (
+            <div key={index} className={styles.cardWrapper}>
+              <Card
+                imgSrc={`http://localhost:3001${especie.ruta}`}
+                imgAlt={especie.nombreComun}
+                nomVulgar={especie.nombreComun}
+                nomCientifico={especie.nombreCientifico}
+                onViewMore={() => setAnimalSeleccionado(especie)}
+              />
             </div>
-          </div>
+          ))}
         </main>
       </div>
     </>
