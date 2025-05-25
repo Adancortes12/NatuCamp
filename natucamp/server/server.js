@@ -50,21 +50,45 @@ const db = mysql.createConnection({
 });
 
 // ------------------ RUTAS DE USUARIOS ------------------
-
 // Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } =
-    req.body;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
 
+  // Verificar si el usuario o el correo ya existen
   db.query(
-    "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [nombre, primerAp, segundoAp, correo, celular, usuario, contrasena],
-    (err) => {
-      if (err) return res.status(500).send("Error al crear usuario");
-      res.send("Usuario creado");
+    "SELECT * FROM usuario WHERE usuario = ? OR correo = ?",
+    [usuario, correo],
+    (err, results) => {
+      if (err) return res.status(500).send("Error en la base de datos");
+
+      if (results.length > 0) {
+        // Revisar cuál está ocupado y mandar mensaje específico
+        const usuarioOcupado = results.some(r => r.usuario === usuario);
+        const correoOcupado = results.some(r => r.correo === correo);
+
+        if (usuarioOcupado && correoOcupado) {
+          return res.status(400).send("Nombre de usuario y correo ocupados");
+        } else if (usuarioOcupado) {
+          return res.status(400).send("Nombre de usuario ocupado");
+        } else if (correoOcupado) {
+          return res.status(400).send("Correo ya registrado");
+        }
+      } else {
+        // No existe usuario ni correo, crear nuevo usuario
+        db.query(
+          "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
+          [nombre, primerAp, segundoAp, correo, celular, usuario, contrasena],
+          (err) => {
+            if (err) return res.status(500).send("Error al crear usuario");
+            res.send("Usuario creado");
+          }
+        );
+      }
     }
   );
 });
+
+
 
 // Inicio de sesión
 app.post("/login", (req, res) => {

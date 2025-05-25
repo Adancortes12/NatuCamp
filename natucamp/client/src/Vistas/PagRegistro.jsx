@@ -15,6 +15,16 @@ export function PagRegistro() {
 
   const navigate = useNavigate();
 
+  // Función para permitir solo letras y espacios (incluye acentos y ñ)
+  const soloLetras = (texto) => {
+    return texto.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+  };
+
+  // Función para permitir solo números
+  const soloNumeros = (texto) => {
+    return texto.replace(/[^0-9]/g, "");
+  };
+
   const Agregar = async (e) => {
     e.preventDefault();
     try {
@@ -31,7 +41,12 @@ export function PagRegistro() {
       limpiarCampos();
       navigate("/InicioSesion");
     } catch (error) {
-      alert("Error al registrar usuario");
+      if (error.response && error.response.status === 400) {
+        alert(error.response.data);
+        limpiarCampos();
+      } else {
+        alert("Error al registrar usuario");
+      }
       console.error(error);
     }
   };
@@ -71,7 +86,7 @@ export function PagRegistro() {
               type="text"
               placeholder="Nombre(s)"
               className={`${StylesRegistro.input} ${StylesRegistro.nombre}`}
-              onChange={(e) => setnombre(e.target.value)}
+              onChange={(e) => setnombre(soloLetras(e.target.value))}
               value={Nombre}
             />
             <div className={StylesRegistro.apellidos}>
@@ -79,14 +94,14 @@ export function PagRegistro() {
                 type="text"
                 placeholder="Primer Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.primerAp}`}
-                onChange={(e) => setprimerAp(e.target.value)}
+                onChange={(e) => setprimerAp(soloLetras(e.target.value))}
                 value={PrimerAp}
               />
               <input
                 type="text"
                 placeholder="Segundo Apellido"
                 className={`${StylesRegistro.input} ${StylesRegistro.segundoAp}`}
-                onChange={(e) => setsegundoAp(e.target.value)}
+                onChange={(e) => setsegundoAp(soloLetras(e.target.value))}
                 value={SegundoAp}
               />
             </div>
@@ -109,7 +124,7 @@ export function PagRegistro() {
             type="text"
             placeholder="Celular"
             className={`${StylesRegistro.input} ${StylesRegistro.celular}`}
-            onChange={(e) => setCelular(e.target.value)}
+            onChange={(e) => setCelular(soloNumeros(e.target.value))}
             value={Celular}
           />
           <input
