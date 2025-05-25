@@ -1,14 +1,28 @@
 import { Link } from "react-router-dom";
 import styles from "./StylesAdminEspecies.module.css";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function PagAdminEspecies() {
+  const fileInputRef = useRef(null);
+
   // Funcion para crear el preview de la imagen en la pantalla
   const [filePreview, setFilePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   function handleChange(e) {
     const file = e.target.files[0];
+
+    if (!file) return;
+
+    const tiposPermitidos = ["image/jpeg", "image/png"];
+    if (!tiposPermitidos.includes(file.type)) {
+      alert("Solo se permiten imágenes en formato .jpg o .png");
+      e.target.value = null; // Limpia el input file
+      setFile(null);
+      setPreview(null);
+      return;
+    }
+
     setSelectedFile(file); // guardar archivo real
     setFilePreview(URL.createObjectURL(file));
   }
@@ -73,6 +87,23 @@ export function PagAdminEspecies() {
   }, []);
 
   const Agregar = async () => {
+    if (
+      !nombreCientifico.trim() ||
+      !nombreVulgar.trim() ||
+      !idTipo ||
+      !idOrden ||
+      !idFamilia ||
+      !idCategoria ||
+      !idClase ||
+      !idNom ||
+      !selectedFile
+    ) {
+      alert(
+        "Por favor, completa todos los campos antes de guardar la especie."
+      );
+      return;
+    }
+
     const formData = new FormData();
     formData.append("nombreCientifico", nombreCientifico);
     formData.append("nombreVulgar", nombreVulgar);
@@ -109,6 +140,9 @@ export function PagAdminEspecies() {
     setIdFamilia("");
     setIdClase("");
     setIdNom("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const cancelar = (e) => {
@@ -289,15 +323,20 @@ export function PagAdminEspecies() {
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
               {filePreview && (
-                <img className={styles.imagen} src={filePreview} alt="Preview" />
+                <img
+                  className={styles.imagen}
+                  src={filePreview}
+                  alt="Preview"
+                />
               )}
             </div>
             <div className={styles.divBotonImagen}>
               <input
                 className={styles.botonAgregarImagen}
                 type="file"
-                accept="image/*"
                 onChange={handleChange}
+                accept=".jpg, .jpeg, .png"
+                ref={fileInputRef}
               />
             </div>
           </div>

@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import styles from "./StylesAdminEventos.module.css";
 
 export function PagAdminEventos() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
-
+  const fileInputRef = useRef(null);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fecha, setFecha] = useState("");
@@ -18,11 +18,35 @@ export function PagAdminEventos() {
 
   function handleChange(e) {
     const archivo = e.target.files[0];
+
+    if (!archivo) return;
+
+    const tiposPermitidos = ["image/jpeg", "image/png"];
+    if (!tiposPermitidos.includes(archivo.type)) {
+      alert("Solo se permiten imágenes en formato .jpg o .png");
+      e.target.value = null; // Limpia el input file
+      setFile(null);
+      setPreview(null);
+      return;
+    }
+
     setFile(archivo);
     setPreview(URL.createObjectURL(archivo));
   }
 
   const Agregar = async () => {
+    if (
+      !nombre.trim() ||
+      !descripcion.trim() ||
+      !fecha ||
+      !horaInicio ||
+      !idTipoAct ||
+      !file
+    ) {
+      alert("Por favor, completa todos los campos antes de guardar el evento.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("descripcion", descripcion);
@@ -55,6 +79,9 @@ export function PagAdminEventos() {
     setTipoAct("");
     setCupo(0);
     setCosto(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const cancelar = (e) => {
@@ -92,6 +119,7 @@ export function PagAdminEventos() {
               className={styles.inputNombre}
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
+              maxLength="50"
             />
             <div className={styles.contenedorTextarea}>
               <textarea
@@ -100,6 +128,7 @@ export function PagAdminEventos() {
                 placeholder="Descripción"
                 name="Desc"
                 id="inputDesc"
+                maxLength="200"
                 className={styles.inputDesc}
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
@@ -200,13 +229,17 @@ export function PagAdminEventos() {
 
           <div className={styles.divImagen}>
             <div className={styles.imgDisplay}>
-              {preview && <img className={styles.imagen} src={preview} alt="Preview" />}
+              {preview && (
+                <img className={styles.imagen} src={preview} alt="Preview" />
+              )}
             </div>
             <div className={styles.divBotonImagen}>
               <input
                 className={styles.botonAgregarImagen}
                 type="file"
                 onChange={handleChange}
+                accept=".jpg, .jpeg, .png"
+                ref={fileInputRef}
               />
             </div>
           </div>

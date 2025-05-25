@@ -27,6 +27,21 @@ export function PagRegistro() {
 
   const Agregar = async (e) => {
     e.preventDefault();
+
+    // Validación de campos vacíos
+    if (
+      !Nombre.trim() ||
+      !PrimerAp.trim() ||
+      !SegundoAp.trim() ||
+      !Correo.trim() ||
+      !Celular.trim() ||
+      !usuario.trim() ||
+      !Contraseña.trim()
+    ) {
+      alert("Por favor, completa todos los campos antes de continuar.");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:3001/create", {
         nombre: Nombre,
@@ -125,6 +140,7 @@ export function PagRegistro() {
             placeholder="Celular"
             className={`${StylesRegistro.input} ${StylesRegistro.celular}`}
             onChange={(e) => setCelular(soloNumeros(e.target.value))}
+            maxLength="10"
             value={Celular}
           />
           <input
@@ -144,7 +160,11 @@ export function PagRegistro() {
             <button
               onClick={cancelar}
               className={StylesRegistro.registroButton}
-              style={{ backgroundColor: "#ccc", color: "#333", marginLeft: "10px" }}
+              style={{
+                backgroundColor: "#ccc",
+                color: "#333",
+                marginLeft: "10px",
+              }}
               type="button"
             >
               Cancelar
