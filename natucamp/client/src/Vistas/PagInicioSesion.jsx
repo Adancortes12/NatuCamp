@@ -12,28 +12,56 @@ export function PagInicioSesion() {
   const [error, setError] = useState("");
   //const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post("http://localhost:3001/login", {
-        correoUsuario,
-        contrasena,
-      });
-
-      // Verificamos si el login fue exitoso
-      if (response.data.success) {
-        localStorage.setItem("usuario", JSON.stringify(response.data.user));
-        window.location.href = "/usuario"; // Esto recarga la página y actualiza el navbar
-      } else {
-        // Si no es exitoso, mostrar un mensaje de error
-        setError(response.data.message);
-      }
-    } catch (err) {
-      console.log(err);
-      setError("Hubo un error en el servidor.");
-    }
+  // Valida formato de correo electrónico
+  const validarEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   };
+
+  // Valida nombre de usuario: alfanumérico, sin espacios, mínimo 4 caracteres
+  const validarUsuario = (usuario) => {
+    const re = /^[a-zA-Z0-9_]{4,}$/;
+    return re.test(usuario);
+  };
+
+const handleLogin = async (e) => {
+  e.preventDefault();
+
+  const esEmail = validarEmail(correoUsuario);
+  const esUsuario = validarUsuario(correoUsuario);
+
+  if (!esEmail && !esUsuario) {
+    alert(
+      "Introduce un correo electrónico válido o un nombre de usuario válido (mínimo 4 caracteres, sin espacios)."
+    );
+    return;
+  }
+
+  if (contrasena.length < 6) {
+    alert("La contraseña debe tener al menos 6 caracteres.");
+    return;
+  }
+
+  setError(""); 
+
+  try {
+    const response = await axios.post("http://localhost:3001/login", {
+      correoUsuario,
+      contrasena,
+    });
+
+    if (response.data.success) {
+      localStorage.setItem("usuario", JSON.stringify(response.data.user));
+      window.location.href = "/usuario";
+    } else {
+      setError(response.data.message);
+    }
+  } catch (err) {
+    console.log(err);
+    setError("Hubo un error en el servidor.");
+  }
+};
+
 
   return (
     <div className={styles.InicioSesionBody}>
@@ -73,6 +101,7 @@ export function PagInicioSesion() {
                 className={styles.usuario}
                 onChange={(e) => setCorreoUsuario(e.target.value)}
                 placeholder="Correo electrónico o usuario"
+                value={correoUsuario}
               />
             </fieldset>
             <div className={styles.separacion2}></div>
@@ -82,6 +111,7 @@ export function PagInicioSesion() {
                 className={styles.contraseña}
                 onChange={(e) => setContrasena(e.target.value)}
                 placeholder="Contraseña"
+                value={contrasena}
               />
             </fieldset>
 
