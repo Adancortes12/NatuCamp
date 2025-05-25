@@ -34,6 +34,18 @@
   color: #333;
 }
 
+.gridGaleria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.cardWrapper {
+  display: flex;
+  justify-content: center;
+}
+
 /* Estilos del panel */
 .modalOverlay {
   position: fixed;
