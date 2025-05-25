@@ -1,8 +1,9 @@
-import { useState, useEffect,  } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./StylesEventos.module.css";
 import defaultImage from "../assets/campana.png";
 import { Link } from "react-router-dom";
+import { jsPDF } from "jspdf";
 
 const Eventos = () => {
   //Abrir y cerrar panel y establecer el evento seleccionado
@@ -14,87 +15,89 @@ const Eventos = () => {
   const [openSection, setOpenSection] = useState(null);
   const [inscritos, setInscritos] = useState({});
   const [tipoSeleccionado, setTipoSeleccionado] = useState("");
-const [fechaFiltro, setFechaFiltro] = useState("");
-const [filtroBusqueda, setFiltroBusqueda] = useState("");
+  const [fechaFiltro, setFechaFiltro] = useState("");
+  const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [tipos, setTipos] = useState([]);
 
-const [formEvento, setFormEvento] = useState({
-  
-  nombre: "",
-  descripcion: "",
-  fecha: "",
-  horaInicio: "",
-  cupo: 0,
-  idTipoAct: "",
-  costo: 0,
-});
-
-useEffect(() => {
-  axios
-    .get("http://localhost:3001/tipoAc") // o la ruta correcta en tu backend
-    .then((response) => {
-      setTipos(response.data);
-    })
-    .catch((error) => {
-      console.error("Error al cargar tipos:", error);
-    });
-}, []);
-
-
-const abrirPanelModificar = (evento) => {
-  setEventoSeleccionado(evento);
-  setFormEvento({
-    nombre: evento.nombre || "",
-    descripcion: evento.descripcion || "",
-    fecha: evento.fecha ? evento.fecha.split("T")[0] : "",
-    horaInicio: evento.horaInicio || "",
-    cupo: evento.cupo || 0,
-    idTipoAct: evento.idTipoAct ? String(evento.idTipoAct) : "",
-    costo: evento.costo || 0,
+  const [formEvento, setFormEvento] = useState({
+    nombre: "",
+    descripcion: "",
+    fecha: "",
+    horaInicio: "",
+    cupo: 0,
+    idTipoAct: "",
+    costo: 0,
   });
-  setMostrarPanel(true);
-};
 
-const cerrarPanelModificar = () => {
-  setEventoSeleccionado(null);
-  setMostrarPanel(false);
-};
-const toggleSection = (section) => {
-  setOpenSection((prev) => (prev === section ? null : section));
-};
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/tipoAc")
+      .then((response) => {
+        setTipos(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al cargar tipos:", error);
+      });
+  }, []);
 
+  const abrirPanelModificar = (evento) => {
+    setEventoSeleccionado(evento);
+    setFormEvento({
+      nombre: evento.nombre || "",
+      descripcion: evento.descripcion || "",
+      fecha: evento.fecha ? evento.fecha.split("T")[0] : "",
+      horaInicio: evento.horaInicio || "",
+      cupo: evento.cupo || 0,
+      idTipoAct: evento.idTipoAct ? String(evento.idTipoAct) : "",
+      costo: evento.costo || 0,
+    });
+    setMostrarPanel(true);
+  };
 
-const handleGuardar = async () => {
-  try {
-    const body = {
-      idActividad: eventoSeleccionado.idActividad,
-      ...formEvento,
-    };
-    const response = await axios.post("http://localhost:3001/eventos/editar", body);
-    if (response.data.success) {
-      alert("Evento actualizado correctamente");
-      setEventos((prev) =>
-        prev.map((e) =>
-          e.idActividad === eventoSeleccionado.idActividad ? { ...e, ...formEvento } : e
-        )
+  const cerrarPanelModificar = () => {
+    setEventoSeleccionado(null);
+    setMostrarPanel(false);
+  };
+
+  const toggleSection = (section) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  };
+
+  const handleGuardar = async () => {
+    try {
+      const body = {
+        idActividad: eventoSeleccionado.idActividad,
+        ...formEvento,
+      };
+      const response = await axios.post(
+        "http://localhost:3001/eventos/editar",
+        body
       );
-      setEventosFiltrados((prev) =>
-        prev.map((e) =>
-          e.idActividad === eventoSeleccionado.idActividad ? { ...e, ...formEvento } : e
-        )
-      );
-      cerrarPanelModificar();
-    } else {
-      alert("Error: " + response.data.message);
+      if (response.data.success) {
+        alert("Evento actualizado correctamente");
+        setEventos((prev) =>
+          prev.map((e) =>
+            e.idActividad === eventoSeleccionado.idActividad
+              ? { ...e, ...formEvento }
+              : e
+          )
+        );
+        setEventosFiltrados((prev) =>
+          prev.map((e) =>
+            e.idActividad === eventoSeleccionado.idActividad
+              ? { ...e, ...formEvento }
+              : e
+          )
+        );
+        cerrarPanelModificar();
+      } else {
+        alert("Error: " + response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al actualizar evento");
     }
-  } catch (error) {
-    console.error(error);
-    alert("Error al actualizar evento");
-  }
-};
-
-  //Funciones para abrir y cerrar el panel
-
+  };
 
   useEffect(() => {
     axios
@@ -124,31 +127,31 @@ const handleGuardar = async () => {
   }, []);
 
   useEffect(() => {
-  let filtrados = [...eventos];
+    let filtrados = [...eventos];
 
-  if (tipoSeleccionado !== "") {
-    filtrados = filtrados.filter(
-      (e) => String(e.idTipoAct) === tipoSeleccionado
-    );
-  }
+    if (tipoSeleccionado !== "") {
+      filtrados = filtrados.filter(
+        (e) => String(e.idTipoAct) === tipoSeleccionado
+      );
+    }
 
-  if (fechaFiltro !== "") {
-    filtrados = filtrados.filter(
-      (e) => e.fecha && e.fecha.startsWith(fechaFiltro)
-    );
-  }
+    if (fechaFiltro !== "") {
+      filtrados = filtrados.filter(
+        (e) => e.fecha && e.fecha.startsWith(fechaFiltro)
+      );
+    }
 
-  if (filtroBusqueda.trim() !== "") {
-    const texto = filtroBusqueda.toLowerCase();
-    filtrados = filtrados.filter(
-      (e) =>
-        e.nombre.toLowerCase().includes(texto) ||
-        e.descripcion.toLowerCase().includes(texto)
-    );
-  }
+    if (filtroBusqueda.trim() !== "") {
+      const texto = filtroBusqueda.toLowerCase();
+      filtrados = filtrados.filter(
+        (e) =>
+          e.nombre.toLowerCase().includes(texto) ||
+          e.descripcion.toLowerCase().includes(texto)
+      );
+    }
 
-  setEventosFiltrados(filtrados);
-}, [tipoSeleccionado, fechaFiltro, filtroBusqueda, eventos]);
+    setEventosFiltrados(filtrados);
+  }, [tipoSeleccionado, fechaFiltro, filtroBusqueda, eventos]);
 
   const handleEliminarEvento = async (idActividad) => {
     if (!window.confirm("¿Estás seguro de eliminar este evento?")) return;
@@ -173,6 +176,50 @@ const handleGuardar = async () => {
       console.error(error);
       alert("Error al eliminar el evento.");
     }
+  };
+
+  // Función para generar y descargar PDF
+  const generarReporteEvento = (evento) => {
+    const inscritosEvento = inscritos[evento.idActividad] || 0;
+    const cupoRestante = evento.cupo - inscritosEvento;
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Información del Evento", 14, 22);
+
+    doc.setFontSize(12);
+    const lineHeight = 10;
+    let startY = 40;
+
+    doc.text(`Nombre: ${evento.nombre}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(`Descripción: ${evento.descripcion}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(
+      `Fecha: ${new Date(evento.fecha).toLocaleDateString()}`,
+      14,
+      startY
+    );
+    startY += lineHeight;
+
+    doc.text(`Hora inicio: ${evento.horaInicio}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(`Inscritos: ${inscritosEvento}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(`Cupo disponible: ${cupoRestante}`, 14, startY);
+    startY += lineHeight;
+
+    doc.text(`Costo: $${evento.costo}`, 14, startY);
+
+    doc.save(`Reporte_Evento_${evento.nombre.replace(/\s+/g, "_")}.pdf`);
   };
 
   return (
@@ -257,134 +304,140 @@ const handleGuardar = async () => {
           )}
         </div>
       </aside>
-{/* Panel modificar */}
-{mostrarPanel && (
-  <div className={styles.contenedor}>
-    <div className={styles.panel}>
-      <div>
-        <input
-          placeholder="Nombre"
-          id="inputNombre"
-          className={styles.inputNombre}
-          value={formEvento.nombre}
-          onChange={(e) =>
-            setFormEvento({ ...formEvento, nombre: e.target.value })
-          }
-        />
-        <div className={styles.contenedorTextarea}>
-          <textarea
-            rows="5"
-            cols="50"
-            placeholder="Descripción"
-            name="Desc"
-            id="inputDesc"
-            className={styles.inputDesc}
-            value={formEvento.descripcion}
-            onChange={(e) =>
-              setFormEvento({ ...formEvento, descripcion: e.target.value })
-            }
-          />
-        </div>
-        <label className={styles.inputLabelFecha}>Fecha</label>
-        <input
-          type="date"
-          id="fecha"
-          className={styles.inputFecha}
-          value={formEvento.fecha}
-          onChange={(e) =>
-            setFormEvento({ ...formEvento, fecha: e.target.value })
-          }
-        />
-        <div className={styles.grupo}>
-          <div>
-            <label className={styles.inputLabel}>Hora</label>
-            <input
-              type="time"
-              id="hora"
-              className={styles.input}
-              value={formEvento.horaInicio}
-              onChange={(e) =>
-                setFormEvento({ ...formEvento, horaInicio: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label className={styles.inputLabel}>Cupo</label>
-            <input
-              type="number"
-              id="cupo"
-              className={styles.input}
-              min="0"
-              value={formEvento.cupo}
-              onChange={(e) =>
-                setFormEvento({ ...formEvento, cupo: Number(e.target.value) })
-              }
-            />
-          </div>
-        </div>
-        <div className={styles.grupo}>
-          <div>
-            <label className={styles.inputLabel}>Tipo </label>
-            <select
-              className={`form-select ${styles.inputTipo}`}
-              value={formEvento.idTipoAct}
-              onChange={(e) =>
-                setFormEvento({ ...formEvento, idTipoAct: e.target.value })
-              }
-            >
-              <option value="" disabled hidden>
-                Selecciona un tipo
-              </option>
-              {tipos.map((t) => (
-                <option key={t.idTipoAct} value={String(t.idTipoAct)}>
-                  {t.tipo}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className={styles.inputLabel}>Costo</label>
-            <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
-              <div className="input-group-prepend">
-                <span className={`input-group-text ${styles.simboloCosto}`}>$</span>
-              </div>
+
+      {/* Panel modificar */}
+      {mostrarPanel && (
+        <div className={styles.contenedor}>
+          <div className={styles.panel}>
+            <div>
               <input
-                type="number"
-                className={`form-control ${styles.inputCosto}`}
-                aria-label="precio"
-                min="0"
-                value={formEvento.costo}
+                placeholder="Nombre"
+                id="inputNombre"
+                className={styles.inputNombre}
+                value={formEvento.nombre}
                 onChange={(e) =>
-                  setFormEvento({ ...formEvento, costo: Number(e.target.value) })
+                  setFormEvento({ ...formEvento, nombre: e.target.value })
                 }
               />
+              <div className={styles.contenedorTextarea}>
+                <textarea
+                  rows="5"
+                  cols="50"
+                  placeholder="Descripción"
+                  name="Desc"
+                  id="inputDesc"
+                  className={styles.inputDesc}
+                  value={formEvento.descripcion}
+                  onChange={(e) =>
+                    setFormEvento({ ...formEvento, descripcion: e.target.value })
+                  }
+                />
+              </div>
+              <label className={styles.inputLabelFecha}>Fecha</label>
+              <input
+                type="date"
+                id="fecha"
+                className={styles.inputFecha}
+                value={formEvento.fecha}
+                onChange={(e) =>
+                  setFormEvento({ ...formEvento, fecha: e.target.value })
+                }
+              />
+              <div className={styles.grupo}>
+                <div>
+                  <label className={styles.inputLabel}>Hora</label>
+                  <input
+                    type="time"
+                    id="hora"
+                    className={styles.input}
+                    value={formEvento.horaInicio}
+                    onChange={(e) =>
+                      setFormEvento({ ...formEvento, horaInicio: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className={styles.inputLabel}>Cupo</label>
+                  <input
+                    type="number"
+                    id="cupo"
+                    className={styles.input}
+                    min="0"
+                    value={formEvento.cupo}
+                    onChange={(e) =>
+                      setFormEvento({ ...formEvento, cupo: Number(e.target.value) })
+                    }
+                  />
+                </div>
+              </div>
+              <div className={styles.grupo}>
+                <div>
+                  <label className={styles.inputLabel}>Tipo </label>
+                  <select
+                    className={`form-select ${styles.inputTipo}`}
+                    value={formEvento.idTipoAct}
+                    onChange={(e) =>
+                      setFormEvento({ ...formEvento, idTipoAct: e.target.value })
+                    }
+                  >
+                    <option value="" disabled hidden>
+                      Selecciona un tipo
+                    </option>
+                    {tipos.map((t) => (
+                      <option key={t.idTipoAct} value={String(t.idTipoAct)}>
+                        {t.tipo}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={styles.inputLabel}>Costo</label>
+                  <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
+                    <div className="input-group-prepend">
+                      <span className={`input-group-text ${styles.simboloCosto}`}>
+                        $
+                      </span>
+                    </div>
+                    <input
+                      type="number"
+                      className={`form-control ${styles.inputCosto}`}
+                      aria-label="precio"
+                      min="0"
+                      value={formEvento.costo}
+                      onChange={(e) =>
+                        setFormEvento({
+                          ...formEvento,
+                          costo: Number(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.grupo}>
+                <button className={styles.botonGuardar} onClick={handleGuardar}>
+                  Guardar
+                </button>
+                <button
+                  className={styles.botonCancelar}
+                  type="button"
+                  onClick={cerrarPanelModificar}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.divImagen}>
+              <div className={styles.imgDisplay}></div>
+              <div className={styles.divBotonImagen}>
+                <input className={styles.botonAgregarImagen} type="file" />
+              </div>
             </div>
           </div>
         </div>
-
-        <div className={styles.grupo}>
-          <button className={styles.botonGuardar} onClick={handleGuardar}>
-            Guardar
-          </button>
-          <button
-            className={styles.botonCancelar}
-            type="button"
-            onClick={cerrarPanelModificar}
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-
-      <div className={styles.divImagen}>
-        <div className={styles.imgDisplay}></div>
-        <div className={styles.divBotonImagen}>
-          <input className={styles.botonAgregarImagen} type="file" />
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       <main className={styles["event-content"]}>
         <div className={styles.tituloCentro}>
@@ -424,6 +477,12 @@ const handleGuardar = async () => {
                   onClick={() => abrirPanelModificar(evento)}
                 >
                   Modificar evento
+                </button>
+                <button
+                  className={styles.eliminar}
+                  onClick={() => generarReporteEvento(evento)}
+                >
+                  Generar reporte
                 </button>
               </div>
             </div>
