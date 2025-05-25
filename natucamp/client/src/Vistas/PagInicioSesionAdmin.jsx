@@ -10,13 +10,32 @@ export function PagInicioSesionAdmin() {
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
 
+  const validarCodigoAdmin = (codigo) => {
+    const re = /^[a-zA-Z0-9_]{4,}$/; // Alfanumérico y guion bajo, mínimo 4 caracteres
+    return re.test(codigo);
+  };
+
   const loginAdmin = async (e) => {
     e.preventDefault();
 
     if (!codigoAdmin || !contrasena) {
-      setError("Por favor, completa todos los campos.");
+      alert("Por favor, completa todos los campos.");
       return;
     }
+
+    if (!validarCodigoAdmin(codigoAdmin)) {
+      alert(
+        "El código de administrador debe tener al menos 4 caracteres y no contener espacios ni caracteres especiales."
+      );
+      return;
+    }
+
+    if (contrasena.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    setError(""); // limpiar errores previos
 
     try {
       const response = await axios.post("http://localhost:3001/loginAdmin", {
@@ -26,7 +45,7 @@ export function PagInicioSesionAdmin() {
 
       if (response.data.success) {
         localStorage.setItem("admin", JSON.stringify(response.data.admin));
-        window.location.href = "/Admin"; // Redirige y fuerza recarga para actualizar navbar
+        window.location.href = "/Admin";
       } else {
         setError(response.data.message || "Credenciales incorrectas.");
       }
@@ -92,7 +111,6 @@ export function PagInicioSesionAdmin() {
             </Link>
 
             <p className={styles.Enviar}>
-              {/* El onClick aquí se elimina porque el form ya maneja el submit */}
               <input type="submit" value="Iniciar Sesión" />
             </p>
             {error && <p className={styles.error}>{error}</p>}
