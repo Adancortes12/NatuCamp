@@ -1,6 +1,6 @@
 import styles from "./StylesPost.module.css";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const PostCard = ({ title, content, author, tags }) => {
@@ -28,18 +28,21 @@ const PostCard = ({ title, content, author, tags }) => {
 };
 
 export default function Post() {
+  const navigate = useNavigate();
   const [openSection, setOpenSection] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filterTag, setFilterTag] = useState(""); // etiqueta seleccionada
   const [searchText, setSearchText] = useState(""); // texto búsqueda
   const [tagsOptions, setTagsOptions] = useState([]); // etiquetas dinámicas
 
+  // Verifica si hay usuario logueado
+  const usuarioLogueado = !!localStorage.getItem("usuario");
+
   // Carga posts desde backend
   useEffect(() => {
     axios
       .get("http://localhost:3001/posts")
       .then((res) => {
-        // console.log para depurar datos recibidos
         console.log("Posts recibidos del backend:", res.data);
         const formattedPosts = res.data.map((post) => ({
           title: post.titulo,
@@ -78,6 +81,16 @@ export default function Post() {
       : false;
     return matchesTag && matchesSearch;
   });
+
+  // Maneja clic en "+ Hacer un post"
+  const handleCrearPostClick = () => {
+    if (!usuarioLogueado) {
+      alert("Debes iniciar sesión para hacer un post.");
+      navigate("/InicioSesion");
+      return;
+    }
+    navigate("/CrearPost");
+  };
 
   return (
     <div className={styles.page}>
@@ -150,10 +163,8 @@ export default function Post() {
 
       <main className={styles.container}>
         <div className={styles.createPostButton}>
-          <button>
-            <Link className={styles.plusIcon} to="/CrearPost">
-              + Hacer un post
-            </Link>
+          <button onClick={handleCrearPostClick} className={styles.plusIcon}>
+            + Hacer un post
           </button>
         </div>
 
