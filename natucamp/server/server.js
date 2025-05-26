@@ -775,6 +775,38 @@ app.post("/eventos/editar", uploadEvento.single("imagen"), (req, res) => {
     res.json({ success: true, message: "Evento actualizado correctamente" });
   });
 });
+// eveRepo.js// importa tu conexión MySQL (mysql2)
+
+const obtenerEventos = async () => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT
+        idActividad,
+        nombre,
+        descripcion,
+        fecha,
+        horaInicio,
+        idTipoAct,
+        costo,
+        cupo,
+        imagen,
+        vigencia,
+        tipo
+      FROM actividad
+      WHERE vigencia = 1
+      ORDER BY fecha ASC
+    `);
+    return rows;
+  } catch (error) {
+    console.error('Error al obtener eventos:', error);
+    throw error;
+  }
+};
+
+module.exports = {
+  obtenerEventos,
+};
+
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {

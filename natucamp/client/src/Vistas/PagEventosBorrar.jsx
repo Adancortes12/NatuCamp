@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./StylesEventos.module.css";
 import defaultImage from "../assets/campana.png";
@@ -6,34 +6,8 @@ import { Link } from "react-router-dom";
 import { jsPDF } from "jspdf";
 
 const Eventos = () => {
-  //Cargar imagen actual del evento
-  const [imagenActual, setImagenActual] = useState(null);
-
-  //Abrir y cerrar panel y establecer el evento seleccionado
   const [mostrarPanel, setMostrarPanel] = useState(false);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
-
-  // Funcion para crear el preview de la imagen en la pantalla
-  const fileInputRef = useRef(null);
-  const [filePreview, setFilePreview] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  function handleChange(e) {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const tiposPermitidos = ["image/jpeg", "image/png"];
-    if (!tiposPermitidos.includes(file.type)) {
-      alert("Solo se permiten imágenes en formato .jpg o .png");
-      e.target.value = null; // Limpia el input file
-      setFile(null);
-      setPreview(null);
-      return;
-    }
-
-    setSelectedFile(file); // guardar archivo real
-    setFilePreview(URL.createObjectURL(file));
-  }
 
   const [eventos, setEventos] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
@@ -57,12 +31,8 @@ const Eventos = () => {
   useEffect(() => {
     axios
       .get("http://localhost:3001/tipoAc")
-      .then((response) => {
-        setTipos(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al cargar tipos:", error);
-      });
+      .then((response) => setTipos(response.data))
+      .catch((error) => console.error("Error al cargar tipos:", error));
   }, []);
 
   const abrirPanelModificar = (evento) => {
@@ -76,16 +46,6 @@ const Eventos = () => {
       idTipoAct: evento.idTipoAct ? String(evento.idTipoAct) : "",
       costo: evento.costo || 0,
     });
-
-    // Si tiene imagen, setear la URL completa al servidor
-    if (evento.imagen) {
-      setImagenActual(`http://localhost:3001${evento.imagen}`);
-    } else {
-      setImagenActual(null);
-    }
-
-    setFilePreview(null); // limpia cualquier imagen previa seleccionada
-    setSelectedFile(null);
     setMostrarPanel(true);
   };
 
@@ -100,46 +60,30 @@ const Eventos = () => {
 
   const handleGuardar = async () => {
     try {
-      const formData = new FormData();
-      formData.append("idActividad", eventoSeleccionado.idActividad);
-      formData.append("nombre", formEvento.nombre);
-      formData.append("descripcion", formEvento.descripcion);
-      formData.append("fecha", formEvento.fecha);
-      formData.append("horaInicio", formEvento.horaInicio);
-      formData.append("cupo", formEvento.cupo);
-      formData.append("idTipoAct", formEvento.idTipoAct);
-      formData.append("costo", formEvento.costo);
-
-      if (selectedFile) {
-        formData.append("imagen", selectedFile);
-      }
-
+      const body = {
+        idActividad: eventoSeleccionado.idActividad,
+        ...formEvento,
+      };
       const response = await axios.post(
         "http://localhost:3001/eventos/editar",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        body
       );
-
       if (response.data.success) {
         alert("Evento actualizado correctamente");
-
-        // Actualizar lista de eventos
-        const updatedEventos = eventos.map((e) =>
-          e.idActividad === eventoSeleccionado.idActividad
-            ? {
-                ...e,
-                ...formEvento,
-                imagen: selectedFile ? response.data.imagen : e.imagen,
-              }
-            : e
+        setEventos((prev) =>
+          prev.map((e) =>
+            e.idActividad === eventoSeleccionado.idActividad
+              ? { ...e, ...formEvento }
+              : e
+          )
         );
-
-        setEventos(updatedEventos);
-        setEventosFiltrados(updatedEventos);
+        setEventosFiltrados((prev) =>
+          prev.map((e) =>
+            e.idActividad === eventoSeleccionado.idActividad
+              ? { ...e, ...formEvento }
+              : e
+          )
+        );
         cerrarPanelModificar();
       } else {
         alert("Error: " + response.data.message);
@@ -158,7 +102,7 @@ const Eventos = () => {
         setEventosFiltrados(response.data);
       })
       .catch((error) => {
-        console.error("Hubo un error al obtener los eventos", error);
+        console.error("Error al obtener eventos", error);
       });
 
     axios
@@ -172,26 +116,17 @@ const Eventos = () => {
           setInscritos(counts);
         }
       })
-      .catch((error) => {
-        console.error("Error al obtener inscritos", error);
-      });
+      .catch((error) => console.error("Error al obtener inscritos", error));
   }, []);
 
   useEffect(() => {
     let filtrados = [...eventos];
-
     if (tipoSeleccionado !== "") {
-      filtrados = filtrados.filter(
-        (e) => String(e.idTipoAct) === tipoSeleccionado
-      );
+      filtrados = filtrados.filter((e) => String(e.idTipoAct) === tipoSeleccionado);
     }
-
     if (fechaFiltro !== "") {
-      filtrados = filtrados.filter(
-        (e) => e.fecha && e.fecha.startsWith(fechaFiltro)
-      );
+      filtrados = filtrados.filter((e) => e.fecha && e.fecha.startsWith(fechaFiltro));
     }
-
     if (filtroBusqueda.trim() !== "") {
       const texto = filtroBusqueda.toLowerCase();
       filtrados = filtrados.filter(
@@ -200,13 +135,11 @@ const Eventos = () => {
           e.descripcion.toLowerCase().includes(texto)
       );
     }
-
     setEventosFiltrados(filtrados);
   }, [tipoSeleccionado, fechaFiltro, filtroBusqueda, eventos]);
 
   const handleEliminarEvento = async (idActividad) => {
     if (!window.confirm("¿Estás seguro de eliminar este evento?")) return;
-
     try {
       const response = await axios.post(
         "http://localhost:3001/eventos/eliminar",
@@ -214,12 +147,8 @@ const Eventos = () => {
       );
       if (response.data.success) {
         alert("Evento eliminado correctamente.");
-        setEventos((prevEventos) =>
-          prevEventos.filter((e) => e.idActividad !== idActividad)
-        );
-        setEventosFiltrados((prevEventos) =>
-          prevEventos.filter((e) => e.idActividad !== idActividad)
-        );
+        setEventos((prevEventos) => prevEventos.filter((e) => e.idActividad !== idActividad));
+        setEventosFiltrados((prevEventos) => prevEventos.filter((e) => e.idActividad !== idActividad));
       } else {
         alert("No se pudo eliminar el evento: " + response.data.message);
       }
@@ -229,94 +158,51 @@ const Eventos = () => {
     }
   };
 
-  // Formatea horaInicio a HH:mm
-  const formatoHora = (horaInicio) => {
-    if (!horaInicio) return "N/A";
-    return horaInicio.slice(0, 5);
+  const formatHoraInicio = (hora) => {
+    if (!hora) return "No disponible";
+    const [h, m] = hora.split(":");
+    return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
   };
 
-  // Función para generar y descargar PDF con lista de inscritos
-  const generarReporteEvento = async (evento) => {
-    try {
-      // Obtén la lista de inscritos para el evento
-      const res = await axios.get(
-        `http://localhost:3001/inscripcion/lista/${evento.idActividad}`
-      );
-      const listaInscritos = res.data.data || [];
+  const generarReporteEvento = (evento) => {
+    const inscritosEvento = inscritos[evento.idActividad] || 0;
+    const cupoRestante = evento.cupo - inscritosEvento;
 
-      const inscritosEvento = inscritos[evento.idActividad] || 0;
-      const cupoRestante = evento.cupo - inscritosEvento;
+    const hora = formatHoraInicio(evento.horaInicio);
 
-      const doc = new jsPDF();
+    const doc = new jsPDF();
 
-      doc.setFontSize(18);
-      doc.text("Información del Evento", 14, 22);
+    doc.setFontSize(18);
+    doc.text("Información del Evento", 14, 22);
 
-      doc.setFontSize(12);
-      let startY = 40;
-      const lineHeight = 10;
+    doc.setFontSize(12);
+    let startY = 40;
+    const lineHeight = 10;
 
-      doc.text(`Nombre: ${evento.nombre}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Nombre: ${evento.nombre}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Descripción: ${evento.descripcion}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Descripción: ${evento.descripcion}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(
-        `Fecha: ${new Date(evento.fecha).toLocaleDateString()}`,
-        14,
-        startY
-      );
-      startY += lineHeight;
+    doc.text(`Fecha: ${new Date(evento.fecha).toLocaleDateString()}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Hora inicio: ${formatoHora(evento.horaInicio)}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Hora inicio: ${hora}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Inscritos: ${inscritosEvento}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Inscritos: ${inscritosEvento}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Cupo disponible: ${cupoRestante}`, 14, startY);
-      startY += lineHeight;
+    doc.text(`Cupo disponible: ${cupoRestante}`, 14, startY);
+    startY += lineHeight;
 
-      doc.text(`Costo: $${evento.costo}`, 14, startY);
-      startY += lineHeight + 5;
+    doc.text(`Costo: $${evento.costo}`, 14, startY);
 
-      // Lista de inscritos
-      doc.setFontSize(14);
-      doc.text("Lista de Inscritos:", 14, startY);
-      startY += lineHeight;
-
-      if (listaInscritos.length === 0) {
-        doc.setFontSize(12);
-        doc.text("No hay inscritos registrados.", 14, startY);
-        startY += lineHeight;
-      } else {
-        doc.setFontSize(12);
-        listaInscritos.forEach((inscrito, index) => {
-          if (startY > 270) {
-            doc.addPage();
-            startY = 20;
-          }
-          const nombreInscrito =
-            inscrito.nombre ||
-            inscrito.usuario ||
-            inscrito.nombreUsuario ||
-            "Sin nombre";
-          const correoInscrito = inscrito.correo || inscrito.email || "";
-          const texto = `${index + 1}. ${nombreInscrito} - ${correoInscrito}`;
-          doc.text(texto, 14, startY);
-          startY += lineHeight;
-        });
-      }
-
-      doc.save(`Reporte_Evento_${evento.nombre.replace(/\s+/g, "_")}.pdf`);
-    } catch (error) {
-      console.error("Error al generar reporte con lista de inscritos:", error);
-      alert("No se pudo generar el reporte completo.");
-    }
+    doc.save(`Reporte_Evento_${evento.nombre.replace(/\s+/g, "_")}.pdf`);
   };
 
   return (
@@ -324,7 +210,6 @@ const Eventos = () => {
       <aside className={styles.sidebar}>
         <h3 className={styles["sidebar-title"]}>Filtros</h3>
 
-        {/* Filtro Tipo */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -360,7 +245,6 @@ const Eventos = () => {
           )}
         </div>
 
-        {/* Filtro Fecha */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -380,7 +264,6 @@ const Eventos = () => {
           )}
         </div>
 
-        {/* Filtro Buscar */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -402,7 +285,6 @@ const Eventos = () => {
         </div>
       </aside>
 
-      {/* Panel modificar */}
       {mostrarPanel && (
         <div className={styles.contenedor}>
           <div className={styles.panel}>
@@ -426,10 +308,7 @@ const Eventos = () => {
                   className={styles.inputDesc}
                   value={formEvento.descripcion}
                   onChange={(e) =>
-                    setFormEvento({
-                      ...formEvento,
-                      descripcion: e.target.value,
-                    })
+                    setFormEvento({ ...formEvento, descripcion: e.target.value })
                   }
                 />
               </div>
@@ -452,10 +331,7 @@ const Eventos = () => {
                     className={styles.input}
                     value={formEvento.horaInicio}
                     onChange={(e) =>
-                      setFormEvento({
-                        ...formEvento,
-                        horaInicio: e.target.value,
-                      })
+                      setFormEvento({ ...formEvento, horaInicio: e.target.value })
                     }
                   />
                 </div>
@@ -468,10 +344,7 @@ const Eventos = () => {
                     min="0"
                     value={formEvento.cupo}
                     onChange={(e) =>
-                      setFormEvento({
-                        ...formEvento,
-                        cupo: Number(e.target.value),
-                      })
+                      setFormEvento({ ...formEvento, cupo: Number(e.target.value) })
                     }
                   />
                 </div>
@@ -483,10 +356,7 @@ const Eventos = () => {
                     className={`form-select ${styles.inputTipo}`}
                     value={formEvento.idTipoAct}
                     onChange={(e) =>
-                      setFormEvento({
-                        ...formEvento,
-                        idTipoAct: e.target.value,
-                      })
+                      setFormEvento({ ...formEvento, idTipoAct: e.target.value })
                     }
                   >
                     <option value="" disabled hidden>
@@ -503,9 +373,7 @@ const Eventos = () => {
                   <label className={styles.inputLabel}>Costo</label>
                   <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
                     <div className="input-group-prepend">
-                      <span
-                        className={`input-group-text ${styles.simboloCosto}`}
-                      >
+                      <span className={`input-group-text ${styles.simboloCosto}`}>
                         $
                       </span>
                     </div>
@@ -541,21 +409,9 @@ const Eventos = () => {
             </div>
 
             <div className={styles.divImagen}>
-              <div className={styles.imgDisplay}>
-                <img
-                  className={styles.imagen}
-                  src={filePreview || imagenActual || defaultImage}
-                  alt="Imagen del evento"
-                />
-              </div>
+              <div className={styles.imgDisplay}></div>
               <div className={styles.divBotonImagen}>
-                <input
-                  className={styles.botonAgregarImagen}
-                  type="file"
-                  onChange={handleChange}
-                  accept=".jpg, .jpeg, .png"
-                  ref={fileInputRef}
-                />
+                <input className={styles.botonAgregarImagen} type="file" />
               </div>
             </div>
           </div>
@@ -586,9 +442,6 @@ const Eventos = () => {
                   Fecha: {new Date(evento.fecha).toLocaleDateString()}
                 </span>
                 <span className={styles.cost}>Costo: ${evento.costo}</span>
-                <span className={styles.cost}>
-                  Hora: {formatoHora(evento.horaInicio)}
-                </span>
               </div>
 
               <div className={styles["event-buttons"]}>
