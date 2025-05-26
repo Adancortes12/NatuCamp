@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import StylesRegistro from "./StylesRegistro.module.css";
 import axios from "axios";
 import fondo from "../assets/campana.png";
 
 export function PagRegistro() {
+  const Formulario = useRef(null);
   const [Nombre, setnombre] = useState("");
   const [PrimerAp, setprimerAp] = useState("");
   const [SegundoAp, setsegundoAp] = useState("");
@@ -12,7 +13,6 @@ export function PagRegistro() {
   const [Celular, setCelular] = useState("");
   const [usuario, setUsuario] = useState("");
   const [Contraseña, setContraseña] = useState("");
-
   const navigate = useNavigate();
 
   // Función para permitir solo letras y espacios (incluye acentos y ñ)
@@ -24,6 +24,17 @@ export function PagRegistro() {
   const soloNumeros = (texto) => {
     return texto.replace(/[^0-9]/g, "");
   };
+
+  //Funcion para que la pagina se centre en el formulario
+  useEffect(() => {
+    if (Formulario.current) {
+      Formulario.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      Formulario.current.focus();
+    }
+  }, []);
 
   const Agregar = async (e) => {
     e.preventDefault();
@@ -39,6 +50,18 @@ export function PagRegistro() {
       !Contraseña.trim()
     ) {
       alert("Por favor, completa todos los campos antes de continuar.");
+      return;
+    }
+
+    // Validación de longitud de contraseña
+    if (Contraseña.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    // Validación de número de celular
+    if (Celular.length < 10) {
+      alert("El número de celular debe tener 10 dígitos.");
       return;
     }
 
@@ -95,7 +118,11 @@ export function PagRegistro() {
           </div>
         </div>
 
-        <form className={StylesRegistro.formulario} onSubmit={Agregar}>
+        <form
+          className={StylesRegistro.formulario}
+          onSubmit={Agregar}
+          ref={Formulario}
+        >
           <fieldset>
             <input
               type="text"

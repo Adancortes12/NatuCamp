@@ -329,7 +329,10 @@ const Eventos = () => {
                   className={styles.inputDesc}
                   value={formEvento.descripcion}
                   onChange={(e) =>
-                    setFormEvento({ ...formEvento, descripcion: e.target.value })
+                    setFormEvento({
+                      ...formEvento,
+                      descripcion: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -352,7 +355,10 @@ const Eventos = () => {
                     className={styles.input}
                     value={formEvento.horaInicio}
                     onChange={(e) =>
-                      setFormEvento({ ...formEvento, horaInicio: e.target.value })
+                      setFormEvento({
+                        ...formEvento,
+                        horaInicio: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -365,7 +371,10 @@ const Eventos = () => {
                     min="0"
                     value={formEvento.cupo}
                     onChange={(e) =>
-                      setFormEvento({ ...formEvento, cupo: Number(e.target.value) })
+                      setFormEvento({
+                        ...formEvento,
+                        cupo: Number(e.target.value),
+                      })
                     }
                   />
                 </div>
@@ -377,7 +386,10 @@ const Eventos = () => {
                     className={`form-select ${styles.inputTipo}`}
                     value={formEvento.idTipoAct}
                     onChange={(e) =>
-                      setFormEvento({ ...formEvento, idTipoAct: e.target.value })
+                      setFormEvento({
+                        ...formEvento,
+                        idTipoAct: e.target.value,
+                      })
                     }
                   >
                     <option value="" disabled hidden>
@@ -394,7 +406,9 @@ const Eventos = () => {
                   <label className={styles.inputLabel}>Costo</label>
                   <div className={`input-group mb-3 ${styles.inputGrupoCosto}`}>
                     <div className="input-group-prepend">
-                      <span className={`input-group-text ${styles.simboloCosto}`}>
+                      <span
+                        className={`input-group-text ${styles.simboloCosto}`}
+                      >
                         $
                       </span>
                     </div>
@@ -463,6 +477,7 @@ const Eventos = () => {
                   Fecha: {new Date(evento.fecha).toLocaleDateString()}
                 </span>
                 <span className={styles.cost}>Costo: ${evento.costo}</span>
+                <span className={styles.cost}>Hora: {evento.hora}</span>
               </div>
 
               <div className={styles["event-buttons"]}>

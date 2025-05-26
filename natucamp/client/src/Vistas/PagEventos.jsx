@@ -9,8 +9,7 @@ const Eventos = () => {
   const [openSection, setOpenSection] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [inscritos, setInscritos] = useState({});
-
-  
+  const [hora, setHora] = useState({});
 
   // Filtros
   const [tipoSeleccionado, setTipoSeleccionado] = useState(""); // "" para Todos
@@ -125,8 +124,8 @@ const Eventos = () => {
                   value=""
                   checked={tipoSeleccionado === ""}
                   onChange={() => setTipoSeleccionado("")}
-                />
-                {" "}Todos
+                />{" "}
+                Todos
               </label>
               {tipos.map((t) => (
                 <label key={t.idTipoAct}>
@@ -136,8 +135,8 @@ const Eventos = () => {
                     value={String(t.idTipoAct)}
                     checked={tipoSeleccionado === String(t.idTipoAct)}
                     onChange={() => setTipoSeleccionado(String(t.idTipoAct))}
-                  />
-                  {" "}{t.tipo}
+                  />{" "}
+                  {t.tipo}
                 </label>
               ))}
             </div>
@@ -189,7 +188,9 @@ const Eventos = () => {
       <main className={styles["event-content"]}>
         <h2 className={styles.title}>Eventos disponibles</h2>
 
-        {eventos.length === 0 && <p>No se encontraron eventos con esos filtros.</p>}
+        {eventos.length === 0 && (
+          <p>No se encontraron eventos con esos filtros.</p>
+        )}
 
         {eventos.map((evento) => (
           <div className={styles["event-card"]} key={evento.idActividad}>
@@ -203,6 +204,7 @@ const Eventos = () => {
                   Fecha: {new Date(evento.fecha).toLocaleDateString()}
                 </span>
                 <span className={styles.cost}>Costo: ${evento.costo}</span>
+                <span className={styles.cost}>Hora: {evento.hora}</span>
               </div>
               <div className={styles["event-buttons"]}>
                 <button

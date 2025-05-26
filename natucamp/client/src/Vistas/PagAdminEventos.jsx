@@ -7,6 +7,7 @@ export function PagAdminEventos() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
+  const registro = useRef(null);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fecha, setFecha] = useState("");
@@ -33,6 +34,17 @@ export function PagAdminEventos() {
     setFile(archivo);
     setPreview(URL.createObjectURL(archivo));
   }
+
+  //Funcion para que la pagina se centre en el formulario
+  useEffect(() => {
+    if (registro.current) {
+      registro.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      registro.current.focus();
+    }
+  }, []);
 
   const Agregar = async () => {
     if (
@@ -112,7 +124,7 @@ export function PagAdminEventos() {
       </div>
       <div className={styles.centro}>
         <div className={styles.contenedor}>
-          <div>
+          <div ref={registro}>
             <input
               placeholder="Nombre"
               id="inputNombre"

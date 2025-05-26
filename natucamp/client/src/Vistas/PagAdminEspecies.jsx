@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 
 export function PagAdminEspecies() {
   const fileInputRef = useRef(null);
-
+  const registro = useRef(null);
   // Funcion para crear el preview de la imagen en la pantalla
   const [filePreview, setFilePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -26,6 +26,17 @@ export function PagAdminEspecies() {
     setSelectedFile(file); // guardar archivo real
     setFilePreview(URL.createObjectURL(file));
   }
+
+  //Funcion para que la pagina se centre en el formulario
+  useEffect(() => {
+    if (registro.current) {
+      registro.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      registro.current.focus();
+    }
+  }, []);
 
   const [nombreCientifico, setNombreCientifico] = useState("");
   const [nombreVulgar, setNombreVulgar] = useState("");
@@ -162,7 +173,7 @@ export function PagAdminEspecies() {
       </div>
       <div className={styles.centro}>
         <div className={styles.contenedor}>
-          <div className={styles.divDatos}>
+          <div className={styles.divDatos} ref={registro}>
             <input
               placeholder="Nombre vulgar"
               id="inputNombre"

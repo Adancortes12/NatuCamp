@@ -28,7 +28,7 @@ const PostCard = ({ title, content, author, tags }) => {
   );
 };
 
-const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
+const EventCard = ({ nombre, tipo, descripcion, fecha, costo, hora }) => {
   return (
     <div className={styles["event-card"]}>
       <div className={styles["event-info"]}>
@@ -39,6 +39,7 @@ const EventCard = ({ nombre, tipo, descripcion, fecha, costo }) => {
         <div className={styles["event-details"]}>
           <span className={styles.date}>Fecha: {fecha}</span>
           <span className={styles.cost}>Costo: ${costo}</span>
+          <span className={styles.cost}>Hora: {hora}</span>
         </div>
       </div>
     </div>
@@ -73,7 +74,10 @@ export function PagUsuario() {
               setPosts(resPosts.data);
             })
             .catch((err) => {
-              console.error("Error al obtener los posts:", err.response?.data || err.message);
+              console.error(
+                "Error al obtener los posts:",
+                err.response?.data || err.message
+              );
             });
         })
         .catch((err) => {
@@ -87,7 +91,10 @@ export function PagUsuario() {
           setEventos(res.data);
         })
         .catch((err) => {
-          console.error("Error al obtener los eventos:", err.response?.data || err.message);
+          console.error(
+            "Error al obtener los eventos:",
+            err.response?.data || err.message
+          );
         });
     }
   }, []);
@@ -114,7 +121,9 @@ export function PagUsuario() {
                 <p className={styles.datosTitulo}>Nombre completo</p>
                 <p className={styles.datosUsuario}>
                   {usuarioData
-                    ? `${usuarioData.nombre} ${usuarioData.primerAp} ${usuarioData.segundoAp || ""}`
+                    ? `${usuarioData.nombre} ${usuarioData.primerAp} ${
+                        usuarioData.segundoAp || ""
+                      }`
                     : "Cargando..."}
                 </p>
                 <p className={styles.datosTitulo}>Celular</p>
