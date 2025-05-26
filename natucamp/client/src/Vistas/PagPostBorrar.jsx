@@ -13,9 +13,7 @@ const PostCard = ({ title, content, author, tags, onDelete }) => {
         <h2>
           {title} | <span className={styles.hashtags}>{tags}</span>
         </h2>
-        <p
-          className={`${styles.postContent} ${expanded ? styles.expanded : ""}`}
-        >
+        <p className={`${styles.postContent} ${expanded ? styles.expanded : ""}`}>
           {content}
         </p>
       </div>
@@ -28,7 +26,6 @@ const PostCard = ({ title, content, author, tags, onDelete }) => {
             Eliminar post
           </button>
         </div>
-
         <span className={styles.user}>por {author}</span>
       </div>
     </div>
@@ -38,19 +35,17 @@ const PostCard = ({ title, content, author, tags, onDelete }) => {
 export default function PostBorrar() {
   const [openSection, setOpenSection] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [filterTag, setFilterTag] = useState(""); // etiqueta seleccionada
-  const [searchText, setSearchText] = useState(""); // texto búsqueda
-  const [tagsOptions, setTagsOptions] = useState([]); // etiquetas dinámicas
+  const [filterTag, setFilterTag] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [tagsOptions, setTagsOptions] = useState([]);
 
-  // Carga posts desde backend
+  // Cargar posts del backend
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/Getpost")
-      .then((res) => {
-        // console.log para depurar datos recibidos
-        console.log("Posts recibidos del backend:", res.data);
-        const formattedPosts = res.data.map((post) => ({
-          id: post.idPost,
+    axios.get("http://localhost:3001/posts")
+      .then(res => {
+        console.log("Posts raw data:", res.data);
+        const formattedPosts = res.data.map(post => ({
+          id: post.idPost,      // Importante: idPost debe venir del backend
           title: post.titulo,
           content: post.comentario,
           author: post.autor,
@@ -58,41 +53,55 @@ export default function PostBorrar() {
         }));
         setPosts(formattedPosts);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error al cargar posts:", error);
       });
   }, []);
 
-  // Carga etiquetas dinámicas desde backend
+  // Cargar etiquetas dinámicas
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/tipoAc")
-      .then((res) => {
-        setTagsOptions(res.data.map((t) => t.tipo));
+    axios.get("http://localhost:3001/tipoAc")
+      .then(res => {
+        setTagsOptions(res.data.map(t => t.tipo));
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error al cargar etiquetas:", error);
       });
   }, []);
 
   const toggleSection = (section) => {
-    setOpenSection((prev) => (prev === section ? null : section));
+    setOpenSection(prev => (prev === section ? null : section));
   };
 
-    const handleDeletePost = async (id) => {
+  // Función para eliminar post
+  const handleDeletePost = async (id) => {
+    console.log("Intentando eliminar post con id:", id);
+    if (!id) {
+      alert("ID inválido para eliminar el post");
+      return;
+    }
     if (window.confirm("¿Estás seguro de eliminar este post?")) {
       try {
-        await axios.delete(`http://localhost:3001/posts/${id}`);
-        setPosts(posts.filter((p) => p.id !== id));
-        alert("Post eliminado correctamente.");
+        const response = await axios.delete(`http://localhost:3001/posts/${id}`);
+        if (response.data && response.data.message) {
+          alert(response.data.message);
+        } else {
+          alert("Post eliminado correctamente.");
+        }
+        setPosts(prevPosts => prevPosts.filter(p => p.id !== id));
       } catch (error) {
         console.error("Error al eliminar el post:", error);
-        alert("Error al eliminar el post.");
+        if (error.response && error.response.data && error.response.data.error) {
+          alert(`Error: ${error.response.data.error}`);
+        } else {
+          alert("Error al eliminar el post.");
+        }
       }
     }
   };
-  // Filtrar posts localmente por etiqueta exacta y búsqueda en título
-  const filteredPosts = posts.filter((post) => {
+
+  // Filtrar posts según etiqueta y búsqueda por título
+  const filteredPosts = posts.filter(post => {
     const matchesTag = filterTag ? post.tags === filterTag : true;
     const matchesSearch = post.title
       ? post.title.toLowerCase().includes(searchText.toLowerCase())
@@ -105,12 +114,8 @@ export default function PostBorrar() {
       <aside className={styles.sidebar}>
         <h3 className={styles.sidebarTitle}>Filtros</h3>
 
-        {/* Filtro etiquetas dinámicas */}
         <div className={styles.filterGroup}>
-          <button
-            className={styles.filterToggle}
-            onClick={() => toggleSection("etiquetas")}
-          >
+          <button className={styles.filterToggle} onClick={() => toggleSection("etiquetas")}>
             Etiquetas ▼
           </button>
           {openSection === "etiquetas" && (
@@ -119,7 +124,7 @@ export default function PostBorrar() {
                 <p>Cargando etiquetas...</p>
               ) : (
                 <>
-                  {tagsOptions.map((tag) => (
+                  {tagsOptions.map(tag => (
                     <label key={tag}>
                       <input
                         type="radio"
@@ -147,12 +152,8 @@ export default function PostBorrar() {
           )}
         </div>
 
-        {/* Filtro búsqueda por título */}
         <div className={styles.filterGroup}>
-          <button
-            className={styles.filterToggle}
-            onClick={() => toggleSection("buscar")}
-          >
+          <button className={styles.filterToggle} onClick={() => toggleSection("buscar")}>
             Buscar ▼
           </button>
           {openSection === "buscar" && (
@@ -161,7 +162,7 @@ export default function PostBorrar() {
                 type="text"
                 placeholder="Buscar por título..."
                 value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={e => setSearchText(e.target.value)}
                 autoComplete="off"
               />
             </div>
@@ -180,9 +181,9 @@ export default function PostBorrar() {
         {filteredPosts.length === 0 ? (
           <p>No hay posts que coincidan.</p>
         ) : (
-          filteredPosts.map((post) => (
+          filteredPosts.map(post => (
             <PostCard
-              key={post.id}
+              key={post.id}  // clave única importante para React
               title={post.title}
               content={post.content}
               author={post.author}

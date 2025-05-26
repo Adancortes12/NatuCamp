@@ -343,22 +343,28 @@ app.post("/createPost", (req, res) => {
 
 // Eliminar post por ID
 app.delete("/posts/:id", (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id, 10);
+  console.log("Petición DELETE recibida para id:", id);
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
 
   const sql = "DELETE FROM post WHERE idPost = ?";
   db.query(sql, [id], (err, result) => {
     if (err) {
       console.error("❌ Error al eliminar post:", err);
-      return res.status(500).send("Error al eliminar el post");
+      return res.status(500).json({ error: "Error al eliminar el post" });
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).send("Post no encontrado");
+      return res.status(404).json({ error: "Post no encontrado" });
     }
 
-    res.send("✅ Post eliminado correctamente");
+    res.json({ message: "Post eliminado correctamente" });
   });
 });
+
 
 //-----------------OBTENER DATOS DEL USUARIO-----------------
 // Obtener datos del usuario por id o correo
@@ -560,6 +566,7 @@ app.post("/eventos/eliminar", (req, res) => {
 app.get("/posts", (req, res) => {
   const query = `
     SELECT 
+      post.idPost,
       post.titulo,
       post.comentario,
       usuario.usuario AS autor,
@@ -568,15 +575,16 @@ app.get("/posts", (req, res) => {
     JOIN usuario ON post.idUsuario = usuario.idUsuario
     JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
   `;
-
   db.query(query, (err, results) => {
     if (err) {
-      console.error("Error al obtener posts:", err);
-      return res.status(500).send("Error al obtener los posts");
+      console.error(err);
+      return res.status(500).send("Error al obtener posts");
     }
     res.json(results);
   });
 });
+
+
 //------------------FILTRO DE POSTS------------------
 app.get("/posts", (req, res) => {
   const { etiqueta, titulo } = req.query;
