@@ -39,13 +39,11 @@ export default function PostBorrar() {
   const [searchText, setSearchText] = useState("");
   const [tagsOptions, setTagsOptions] = useState([]);
 
-  // Cargar posts del backend
   useEffect(() => {
     axios.get("http://localhost:3001/posts")
       .then(res => {
-        console.log("Posts raw data:", res.data);
         const formattedPosts = res.data.map(post => ({
-          id: post.idPost,      // Importante: idPost debe venir del backend
+          id: post.idPost, // ✅ ahora tiene id único
           title: post.titulo,
           content: post.comentario,
           author: post.autor,
@@ -58,7 +56,6 @@ export default function PostBorrar() {
       });
   }, []);
 
-  // Cargar etiquetas dinámicas
   useEffect(() => {
     axios.get("http://localhost:3001/tipoAc")
       .then(res => {
@@ -73,9 +70,7 @@ export default function PostBorrar() {
     setOpenSection(prev => (prev === section ? null : section));
   };
 
-  // Función para eliminar post
   const handleDeletePost = async (id) => {
-    console.log("Intentando eliminar post con id:", id);
     if (!id) {
       alert("ID inválido para eliminar el post");
       return;
@@ -91,7 +86,7 @@ export default function PostBorrar() {
         setPosts(prevPosts => prevPosts.filter(p => p.id !== id));
       } catch (error) {
         console.error("Error al eliminar el post:", error);
-        if (error.response && error.response.data && error.response.data.error) {
+        if (error.response?.data?.error) {
           alert(`Error: ${error.response.data.error}`);
         } else {
           alert("Error al eliminar el post.");
@@ -100,7 +95,6 @@ export default function PostBorrar() {
     }
   };
 
-  // Filtrar posts según etiqueta y búsqueda por título
   const filteredPosts = posts.filter(post => {
     const matchesTag = filterTag ? post.tags === filterTag : true;
     const matchesSearch = post.title
@@ -183,7 +177,7 @@ export default function PostBorrar() {
         ) : (
           filteredPosts.map(post => (
             <PostCard
-              key={post.id}  // clave única importante para React
+              key={post.id} // ✅ ya es único
               title={post.title}
               content={post.content}
               author={post.author}

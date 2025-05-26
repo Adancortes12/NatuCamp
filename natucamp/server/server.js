@@ -630,15 +630,15 @@ app.get("/posts", (req, res) => {
   const { etiqueta, titulo } = req.query;
 
   let query = `
-    SELECT 
-      post.titulo,
-      post.comentario,
-      usuario.usuario AS autor,
-      tipoact.tipo AS etiqueta
-    FROM post
-    JOIN usuario ON post.idUsuario = usuario.idUsuario
-    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
-    WHERE 1=1
+SELECT 
+  post.idPost,
+  post.titulo,
+  post.comentario,
+  usuario.usuario AS autor,
+  tipoact.tipo AS etiqueta
+FROM post
+JOIN usuario ON post.idUsuario = usuario.idUsuario
+JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
   `;
 
   const params = [];
