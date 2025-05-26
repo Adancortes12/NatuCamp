@@ -5,6 +5,8 @@ import axios from "axios";
 import fondo from "../assets/campana.png";
 
 export function PagRegistro() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const Formulario = useRef(null);
   const [Nombre, setnombre] = useState("");
   const [PrimerAp, setprimerAp] = useState("");
@@ -60,12 +62,13 @@ export function PagRegistro() {
     }
 
     // Validación de número de celular
-    if (Celular.length < 10) {
+    if (Celular.trim().length < 10) {
       alert("El número de celular debe tener 10 dígitos.");
       return;
     }
 
     try {
+      setIsSubmitting(true);
       await axios.post("http://localhost:3001/create", {
         nombre: Nombre,
         primerAp: PrimerAp,
@@ -76,6 +79,7 @@ export function PagRegistro() {
         contrasena: Contraseña,
       });
       alert("Usuario creado");
+      setIsSubmitting(false);
       limpiarCampos();
       navigate("/InicioSesion");
     } catch (error) {
