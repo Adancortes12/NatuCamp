@@ -57,11 +57,18 @@
   padding: 1.5rem;
   margin-bottom: 2rem;
   align-items: center;
+  flex-wrap: wrap;              /* AGREGADO */
+  max-width: 100%;              /* AGREGADO */
+  overflow: hidden;             /* AGREGADO */
 }
 
 .event-info {
   flex: 1;
   padding-right: 1rem;
+  min-width: 0;                 /* AGREGADO */
+  overflow-wrap: break-word;   /* AGREGADO */
+  word-break: break-word;      /* AGREGADO */
+  white-space: normal;         /* AGREGADO */
 }
 
 .event-info h3 {
@@ -72,6 +79,10 @@
 .event-info p {
   color: #555;
   margin-bottom: 1rem;
+  word-wrap: break-word;       /* AGREGADO */
+  overflow-wrap: break-word;   /* AGREGADO */
+  max-width: 100%;             /* AGREGADO */
+  white-space: normal;         /* AGREGADO */
 }
 
 .event-details {
