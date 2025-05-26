@@ -26,6 +26,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Configuración de multer para almacenar imágenes en /public/NatuEventos
 const storageEventos = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "/public/NatuEventos"));
@@ -52,7 +53,8 @@ const db = mysql.createConnection({
 // ------------------ RUTAS DE USUARIOS ------------------
 // Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } =
+    req.body;
 
   // Verificar si el usuario, correo o celular ya existen
   db.query(
@@ -68,7 +70,9 @@ app.post("/create", (req, res) => {
         const celularOcupado = results.some((r) => r.celular === celular);
 
         if (usuarioOcupado && correoOcupado && celularOcupado) {
-          return res.status(400).send("Nombre de usuario, correo y celular ocupados");
+          return res
+            .status(400)
+            .send("Nombre de usuario, correo y celular ocupados");
         } else if (usuarioOcupado) {
           return res.status(400).send("Nombre de usuario ocupado");
         } else if (correoOcupado) {
@@ -80,7 +84,15 @@ app.post("/create", (req, res) => {
         // No existe usuario ni correo ni celular, crear nuevo usuario
         db.query(
           "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
-          [nombre, primerAp, segundoAp || null, correo, celular || null, usuario, contrasena],
+          [
+            nombre,
+            primerAp,
+            segundoAp || null,
+            correo,
+            celular || null,
+            usuario,
+            contrasena,
+          ],
           (err) => {
             if (err) {
               console.error("Error al insertar usuario:", err);
@@ -93,7 +105,6 @@ app.post("/create", (req, res) => {
     }
   );
 });
-
 
 // Inicio de sesión
 app.post("/login", (req, res) => {
@@ -371,7 +382,6 @@ app.delete("/posts/:id", (req, res) => {
   });
 });
 
-
 //-----------------OBTENER DATOS DEL USUARIO-----------------
 // Obtener datos del usuario por id o correo
 app.get("/usuario", (req, res) => {
@@ -456,7 +466,6 @@ app.get("/eventos", (req, res) => {
     res.json(result);
   });
 });
-
 
 //------------------Login de ADMINNISTRADOR------------------
 app.post("/loginAdmin", (req, res) => {
@@ -608,12 +617,13 @@ app.get("/eventos", (req, res) => {
   db.query(query, params, (err, results) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ success: false, message: "Error al obtener eventos" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener eventos" });
     }
     res.json(results);
   });
 });
-
 
 //------------------FILTRO DE POSTS------------------
 app.get("/posts", (req, res) => {
@@ -696,7 +706,7 @@ app.get("/inscripcion", (req, res) => {
 });
 
 //---------------------------------------------------------------------
-app.post("/eventos/editar", (req, res) => {
+app.post("/eventos/editar", uploadEvento.single("imagen"), (req, res) => {
   const {
     idActividad,
     nombre,
@@ -707,6 +717,11 @@ app.post("/eventos/editar", (req, res) => {
     idTipoAct,
     costo,
   } = req.body;
+
+  let imagenPath = null;
+  if (req.file) {
+    imagenPath = `/NatuEventos/${req.file.filename}`;
+  }
 
   if (
     !idActividad ||
@@ -721,61 +736,45 @@ app.post("/eventos/editar", (req, res) => {
       .json({ success: false, message: "Faltan datos obligatorios" });
   }
 
-  const sql = `
+  // Construir query condicional
+  let sql = `
     UPDATE actividad SET
       nombre = ?, descripcion = ?, fecha = ?, horaInicio = ?,
       cupo = ?, idTipoAct = ?, costo = ?
-    WHERE idActividad = ?
   `;
+  const params = [
+    nombre,
+    descripcion,
+    fecha,
+    horaInicio,
+    cupo,
+    idTipoAct,
+    costo,
+  ];
 
-  db.query(
-    sql,
-    [
-      nombre,
-      descripcion,
-      fecha,
-      horaInicio,
-      cupo,
-      idTipoAct,
-      costo,
-      idActividad,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Error al actualizar evento:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Error al actualizar evento" });
-      }
-      if (result.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Evento no encontrado" });
-      }
-      res.json({ success: true, message: "Evento actualizado correctamente" });
-    }
-  );
-});
-app.get("/inscripcion/lista/:idActividad", (req, res) => {
-  const { idActividad } = req.params;
+  if (imagenPath) {
+    sql += `, imagen = ?`;
+    params.push(imagenPath);
+  }
 
-  const sql = `
-    SELECT u.nombre, u.primerAp, u.segundoAp, u.correo, u.celular, u.usuario
-    FROM inscripcion i
-    JOIN usuario u ON i.idUsuario = u.idUsuario
-    WHERE i.idActividad = ?
-  `;
+  sql += ` WHERE idActividad = ?`;
+  params.push(idActividad);
 
-  db.query(sql, [idActividad], (err, results) => {
+  db.query(sql, params, (err, result) => {
     if (err) {
-      console.error("Error al obtener lista de inscritos:", err);
-      return res.status(500).json({ success: false, message: "Error al obtener inscritos" });
+      console.error("Error al actualizar evento:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al actualizar evento" });
     }
-    res.json({ success: true, data: results });
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Evento no encontrado" });
+    }
+    res.json({ success: true, message: "Evento actualizado correctamente" });
   });
 });
-
-
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {

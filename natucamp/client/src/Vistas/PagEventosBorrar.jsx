@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import styles from "./StylesEventos.module.css";
 import defaultImage from "../assets/campana.png";
@@ -6,9 +6,34 @@ import { Link } from "react-router-dom";
 import { jsPDF } from "jspdf";
 
 const Eventos = () => {
+  //Cargar imagen actual del evento
+  const [imagenActual, setImagenActual] = useState(null);
+
   //Abrir y cerrar panel y establecer el evento seleccionado
   const [mostrarPanel, setMostrarPanel] = useState(false);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+
+  // Funcion para crear el preview de la imagen en la pantalla
+  const fileInputRef = useRef(null);
+  const [filePreview, setFilePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  function handleChange(e) {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const tiposPermitidos = ["image/jpeg", "image/png"];
+    if (!tiposPermitidos.includes(file.type)) {
+      alert("Solo se permiten imágenes en formato .jpg o .png");
+      e.target.value = null; // Limpia el input file
+      setFile(null);
+      setPreview(null);
+      return;
+    }
+
+    setSelectedFile(file); // guardar archivo real
+    setFilePreview(URL.createObjectURL(file));
+  }
 
   const [eventos, setEventos] = useState([]);
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
@@ -51,6 +76,16 @@ const Eventos = () => {
       idTipoAct: evento.idTipoAct ? String(evento.idTipoAct) : "",
       costo: evento.costo || 0,
     });
+
+    // Si tiene imagen, setear la URL completa al servidor
+    if (evento.imagen) {
+      setImagenActual(`http://localhost:3001${evento.imagen}`);
+    } else {
+      setImagenActual(null);
+    }
+
+    setFilePreview(null); // limpia cualquier imagen previa seleccionada
+    setSelectedFile(null);
     setMostrarPanel(true);
   };
 
@@ -65,30 +100,46 @@ const Eventos = () => {
 
   const handleGuardar = async () => {
     try {
-      const body = {
-        idActividad: eventoSeleccionado.idActividad,
-        ...formEvento,
-      };
+      const formData = new FormData();
+      formData.append("idActividad", eventoSeleccionado.idActividad);
+      formData.append("nombre", formEvento.nombre);
+      formData.append("descripcion", formEvento.descripcion);
+      formData.append("fecha", formEvento.fecha);
+      formData.append("horaInicio", formEvento.horaInicio);
+      formData.append("cupo", formEvento.cupo);
+      formData.append("idTipoAct", formEvento.idTipoAct);
+      formData.append("costo", formEvento.costo);
+
+      if (selectedFile) {
+        formData.append("imagen", selectedFile);
+      }
+
       const response = await axios.post(
         "http://localhost:3001/eventos/editar",
-        body
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
       if (response.data.success) {
         alert("Evento actualizado correctamente");
-        setEventos((prev) =>
-          prev.map((e) =>
-            e.idActividad === eventoSeleccionado.idActividad
-              ? { ...e, ...formEvento }
-              : e
-          )
+
+        // Actualizar lista de eventos
+        const updatedEventos = eventos.map((e) =>
+          e.idActividad === eventoSeleccionado.idActividad
+            ? {
+                ...e,
+                ...formEvento,
+                imagen: selectedFile ? response.data.imagen : e.imagen,
+              }
+            : e
         );
-        setEventosFiltrados((prev) =>
-          prev.map((e) =>
-            e.idActividad === eventoSeleccionado.idActividad
-              ? { ...e, ...formEvento }
-              : e
-          )
-        );
+
+        setEventos(updatedEventos);
+        setEventosFiltrados(updatedEventos);
         cerrarPanelModificar();
       } else {
         alert("Error: " + response.data.message);
@@ -490,9 +541,21 @@ const Eventos = () => {
             </div>
 
             <div className={styles.divImagen}>
-              <div className={styles.imgDisplay}></div>
+              <div className={styles.imgDisplay}>
+                <img
+                  className={styles.imagen}
+                  src={filePreview || imagenActual || defaultImage}
+                  alt="Imagen del evento"
+                />
+              </div>
               <div className={styles.divBotonImagen}>
-                <input className={styles.botonAgregarImagen} type="file" />
+                <input
+                  className={styles.botonAgregarImagen}
+                  type="file"
+                  onChange={handleChange}
+                  accept=".jpg, .jpeg, .png"
+                  ref={fileInputRef}
+                />
               </div>
             </div>
           </div>
