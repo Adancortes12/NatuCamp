@@ -756,6 +756,26 @@ app.post("/eventos/editar", (req, res) => {
     }
   );
 });
+app.get("/inscripcion/lista/:idActividad", (req, res) => {
+  const { idActividad } = req.params;
+
+  const sql = `
+    SELECT u.nombre, u.primerAp, u.segundoAp, u.correo, u.celular, u.usuario
+    FROM inscripcion i
+    JOIN usuario u ON i.idUsuario = u.idUsuario
+    WHERE i.idActividad = ?
+  `;
+
+  db.query(sql, [idActividad], (err, results) => {
+    if (err) {
+      console.error("Error al obtener lista de inscritos:", err);
+      return res.status(500).json({ success: false, message: "Error al obtener inscritos" });
+    }
+    res.json({ success: true, data: results });
+  });
+});
+
+
 
 // ------------------ INICIO DEL SERVIDOR ------------------
 app.listen(3001, () => {

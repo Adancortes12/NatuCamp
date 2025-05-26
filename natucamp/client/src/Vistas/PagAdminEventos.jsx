@@ -16,6 +16,7 @@ export function PagAdminEventos() {
   const [cupo, setCupo] = useState(0);
   const [costo, setCosto] = useState(0);
   const [tiposActividad, setTiposActividad] = useState([]);
+  const [hoy, setHoy] = useState("");
 
   function handleChange(e) {
     const archivo = e.target.files[0];
@@ -35,7 +36,7 @@ export function PagAdminEventos() {
     setPreview(URL.createObjectURL(archivo));
   }
 
-  //Funcion para que la pagina se centre en el formulario
+  // Funcion para que la pagina se centre en el formulario
   useEffect(() => {
     if (registro.current) {
       registro.current.scrollIntoView({
@@ -44,6 +45,15 @@ export function PagAdminEventos() {
       });
       registro.current.focus();
     }
+  }, []);
+
+  // Obtener fecha de hoy para usar en min del input fecha
+  useEffect(() => {
+    const fechaActual = new Date();
+    const año = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, "0");
+    const dia = String(fechaActual.getDate()).padStart(2, "0");
+    setHoy(`${año}-${mes}-${dia}`);
   }, []);
 
   const Agregar = async () => {
@@ -152,6 +162,7 @@ export function PagAdminEventos() {
               id="fecha"
               className={styles.inputFecha}
               value={fecha}
+              min={hoy} // Aquí está la validación para fecha mínima
               onChange={(e) => setFecha(e.target.value)}
             />
             <div className={styles.grupo}>

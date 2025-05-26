@@ -184,48 +184,88 @@ const Eventos = () => {
     return horaInicio.slice(0, 5);
   };
 
-  // Función para generar y descargar PDF
-  const generarReporteEvento = (evento) => {
-    const inscritosEvento = inscritos[evento.idActividad] || 0;
-    const cupoRestante = evento.cupo - inscritosEvento;
+  // Función para generar y descargar PDF con lista de inscritos
+  const generarReporteEvento = async (evento) => {
+    try {
+      // Obtén la lista de inscritos para el evento
+      const res = await axios.get(
+        `http://localhost:3001/inscripcion/lista/${evento.idActividad}`
+      );
+      const listaInscritos = res.data.data || [];
 
-    const doc = new jsPDF();
+      const inscritosEvento = inscritos[evento.idActividad] || 0;
+      const cupoRestante = evento.cupo - inscritosEvento;
 
-    doc.setFontSize(18);
-    doc.text("Información del Evento", 14, 22);
+      const doc = new jsPDF();
 
-    doc.setFontSize(12);
-    const lineHeight = 10;
-    let startY = 40;
+      doc.setFontSize(18);
+      doc.text("Información del Evento", 14, 22);
 
-    doc.text(`Nombre: ${evento.nombre}`, 14, startY);
-    startY += lineHeight;
+      doc.setFontSize(12);
+      let startY = 40;
+      const lineHeight = 10;
 
-    doc.text(`Descripción: ${evento.descripcion}`, 14, startY);
-    startY += lineHeight;
+      doc.text(`Nombre: ${evento.nombre}`, 14, startY);
+      startY += lineHeight;
 
-    doc.text(
-      `Fecha: ${new Date(evento.fecha).toLocaleDateString()}`,
-      14,
-      startY
-    );
-    startY += lineHeight;
+      doc.text(`Descripción: ${evento.descripcion}`, 14, startY);
+      startY += lineHeight;
 
-    doc.text(`Hora inicio: ${formatoHora(evento.horaInicio)}`, 14, startY);
-    startY += lineHeight;
+      doc.text(
+        `Fecha: ${new Date(evento.fecha).toLocaleDateString()}`,
+        14,
+        startY
+      );
+      startY += lineHeight;
 
-    doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
-    startY += lineHeight;
+      doc.text(`Hora inicio: ${formatoHora(evento.horaInicio)}`, 14, startY);
+      startY += lineHeight;
 
-    doc.text(`Inscritos: ${inscritosEvento}`, 14, startY);
-    startY += lineHeight;
+      doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
+      startY += lineHeight;
 
-    doc.text(`Cupo disponible: ${cupoRestante}`, 14, startY);
-    startY += lineHeight;
+      doc.text(`Inscritos: ${inscritosEvento}`, 14, startY);
+      startY += lineHeight;
 
-    doc.text(`Costo: $${evento.costo}`, 14, startY);
+      doc.text(`Cupo disponible: ${cupoRestante}`, 14, startY);
+      startY += lineHeight;
 
-    doc.save(`Reporte_Evento_${evento.nombre.replace(/\s+/g, "_")}.pdf`);
+      doc.text(`Costo: $${evento.costo}`, 14, startY);
+      startY += lineHeight + 5;
+
+      // Lista de inscritos
+      doc.setFontSize(14);
+      doc.text("Lista de Inscritos:", 14, startY);
+      startY += lineHeight;
+
+      if (listaInscritos.length === 0) {
+        doc.setFontSize(12);
+        doc.text("No hay inscritos registrados.", 14, startY);
+        startY += lineHeight;
+      } else {
+        doc.setFontSize(12);
+        listaInscritos.forEach((inscrito, index) => {
+          if (startY > 270) {
+            doc.addPage();
+            startY = 20;
+          }
+          const nombreInscrito =
+            inscrito.nombre ||
+            inscrito.usuario ||
+            inscrito.nombreUsuario ||
+            "Sin nombre";
+          const correoInscrito = inscrito.correo || inscrito.email || "";
+          const texto = `${index + 1}. ${nombreInscrito} - ${correoInscrito}`;
+          doc.text(texto, 14, startY);
+          startY += lineHeight;
+        });
+      }
+
+      doc.save(`Reporte_Evento_${evento.nombre.replace(/\s+/g, "_")}.pdf`);
+    } catch (error) {
+      console.error("Error al generar reporte con lista de inscritos:", error);
+      alert("No se pudo generar el reporte completo.");
+    }
   };
 
   return (
