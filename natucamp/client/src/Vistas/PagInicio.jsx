@@ -115,12 +115,12 @@ export function PagInicio() {
         <div className="container">
           <div className="row">
             <div className="col-md-6 text-start">
-              <Link to="/" className={styles.linkFooter}>
-                Contactanos
-              </Link>
-              <Link to="/" className={styles.linkFooter}>
+              <a
+                href="https://es.wikipedia.org/wiki/La_Campana_(Colima)"
+                className={styles.linkFooter}
+              >
                 Acerca de
-              </Link>
+              </a>
               <Link to="/Eventos" className={styles.linkFooter}>
                 Explora
               </Link>
