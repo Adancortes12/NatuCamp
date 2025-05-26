@@ -679,7 +679,7 @@ app.get("/posts/:idUsuario", (req, res) => {
 app.get("/inscripcion", (req, res) => {
   const { usuario } = req.query; // Obtener el usuario desde la query
   const query = `
-    SELECT i.*, a.nombre, a.tipo, a.descripcion, a.costo
+    SELECT i.*, a.nombre, a.tipo, a.descripcion, a.costo,a.horaInicio, a.fecha
     FROM inscripcion i
     JOIN actividad a ON i.idActividad = a.idActividad
     JOIN usuario u ON i.idUsuario = u.idUsuario

@@ -29,6 +29,14 @@ const PostCard = ({ title, content, author, tags }) => {
 };
 
 const EventCard = ({ nombre, tipo, descripcion, fecha, costo, hora }) => {
+  // Formatear fecha a formato local legible
+  const fechaFormateada = fecha
+    ? new Date(fecha).toLocaleDateString()
+    : "Fecha no disponible";
+
+  // Formatear hora a HH:mm (asumiendo hora viene como 'HH:mm:ss')
+  const horaFormateada = hora ? hora.slice(0, 5) : "Hora no disponible";
+
   return (
     <div className={styles["event-card"]}>
       <div className={styles["event-info"]}>
@@ -37,9 +45,9 @@ const EventCard = ({ nombre, tipo, descripcion, fecha, costo, hora }) => {
         </h3>
         <p>{descripcion}</p>
         <div className={styles["event-details"]}>
-          <span className={styles.date}>Fecha: {fecha}</span>
+          <span className={styles.date}>Fecha: {fechaFormateada}</span>
           <span className={styles.cost}>Costo: ${costo}</span>
-          <span className={styles.cost}>Hora: {hora}</span>
+          <span className={styles.cost}>Hora: {horaFormateada}</span>
         </div>
       </div>
     </div>
@@ -85,6 +93,7 @@ export function PagUsuario() {
           setLoading(false);
         });
 
+      // Aquí traemos eventos con la hora incluida y fecha para mostrar
       axios
         .get(`http://localhost:3001/inscripcion?usuario=${usuario.usuario}`)
         .then((res) => {
@@ -186,6 +195,7 @@ export function PagUsuario() {
                         descripcion={evento.descripcion}
                         fecha={evento.fechaInscrip}
                         costo={evento.costo}
+                        hora={evento.horaInicio} // Ajusta según tu API
                       />
                     ))
                   ) : (
