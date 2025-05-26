@@ -178,6 +178,12 @@ const Eventos = () => {
     }
   };
 
+  // Formatea horaInicio a HH:mm
+  const formatoHora = (horaInicio) => {
+    if (!horaInicio) return "N/A";
+    return horaInicio.slice(0, 5);
+  };
+
   // Función para generar y descargar PDF
   const generarReporteEvento = (evento) => {
     const inscritosEvento = inscritos[evento.idActividad] || 0;
@@ -205,7 +211,7 @@ const Eventos = () => {
     );
     startY += lineHeight;
 
-    doc.text(`Hora inicio: ${evento.horaInicio}`, 14, startY);
+    doc.text(`Hora inicio: ${formatoHora(evento.horaInicio)}`, 14, startY);
     startY += lineHeight;
 
     doc.text(`Cupo total: ${evento.cupo}`, 14, startY);
@@ -477,7 +483,9 @@ const Eventos = () => {
                   Fecha: {new Date(evento.fecha).toLocaleDateString()}
                 </span>
                 <span className={styles.cost}>Costo: ${evento.costo}</span>
-                <span className={styles.cost}>Hora: {evento.hora}</span>
+                <span className={styles.cost}>
+                  Hora: {formatoHora(evento.horaInicio)}
+                </span>
               </div>
 
               <div className={styles["event-buttons"]}>

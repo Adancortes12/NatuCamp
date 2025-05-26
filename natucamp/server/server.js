@@ -425,6 +425,7 @@ app.get("/eventos", (req, res) => {
       actividad.nombre,
       actividad.descripcion,
       actividad.fecha,
+      actividad.horaInicio,
       actividad.costo,
       actividad.cupo,
       actividad.imagen,
@@ -455,6 +456,7 @@ app.get("/eventos", (req, res) => {
     res.json(result);
   });
 });
+
 
 //------------------Login de ADMINNISTRADOR------------------
 app.post("/loginAdmin", (req, res) => {
@@ -569,22 +571,44 @@ app.post("/eventos/eliminar", (req, res) => {
   );
 });
 //------------------OBTENER LOS POSTS------------------
-app.get("/posts", (req, res) => {
-  const query = `
+app.get("/eventos", (req, res) => {
+  const { idTipoAct, fecha } = req.query;
+
+  let query = `
     SELECT 
-      post.idPost,
-      post.titulo,
-      post.comentario,
-      usuario.usuario AS autor,
-      tipoact.tipo AS etiqueta
-    FROM post
-    JOIN usuario ON post.idUsuario = usuario.idUsuario
-    JOIN tipoact ON post.idTipoAct = tipoact.idTipoAct
+      a.idActividad,
+      a.nombre,
+      a.descripcion,
+      a.fecha,
+      a.hora,
+      a.costo,
+      a.cupo,
+      a.imagen,
+      t.tipo
+    FROM actividad a
+    JOIN tipoact t ON a.idTipoAct = t.idTipoAct
   `;
-  db.query(query, (err, results) => {
+
+  const conditions = [];
+  const params = [];
+
+  if (idTipoAct) {
+    conditions.push("a.idTipoAct = ?");
+    params.push(idTipoAct);
+  }
+  if (fecha) {
+    conditions.push("DATE(a.fecha) = ?");
+    params.push(fecha);
+  }
+
+  if (conditions.length > 0) {
+    query += " WHERE " + conditions.join(" AND ");
+  }
+
+  db.query(query, params, (err, results) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Error al obtener posts");
+      return res.status(500).json({ success: false, message: "Error al obtener eventos" });
     }
     res.json(results);
   });

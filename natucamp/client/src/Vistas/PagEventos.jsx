@@ -9,22 +9,17 @@ const Eventos = () => {
   const [openSection, setOpenSection] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [inscritos, setInscritos] = useState({});
-  const [hora, setHora] = useState({});
 
-  // Filtros
-  const [tipoSeleccionado, setTipoSeleccionado] = useState(""); // "" para Todos
+  const [tipoSeleccionado, setTipoSeleccionado] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
 
   useEffect(() => {
     const usuarioStorage = localStorage.getItem("usuario");
-    if (usuarioStorage) {
-      setUsuario(JSON.parse(usuarioStorage));
-    }
+    if (usuarioStorage) setUsuario(JSON.parse(usuarioStorage));
   }, []);
 
   useEffect(() => {
-    // Cargar tipos
     axios
       .get("http://localhost:3001/eventos/tipos")
       .then((res) => setTipos(res.data))
@@ -41,7 +36,6 @@ const Eventos = () => {
       .then((res) => {
         let datos = res.data;
 
-        // Filtro local por búsqueda
         if (filtroBusqueda.trim() !== "") {
           const busquedaLower = filtroBusqueda.toLowerCase();
           datos = datos.filter(
@@ -57,7 +51,6 @@ const Eventos = () => {
         setEventos([]);
       });
 
-    // Obtener inscritos
     axios
       .get("http://localhost:3001/inscripcion/count")
       .then((res) => {
@@ -102,12 +95,17 @@ const Eventos = () => {
     }
   };
 
+  // Cambié para usar horaInicio
+  const formatoHora = (horaInicio) => {
+    if (!horaInicio) return "N/A";
+    return horaInicio.slice(0, 5);
+  };
+
   return (
     <div className={styles["event-page"]}>
       <aside className={styles.sidebar}>
         <h3 className={styles["sidebar-title"]}>Filtros</h3>
 
-        {/* Filtro Tipo */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -143,7 +141,6 @@ const Eventos = () => {
           )}
         </div>
 
-        {/* Filtro Fecha */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -163,7 +160,6 @@ const Eventos = () => {
           )}
         </div>
 
-        {/* Filtro Buscar */}
         <div className={styles["filter-group"]}>
           <button
             className={styles["filter-toggle"]}
@@ -204,7 +200,9 @@ const Eventos = () => {
                   Fecha: {new Date(evento.fecha).toLocaleDateString()}
                 </span>
                 <span className={styles.cost}>Costo: ${evento.costo}</span>
-                <span className={styles.cost}>Hora: {evento.hora}</span>
+                <span className={styles.cost}>
+                  Hora: {formatoHora(evento.horaInicio)}
+                </span>
               </div>
               <div className={styles["event-buttons"]}>
                 <button
