@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./StylesCrearPost.module.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -10,7 +10,7 @@ export function PagCrearPost() {
   const [mensaje, setMensaje] = useState("");
   const usuario = JSON.parse(localStorage.getItem("usuario"));
   const idUsuario = usuario ? usuario.idUsuario : null;
-
+  const postDatos = useRef(null);
   // Cargar tipos de actividad al montar
   useEffect(() => {
     axios
@@ -26,6 +26,17 @@ export function PagCrearPost() {
       .catch((err) => {
         console.error("Error al cargar tipos:", err);
       });
+  }, []);
+
+  //Funcion para que la pagina se centre en el formulario
+  useEffect(() => {
+    if (postDatos.current) {
+      postDatos.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      postDatos.current.focus();
+    }
   }, []);
 
   const handleGuardar = async () => {
@@ -78,7 +89,7 @@ export function PagCrearPost() {
         {mensaje && <p className={styles.aviso}>{mensaje}</p>}
       </div>
       <div className={styles.centro}>
-        <div className={styles.contenedor}>
+        <div className={styles.contenedor} ref={postDatos}>
           <div className={styles.divDatos}>
             <div className={styles.grupo}>
               <div className={styles.grupoTituloEtiquetas}>
@@ -90,17 +101,17 @@ export function PagCrearPost() {
                   onChange={(e) => setTitulo(e.target.value)}
                   maxlength="70"
                 />
-                  <select
-                    className={styles.selectEtiquetas}
-                    value={idTipoAct}
-                    onChange={(e) => setIdTipoAct(e.target.value)}
-                  >
-                    {tipos.map((tipo) => (
-                      <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
-                        {tipo.tipo}
-                      </option>
-                    ))}
-                  </select>
+                <select
+                  className={styles.selectEtiquetas}
+                  value={idTipoAct}
+                  onChange={(e) => setIdTipoAct(e.target.value)}
+                >
+                  {tipos.map((tipo) => (
+                    <option key={tipo.idTipoAct} value={tipo.idTipoAct}>
+                      {tipo.tipo}
+                    </option>
+                  ))}
+                </select>
               </div>
               {/* Botones para guardar y cancelar entrada de datos */}
               <div className={styles.botones}>

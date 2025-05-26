@@ -52,7 +52,8 @@ const db = mysql.createConnection({
 // ------------------ RUTAS DE USUARIOS ------------------
 // Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } =
+    req.body;
 
   // Verificar si el usuario o el correo ya existen
   db.query(
@@ -63,8 +64,8 @@ app.post("/create", (req, res) => {
 
       if (results.length > 0) {
         // Revisar cuál está ocupado y mandar mensaje específico
-        const usuarioOcupado = results.some(r => r.usuario === usuario);
-        const correoOcupado = results.some(r => r.correo === correo);
+        const usuarioOcupado = results.some((r) => r.usuario === usuario);
+        const correoOcupado = results.some((r) => r.correo === correo);
 
         if (usuarioOcupado && correoOcupado) {
           return res.status(400).send("Nombre de usuario y correo ocupados");
@@ -87,8 +88,6 @@ app.post("/create", (req, res) => {
     }
   );
 });
-
-
 
 // Inicio de sesión
 app.post("/login", (req, res) => {
@@ -222,8 +221,6 @@ app.delete("/especies/:id", (req, res) => {
   });
 });
 
-
-
 // ------------------ RUTAS DE TABLAS RELACIONADAS ------------------
 
 app.get("/tipos", (req, res) => {
@@ -306,7 +303,9 @@ app.get("/tipoact", (req, res) => {
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error al obtener tipos de actividad:", err);
-      return res.status(500).json({ success: false, message: "Error al obtener tipos" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener tipos" });
     }
     res.json({ success: true, data: results });
   });
@@ -319,17 +318,26 @@ app.post("/createPost", (req, res) => {
   const { titulo, comentario, idTipoAct, idUsuario } = req.body;
 
   if (!titulo || !comentario || !idTipoAct || !idUsuario) {
-    return res.status(400).json({ success: false, message: "Faltan datos obligatorios" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan datos obligatorios" });
   }
 
-  const sql = "INSERT INTO post (titulo, comentario, idTipoAct, idUsuario) VALUES (?, ?, ?, ?)";
+  const sql =
+    "INSERT INTO post (titulo, comentario, idTipoAct, idUsuario) VALUES (?, ?, ?, ?)";
 
   db.query(sql, [titulo, comentario, idTipoAct, idUsuario], (err, result) => {
     if (err) {
       console.error("Error al crear post:", err);
-      return res.status(500).json({ success: false, message: "Error al crear post" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al crear post" });
     }
-    res.json({ success: true, message: "Post creado correctamente", postId: result.insertId });
+    res.json({
+      success: true,
+      message: "Post creado correctamente",
+      postId: result.insertId,
+    });
   });
 });
 
@@ -351,9 +359,6 @@ app.delete("/posts/:id", (req, res) => {
     res.send("✅ Post eliminado correctamente");
   });
 });
-
-
-
 
 //-----------------OBTENER DATOS DEL USUARIO-----------------
 // Obtener datos del usuario por id o correo
@@ -398,7 +403,6 @@ app.get("/eventos/tipos", (req, res) => {
   });
 });
 
-
 //-------------------EVENTOS-------------------
 app.get("/eventos", (req, res) => {
   const { idTipoAct, fecha } = req.query;
@@ -439,7 +443,6 @@ app.get("/eventos", (req, res) => {
     res.json(result);
   });
 });
-
 
 //------------------Login de ADMINNISTRADOR------------------
 app.post("/loginAdmin", (req, res) => {
@@ -522,12 +525,10 @@ app.post("/eventos/eliminar", (req, res) => {
     (err) => {
       if (err) {
         console.error("Error al eliminar inscripciones:", err);
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Error al eliminar inscripciones relacionadas",
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar inscripciones relacionadas",
+        });
       }
 
       // Luego eliminar el evento
@@ -559,7 +560,6 @@ app.post("/eventos/eliminar", (req, res) => {
 app.get("/posts", (req, res) => {
   const query = `
     SELECT 
-
       post.titulo,
       post.comentario,
       usuario.usuario AS autor,
@@ -615,11 +615,11 @@ app.get("/posts", (req, res) => {
 });
 
 // ------------------ OBTENER LOS POSTS DEL UUSUARIO------------------
-app.get('/posts/:idUsuario', (req, res) => {
+app.get("/posts/:idUsuario", (req, res) => {
   const idUsuario = Number(req.params.idUsuario);
 
   if (isNaN(idUsuario) || idUsuario <= 0) {
-    return res.status(400).json({ message: 'idUsuario inválido' });
+    return res.status(400).json({ message: "idUsuario inválido" });
   }
 
   const query = `
@@ -631,8 +631,8 @@ app.get('/posts/:idUsuario', (req, res) => {
 
   db.query(query, [idUsuario], (err, results) => {
     if (err) {
-      console.error('Error al obtener los posts:', err);
-      return res.status(500).json({ message: 'Error en el servidor' });
+      console.error("Error al obtener los posts:", err);
+      return res.status(500).json({ message: "Error en el servidor" });
     }
     res.json(results);
   });
@@ -650,8 +650,8 @@ app.get("/inscripcion", (req, res) => {
 
   db.query(query, [usuario], (err, results) => {
     if (err) {
-      console.error('Error al obtener los eventos:', err);
-      return res.status(500).send('Error en el servidor');
+      console.error("Error al obtener los eventos:", err);
+      return res.status(500).send("Error en el servidor");
     }
     res.json(results); // Enviar los resultados
   });
@@ -670,8 +670,17 @@ app.post("/eventos/editar", (req, res) => {
     costo,
   } = req.body;
 
-  if (!idActividad || !nombre || !descripcion || !fecha || !horaInicio || !idTipoAct) {
-    return res.status(400).json({ success: false, message: "Faltan datos obligatorios" });
+  if (
+    !idActividad ||
+    !nombre ||
+    !descripcion ||
+    !fecha ||
+    !horaInicio ||
+    !idTipoAct
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan datos obligatorios" });
   }
 
   const sql = `
@@ -683,14 +692,27 @@ app.post("/eventos/editar", (req, res) => {
 
   db.query(
     sql,
-    [nombre, descripcion, fecha, horaInicio, cupo, idTipoAct, costo, idActividad],
+    [
+      nombre,
+      descripcion,
+      fecha,
+      horaInicio,
+      cupo,
+      idTipoAct,
+      costo,
+      idActividad,
+    ],
     (err, result) => {
       if (err) {
         console.error("Error al actualizar evento:", err);
-        return res.status(500).json({ success: false, message: "Error al actualizar evento" });
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al actualizar evento" });
       }
       if (result.affectedRows === 0) {
-        return res.status(404).json({ success: false, message: "Evento no encontrado" });
+        return res
+          .status(404)
+          .json({ success: false, message: "Evento no encontrado" });
       }
       res.json({ success: true, message: "Evento actualizado correctamente" });
     }
