@@ -80,7 +80,8 @@ export function PagRegistro() {
       navigate("/InicioSesion");
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert(error.response.data);
+        // Mostrar el error del backend
+        alert(error.response.data); // Muestra el mensaje de error del backend
         limpiarCampos();
       } else {
         alert("Error al registrar usuario");

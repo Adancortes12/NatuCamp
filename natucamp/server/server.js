@@ -52,13 +52,12 @@ const db = mysql.createConnection({
 // ------------------ RUTAS DE USUARIOS ------------------
 // Crear un nuevo usuario
 app.post("/create", (req, res) => {
-  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } =
-    req.body;
+  const { nombre, primerAp, segundoAp, correo, celular, usuario, contrasena } = req.body;
 
-  // Verificar si el usuario o el correo ya existen
+  // Verificar si el usuario, correo o celular ya existen
   db.query(
-    "SELECT * FROM usuario WHERE usuario = ? OR correo = ?",
-    [usuario, correo],
+    "SELECT * FROM usuario WHERE usuario = ? OR correo = ? OR celular = ?",
+    [usuario, correo, celular],
     (err, results) => {
       if (err) return res.status(500).send("Error en la base de datos");
 
@@ -66,28 +65,35 @@ app.post("/create", (req, res) => {
         // Revisar cuál está ocupado y mandar mensaje específico
         const usuarioOcupado = results.some((r) => r.usuario === usuario);
         const correoOcupado = results.some((r) => r.correo === correo);
+        const celularOcupado = results.some((r) => r.celular === celular);
 
-        if (usuarioOcupado && correoOcupado) {
-          return res.status(400).send("Nombre de usuario y correo ocupados");
+        if (usuarioOcupado && correoOcupado && celularOcupado) {
+          return res.status(400).send("Nombre de usuario, correo y celular ocupados");
         } else if (usuarioOcupado) {
           return res.status(400).send("Nombre de usuario ocupado");
         } else if (correoOcupado) {
           return res.status(400).send("Correo ya registrado");
+        } else if (celularOcupado) {
+          return res.status(400).send("Celular ya registrado");
         }
       } else {
-        // No existe usuario ni correo, crear nuevo usuario
+        // No existe usuario ni correo ni celular, crear nuevo usuario
         db.query(
           "INSERT INTO usuario (nombre, primerAp, segundoAp, correo, celular, usuario, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)",
-          [nombre, primerAp, segundoAp, correo, celular, usuario, contrasena],
+          [nombre, primerAp, segundoAp || null, correo, celular || null, usuario, contrasena],
           (err) => {
-            if (err) return res.status(500).send("Error al crear usuario");
-            res.send("Usuario creado");
+            if (err) {
+              console.error("Error al insertar usuario:", err);
+              return res.status(500).send("Error al crear usuario");
+            }
+            res.status(201).send("Usuario creado");
           }
         );
       }
     }
   );
 });
+
 
 // Inicio de sesión
 app.post("/login", (req, res) => {
