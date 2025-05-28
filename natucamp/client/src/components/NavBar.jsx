@@ -46,6 +46,11 @@ export function Navbar() {
       >
         <ul className="navbar-nav">
           <li className="nav-item">
+            <Link className="nav-link" to="/FAQ">
+              AYUDA
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link className="nav-link" to="/">
               INICIO
             </Link>
